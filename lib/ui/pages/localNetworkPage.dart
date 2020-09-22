@@ -10,6 +10,7 @@ class LocalNetworkPage extends StatelessWidget {
         title: Text('Local Network'),
       ),
       body: Center(child: Text('Local Network')),
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: () {}),
     );
   }
 }
