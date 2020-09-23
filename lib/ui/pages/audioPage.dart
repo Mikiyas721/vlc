@@ -10,7 +10,9 @@ class AudioPage extends StatelessWidget {
           drawer: MyDrawer(),
           appBar: AppBar(
             title: Text('Audio'),
-            bottom: TabBar(tabs: [Text('Artists'), Text('Albums'), Text('Tracks'), Text('Genres')]),
+            bottom: TabBar(
+                labelPadding: EdgeInsets.only(bottom: 5),
+                tabs: [Text('Artists', ), Text('Albums'), Text('Tracks'), Text('Genres')]),
           ),
           body: TabBarView(
             children: [
