@@ -15,11 +15,14 @@ class ImagePage extends StatelessWidget {
           appBar: AppBar(
             title: Text('Image'),
           ),
-          body: StreamBuilder(builder: (BuildContext context, AsyncSnapshot<VideoModel> snapShot) {
-            return Center(
-                child:
-                    snapShot.data == null ? Text('No images to display') : Image.asset(snapShot.data.value));
-          }),
+          body: StreamBuilder(
+              stream: bloc.imageStream,
+              builder: (BuildContext context, AsyncSnapshot<VideoModel> snapShot) {
+                return Center(
+                    child: snapShot.data == null
+                        ? Text('No images to display')
+                        : Image.asset(snapShot.data.value));
+              }),
           floatingActionButton: FloatingActionButton(
               child: Icon(Icons.file_download),
               onPressed: () async {

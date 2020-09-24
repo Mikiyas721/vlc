@@ -5,12 +5,14 @@ import 'package:vlc/dataSource/imageDataSource.dart';
 import 'package:vlc/model/video.dart';
 
 class ImageBloc extends Disposable {
-  ImageRepo imageRepo = GetIt.instance.get();
-  ImagePicker imagePicker = ImagePicker();
+  ImageRepo _imageRepo = GetIt.instance.get();
+  ImagePicker imagePicker= ImagePicker();
+
+  get imageStream=> _imageRepo.getStream<VideoModel>((value)=>value);
 
   void loadImage() async {
     PickedFile images = await imagePicker.getImage(source: ImageSource.gallery);
-    imageRepo.updateStream(VideoModel(images.path));
+    _imageRepo.updateStream(VideoModel(images.path));
   }
 
   @override

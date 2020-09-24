@@ -10,5 +10,5 @@ void inject() async {
   GetIt.instance.registerSingleton<SharedPreferences>(preference);
 
   GetIt.instance.registerLazySingleton<ImageRepo>(() => ImageRepo(BehaviorSubject<VideoModel>()));
-  GetIt.instance.registerLazySingleton<VideoRepo>(() => VideoRepo(BehaviorSubject<List<VideoModel>>()));
+  GetIt.instance.registerLazySingleton<VideoRepo>(() => VideoRepo(BehaviorSubject<VideoModel>()));
 }
