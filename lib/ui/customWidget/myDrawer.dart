@@ -8,8 +8,8 @@ class MyDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           MyListTile(
-              leadingIcon: Icons.videocam,
-              title: 'Video',
+              leadingIcon: Icons.image,
+              title: 'Image',
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/');
               }),
@@ -18,6 +18,12 @@ class MyDrawer extends StatelessWidget {
               title: 'Audio',
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/audioPage');
+              }),
+          MyListTile(
+              leadingIcon: Icons.videocam,
+              title: 'Video',
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/videoPage');
               }),
           MyListTile(
               leadingIcon: Icons.list,

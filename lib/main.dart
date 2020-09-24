@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/ui/pages/aboutPage.dart';
-import 'package:vlc/ui/pages/directoriesPage.dart';
-import 'package:vlc/ui/pages/historyPage.dart';
-import 'package:vlc/ui/pages/localNetworkPage.dart';
-import 'package:vlc/ui/pages/playlistsPage.dart';
-import 'package:vlc/ui/pages/settingsPage.dart';
-import 'package:vlc/ui/pages/streamPage.dart';
-import 'package:vlc/ui/pages/videoPage.dart';
-import 'ui/pages/audioPage.dart';
+import 'injector.dart';
+import './ui/pages/aboutPage.dart';
+import './ui/pages/directoriesPage.dart';
+import './ui/pages/historyPage.dart';
+import './ui/pages/imagesPage.dart';
+import './ui/pages/localNetworkPage.dart';
+import './ui/pages/playlistsPage.dart';
+import './ui/pages/settingsPage.dart';
+import './ui/pages/streamPage.dart';
+import './ui/pages/videoPage.dart';
+import './ui/pages/audioPage.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await inject();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -29,10 +35,11 @@ class MyApp extends StatelessWidget {
     '/audioPage': (BuildContext context) => AudioPage(),
     '/directoriesPage': (BuildContext context) => DirectoriesPage(),
     '/historyPage': (BuildContext context) => HistoryPage(),
+    '/': (BuildContext context) => ImagePage(),
     '/localNetworkPage': (BuildContext context) => LocalNetworkPage(),
     '/playlistsPage': (BuildContext context) => PlayListsPage(),
     '/settingsPage': (BuildContext context) => SettingsPage(),
     '/streamPage': (BuildContext context) => StreamPage(),
-    '/': (BuildContext context) => VideoPage()
+    '/videoPage': (BuildContext context) => VideoPage()
   };
 }

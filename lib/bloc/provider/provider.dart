@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/utils/disposable.dart';
+import '../../core/utils/disposable.dart';
 
 class Provider<T> extends InheritedWidget {
   final T bloc;
@@ -17,12 +17,12 @@ class Provider<T> extends InheritedWidget {
 
 class BlocProvider<T extends Disposable> extends StatefulWidget {
   final T Function() blocFactory;
-  final Widget Function(BuildContext context, T bloc) builder;
+  final Widget Function(BuildContext, T) builder;
 
-  BlocProvider({Key key, this.blocFactory, this.builder}) : super(key: key);
+  BlocProvider({Key key, @required this.blocFactory, @required this.builder}) : super(key: key);
 
   @override
-  State<BlocProvider> createState() => _BlocProviderState();
+  _BlocProviderState<T> createState() => _BlocProviderState();
 }
 
 class _BlocProviderState<T extends Disposable> extends State<BlocProvider<T>> {
