@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/ui/customWidget/myDrawer.dart';
+import '../../ui/customWidget/myDrawer.dart';
 
 class AudioPage extends StatelessWidget {
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/ui/customWidget/myListTIle.dart';
+import '../../ui/customWidget/myListTIle.dart';
 
 class MyDrawer extends StatelessWidget {
   @override

@@ -1,9 +1,9 @@
 import 'package:flutter_multimedia_picker/data/MediaFile.dart';
 import 'package:flutter_multimedia_picker/fullter_multimedia_picker.dart';
 import 'package:get_it/get_it.dart';
-import 'package:vlc/core/utils/disposable.dart';
-import 'package:vlc/dataSource/imageDataSource.dart';
-import 'package:vlc/model/media.dart';
+import '../core/utils/disposable.dart';
+import '../dataSource/imageDataSource.dart';
+import '../model/media.dart';
 
 class ImageBloc extends Disposable {
   ImageRepo _imageRepo = GetIt.instance.get();

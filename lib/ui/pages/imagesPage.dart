@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/ui/customWidget/myImageView.dart';
+import '../../ui/customWidget/myImageView.dart';
 import '../../bloc/imageBloc.dart';
 import '../../bloc/provider/provider.dart';
 import '../../model/media.dart';

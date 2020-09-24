@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/bloc/provider/provider.dart';
-import 'package:vlc/bloc/videoBloc.dart';
-import 'package:vlc/model/media.dart';
-import 'package:vlc/ui/customWidget/myDrawer.dart';
+import '../../bloc/provider/provider.dart';
+import '../../bloc/videoBloc.dart';
+import '../../model/media.dart';
+import '../../ui/customWidget/myDrawer.dart';
 
 class VideoPage extends StatelessWidget {
   @override

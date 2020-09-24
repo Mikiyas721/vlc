@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:get_it/get_it.dart';
-import 'package:vlc/core/utils/disposable.dart';
-import 'package:vlc/dataSource/videoDataSource.dart';
-import 'package:vlc/model/media.dart';
+import '../core/utils/disposable.dart';
+import '../dataSource/videoDataSource.dart';
+import '../model/media.dart';
 
 class VideoBloc extends Disposable {
   VideoRepo _videoRepo = GetIt.instance.get();

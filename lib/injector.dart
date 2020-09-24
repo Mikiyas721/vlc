@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './dataSource/videoDataSource.dart';
 import './model/media.dart';
 import './dataSource/imageDataSource.dart';
+import 'dataSource/audioDataSource.dart';
 
 void inject() async {
   final preference = await SharedPreferences.getInstance();
@@ -11,4 +12,5 @@ void inject() async {
 
   GetIt.instance.registerLazySingleton<ImageRepo>(() => ImageRepo(BehaviorSubject<List<MediaModel>>()));
   GetIt.instance.registerLazySingleton<VideoRepo>(() => VideoRepo(BehaviorSubject<MediaModel>()));
+  GetIt.instance.registerLazySingleton<AudioRepo>(() => AudioRepo(BehaviorSubject<MediaModel>()));
 }
