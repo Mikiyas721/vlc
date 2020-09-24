@@ -26,12 +26,11 @@ dependencies:
   shared_preferences: ^0.5.7+2
   rxdart: ^0.24.1
   equatable: ^1.2.3
-  image_picker: ^0.6.7+11
+  flutter_multimedia_picker: ^1.0.3
 
   cupertino_icons: ^0.1.2
   sliding_up_panel: ^1.0.2
   video_player: ^0.10.12+3
-  flick_video_player: ^0.1.1
   audioplayers: ^0.16.1
   flutter_launcher_icons: ^0.8.0
 

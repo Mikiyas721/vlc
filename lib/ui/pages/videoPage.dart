@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vlc/bloc/provider/provider.dart';
 import 'package:vlc/bloc/videoBloc.dart';
-import 'package:vlc/model/video.dart';
+import 'package:vlc/model/media.dart';
 import 'package:vlc/ui/customWidget/myDrawer.dart';
 
 class VideoPage extends StatelessWidget {
@@ -17,7 +17,7 @@ class VideoPage extends StatelessWidget {
           ),
           body: StreamBuilder(
             stream: bloc.videoStream,
-            builder: (BuildContext context, AsyncSnapshot<VideoModel> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<MediaModel> snapshot) {
               return Center(
                   child: snapshot.data == null ? Text('No Video Found') : Image.asset(snapshot.data.value));
             },

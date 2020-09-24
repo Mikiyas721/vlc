@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:vlc/core/repository.dart';
-import 'package:vlc/model/video.dart';
+import 'package:vlc/model/media.dart';
 
-class VideoRepo extends ItemRepo<VideoModel> {
-  VideoRepo(BehaviorSubject<VideoModel> subject) : super(subject);
+class VideoRepo extends ItemRepo<MediaModel> {
+  VideoRepo(BehaviorSubject<MediaModel> subject) : super(subject);
 }
