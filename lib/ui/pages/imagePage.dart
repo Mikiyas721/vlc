@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import '../../ui/customWidget/myImageView.dart';
+import 'package:vlc/bloc/imageBloc.dart';
+import 'package:vlc/bloc/provider/provider.dart';
+import 'package:vlc/ui/customWidget/myDrawer.dart';
+import 'package:vlc/ui/customWidget/myImageView.dart';
+import '../customWidget/myImageView.dart';
 import '../../bloc/imageBloc.dart';
 import '../../bloc/provider/provider.dart';
 import '../../model/media.dart';
-import '../../ui/customWidget/myDrawer.dart';
+import '../customWidget/myDrawer.dart';
 
 class ImagePage extends StatelessWidget {
   @override
@@ -16,6 +22,12 @@ class ImagePage extends StatelessWidget {
           drawer: MyDrawer(),
           appBar: AppBar(
             title: Text('Image'),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: bloc.loadImage,
+              )
+            ],
           ),
           body: StreamBuilder(
               stream: bloc.imageStream,
@@ -51,10 +63,13 @@ List<Widget> getImages(BuildContext context, List<MediaModel> imageModels) {
             decoration: BoxDecoration(
                 image: DecorationImage(image: AssetImage(imageModel.mediaPath), fit: BoxFit.cover)),
             margin: EdgeInsets.all(2)),
-        onTap: () {
+        onTap: () async {
+          var decodedImage = await decodeImageFromList(new File(imageModel.mediaPath).readAsBytesSync());
           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
             return MyImageView(
               imagePath: imageModel.mediaPath,
+              width: decodedImage.width,
+              height: decodedImage.height,
             );
           }));
         },

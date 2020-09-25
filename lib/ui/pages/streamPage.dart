@@ -26,6 +26,7 @@ class StreamPage extends StatelessWidget {
                     SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: TextField(
+                          keyboardType: TextInputType.url,
                           decoration: InputDecoration(labelText: 'Enter a network address with audio file.'),
                           onChanged: (String newValue) {
                             bloc.onAudioUrlEntered(newValue);

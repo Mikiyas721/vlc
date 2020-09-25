@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_multimedia_picker/data/MediaFile.dart';
 import 'package:flutter_multimedia_picker/fullter_multimedia_picker.dart';
 import 'package:get_it/get_it.dart';
-import '../core/utils/disposable.dart';
-import '../dataSource/imageDataSource.dart';
-import '../model/media.dart';
+import 'package:vlc/core/utils/disposable.dart';
+import 'package:vlc/dataSource/imageDataSource.dart';
+import 'package:vlc/model/media.dart';
 
 class ImageBloc extends Disposable {
   ImageRepo _imageRepo = GetIt.instance.get();
@@ -21,6 +22,18 @@ class ImageBloc extends Disposable {
     }
   }
 
+  List<Widget> getImages(List<MediaModel> imageModels) {
+    List<Image> images = [];
+    if (imageModels != null) {
+      imageModels.forEach((imageModel) {
+        images.add(Image.asset(
+          imageModel.mediaPath,
+          width: 100,
+        ));
+      });
+    }
+    return images;
+  }
 
   @override
   void dispose() {}

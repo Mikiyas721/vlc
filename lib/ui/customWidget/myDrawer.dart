@@ -11,13 +11,13 @@ class MyDrawer extends StatelessWidget {
               leadingIcon: Icons.image,
               title: 'Image',
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/');
+                Navigator.pushReplacementNamed(context, '/imagePage');
               }),
           MyListTile(
               leadingIcon: Icons.audiotrack,
               title: 'Audio',
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/audioPage');
+                Navigator.pushReplacementNamed(context, '/');
               }),
           MyListTile(
               leadingIcon: Icons.videocam,

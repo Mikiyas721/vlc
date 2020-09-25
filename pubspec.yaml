@@ -27,6 +27,7 @@ dependencies:
   rxdart: ^0.24.1
   equatable: ^1.2.3
   flutter_multimedia_picker: ^1.0.3
+  file_picker: ^2.0.2
 
   cupertino_icons: ^0.1.2
   sliding_up_panel: ^1.0.2

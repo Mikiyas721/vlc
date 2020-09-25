@@ -3,7 +3,7 @@ import 'injector.dart';
 import './ui/pages/aboutPage.dart';
 import './ui/pages/directoriesPage.dart';
 import './ui/pages/historyPage.dart';
-import './ui/pages/imagesPage.dart';
+import 'ui/pages/imagePage.dart';
 import './ui/pages/localNetworkPage.dart';
 import './ui/pages/playlistsPage.dart';
 import './ui/pages/settingsPage.dart';
@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
 
   final routes = {
     '/aboutPage': (BuildContext context) => AboutPage(),
-    '/audioPage': (BuildContext context) => AudioPage(),
+    '/': (BuildContext context) => AudioPage(),
     '/directoriesPage': (BuildContext context) => DirectoriesPage(),
     '/historyPage': (BuildContext context) => HistoryPage(),
-    '/': (BuildContext context) => ImagePage(),
+    '/imagePage': (BuildContext context) => ImagePage(),
     '/localNetworkPage': (BuildContext context) => LocalNetworkPage(),
     '/playlistsPage': (BuildContext context) => PlayListsPage(),
     '/settingsPage': (BuildContext context) => SettingsPage(),
