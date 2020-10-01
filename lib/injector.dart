@@ -5,6 +5,7 @@ import './model/media.dart';
 import './dataSource/galleryDataSource.dart';
 import 'dataSource/audioDataSource.dart';
 import 'model/album.dart';
+import 'model/url.dart';
 
 void inject() async {
   final preference = await SharedPreferences.getInstance();
@@ -16,4 +17,5 @@ void inject() async {
   GetIt.instance.registerLazySingleton<RemoteAudioRepo>(() => RemoteAudioRepo(BehaviorSubject<MediaModel>()));
   GetIt.instance
       .registerLazySingleton<DeviceAudioRepo>(() => DeviceAudioRepo(BehaviorSubject<List<AlbumModel>>()));
+  GetIt.instance.registerLazySingleton<PlayingRepo>(() => PlayingRepo(BehaviorSubject<UrlModel>()));
 }

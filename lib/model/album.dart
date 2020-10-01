@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:vlc/core/jsonModel.dart';
+import '../core/jsonModel.dart';
 import 'media.dart';
 
 class AlbumModel extends JSONModel {
@@ -9,13 +8,13 @@ class AlbumModel extends JSONModel {
   final String name;
   final int assetCount;
   final File firstAlbumFile;
-  final List<MediaModel> imageList;
+  final List<MediaModel> mediaList;
 
   AlbumModel(
       {@required this.id,
       @required this.name,
       @required this.assetCount,
-      @required this.imageList,
+      @required this.mediaList,
       @required this.firstAlbumFile})
       : super(id);
 

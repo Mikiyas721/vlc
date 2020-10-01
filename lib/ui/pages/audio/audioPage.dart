@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../ui/pages/audio/audioAlbumPage.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../../model/album.dart';
@@ -40,7 +41,11 @@ class AudioPage extends StatelessWidget {
   List<Widget> getGridElements(BuildContext context, List<AlbumModel> audioModels) {
     List<Widget> widgets = [];
     for (AlbumModel album in audioModels) {
-      widgets.add(AudioAlbum(albumName: album.name, onPlayPressed: () {}, onAlbumTap: () {}));
+      widgets.add(AudioAlbum(albumName: album.name, onPlayPressed: () {}, onAlbumTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+          return AudioAlbumPage(title: album.name,albumAudio: album.mediaList);
+        }));
+      }));
     }
     return widgets;
   }

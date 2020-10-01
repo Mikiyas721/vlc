@@ -1,12 +1,11 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import '../../bloc/audioBloc.dart';
-import '../../bloc/provider/provider.dart';
-import '../../ui/customWidget/myDrawer.dart';
+import '../../../ui/customWidget/audioControlls.dart';
+import '../../../bloc/audioBloc.dart';
+import '../../../bloc/provider/provider.dart';
+import '../../customWidget/myDrawer.dart';
+import 'audioAlbumPage.dart';
 
 class StreamPage extends StatelessWidget {
-  final AudioPlayer audioPlayer = AudioPlayer();
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AudioBloc>(
@@ -36,33 +35,7 @@ class StreamPage extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(10),
               )),
-          bottomSheet: Card(
-              margin: EdgeInsets.all(0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.pause),
-                    onPressed: () {
-                      audioPlayer.pause();
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.play_arrow),
-                    onPressed: () {
-                      String url = bloc.currentUrl;
-                      audioPlayer.play(url, isLocal: false);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.stop),
-                    onPressed: () {
-                      audioPlayer.stop();
-                    },
-                  ),
-                ],
-              )),
+          bottomSheet: AudioControls(audioPlayer: audioPlayer,),
         );
       },
     );

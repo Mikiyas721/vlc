@@ -111,7 +111,7 @@ List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels) {
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
           return GalleryAlbumPage(
             title: album.name,
-            mediaModels: album.imageList,
+            mediaModels: album.mediaList,
           );
         }));
       },

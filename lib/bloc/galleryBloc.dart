@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:vlc/core/utils/disposable.dart';
-import 'package:vlc/dataSource/galleryDataSource.dart';
-import 'package:vlc/model/album.dart';
-import 'package:vlc/model/media.dart';
-import 'package:vlc/model/mediaType.dart';
+import '../core/utils/disposable.dart';
+import '../dataSource/galleryDataSource.dart';
+import '../model/album.dart';
+import '../model/media.dart';
+import '../model/mediaType.dart';
 
 abstract class MediaBloc extends Disposable {
   Future<List<AlbumModel>> getAlbumModels(List<AssetPathEntity> albums) async {
@@ -16,7 +16,7 @@ abstract class MediaBloc extends Disposable {
         albumMedia.add(MediaModel(
             width: asset.width,
             duration: asset.duration,
-            imageFile: await asset.file,
+            mediaFile: await asset.file,
             height: asset.height,
             size: asset.size,
             id: asset.id,
@@ -26,7 +26,7 @@ abstract class MediaBloc extends Disposable {
         id: album.id,
         name: getAlbumName(album.name),
         assetCount: album.assetCount,
-        imageList: albumMedia,
+        mediaList: albumMedia,
         firstAlbumFile: await assets[0].file,
       ));
     }

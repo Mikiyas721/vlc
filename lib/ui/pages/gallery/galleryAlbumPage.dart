@@ -35,7 +35,7 @@ class GalleryAlbumPage extends StatelessWidget {
               width: width * 0.33,
               height: width * 0.33,
               decoration: BoxDecoration(
-                  image: DecorationImage(image: FileImage(mediaModel.imageFile), fit: BoxFit.cover)),
+                  image: DecorationImage(image: FileImage(mediaModel.mediaFile), fit: BoxFit.cover)),
               margin: EdgeInsets.all(2),
               child: Align(
                 child: Icon(
@@ -50,7 +50,7 @@ class GalleryAlbumPage extends StatelessWidget {
                 return MyImageView(
                   width: mediaModel.width,
                   height: mediaModel.height,
-                  imageFile: mediaModel.imageFile,
+                  imageFile: mediaModel.mediaFile,
                 );
               }));
             },
@@ -61,7 +61,7 @@ class GalleryAlbumPage extends StatelessWidget {
               width: width * 0.33,
               height: width * 0.33,
               decoration: BoxDecoration(
-                  image: DecorationImage(image: FileImage(mediaModel.imageFile), fit: BoxFit.cover)),
+                  image: DecorationImage(image: FileImage(mediaModel.mediaFile), fit: BoxFit.cover)),
               margin: EdgeInsets.all(2),
               child: Align(
                 child: Icon(

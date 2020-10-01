@@ -1,5 +1,5 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:vlc/model/album.dart';
+import '../model/album.dart';
 import '../core/repository.dart';
 
 class GalleryRepo extends ListRepo<AlbumModel> {
