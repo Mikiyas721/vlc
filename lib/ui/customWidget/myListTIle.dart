@@ -25,7 +25,7 @@ class MyListTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: isSelected != null ? TextStyle(fontWeight: FontWeight.bold, fontSize: 16) : null,
+        style: isSelected != null ? TextStyle(fontWeight: FontWeight.bold, fontSize: 15) : null,
       ),
       subtitle: subTitle != null ? Text(subTitle) : null,
       onTap: onTap,

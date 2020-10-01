@@ -5,7 +5,7 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
+      drawer: MyDrawer(isHistorySelected: true),
       appBar: AppBar(
         title: Text('History'),
       ),

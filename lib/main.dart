@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/ui/pages/galleryPage.dart';
+import 'package:vlc/ui/pages/gallery/galleryPage.dart';
 import 'injector.dart';
 import './ui/pages/aboutPage.dart';
 import './ui/pages/directoriesPage.dart';
@@ -8,8 +8,8 @@ import './ui/pages/localNetworkPage.dart';
 import './ui/pages/playlistsPage.dart';
 import './ui/pages/settingsPage.dart';
 import './ui/pages/streamPage.dart';
-import './ui/pages/albumPage.dart';
-import './ui/pages/audioPage.dart';
+import 'ui/pages/gallery/galleryAlbumPage.dart';
+import 'ui/pages/audio/audioPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

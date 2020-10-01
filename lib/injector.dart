@@ -11,5 +11,9 @@ void inject() async {
   GetIt.instance.registerSingleton<SharedPreferences>(preference);
 
   GetIt.instance.registerLazySingleton<GalleryRepo>(() => GalleryRepo(BehaviorSubject<List<AlbumModel>>()));
-  GetIt.instance.registerLazySingleton<AudioRepo>(() => AudioRepo(BehaviorSubject<MediaModel>()));
+  GetIt.instance.registerLazySingleton<VideoRepo>(() => VideoRepo(BehaviorSubject<List<AlbumModel>>()));
+  GetIt.instance.registerLazySingleton<ImageRepo>(() => ImageRepo(BehaviorSubject<List<AlbumModel>>()));
+  GetIt.instance.registerLazySingleton<RemoteAudioRepo>(() => RemoteAudioRepo(BehaviorSubject<MediaModel>()));
+  GetIt.instance
+      .registerLazySingleton<DeviceAudioRepo>(() => DeviceAudioRepo(BehaviorSubject<List<AlbumModel>>()));
 }

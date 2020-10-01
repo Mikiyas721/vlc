@@ -1,8 +1,15 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:vlc/model/album.dart';
 import '../core/repository.dart';
-import '../model/media.dart';
 
 class GalleryRepo extends ListRepo<AlbumModel> {
   GalleryRepo(BehaviorSubject<List<AlbumModel>> subject) : super(subject);
+}
+
+class VideoRepo extends ListRepo<AlbumModel> {
+  VideoRepo(BehaviorSubject<List<AlbumModel>> subject) : super(subject);
+}
+
+class ImageRepo extends ListRepo<AlbumModel> {
+  ImageRepo(BehaviorSubject<List<AlbumModel>> subject) : super(subject);
 }

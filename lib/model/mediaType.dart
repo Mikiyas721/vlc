@@ -1,6 +1,6 @@
 import 'package:photo_manager/photo_manager.dart';
 
-enum MediaType { AUDIO, IMAGE, VIDEO }
+enum MediaType { AUDIO, IMAGE, VIDEO, COMMON }
 
 mapMediaType(AssetType assetType) {
   if (assetType == AssetType.audio) return MediaType.AUDIO;

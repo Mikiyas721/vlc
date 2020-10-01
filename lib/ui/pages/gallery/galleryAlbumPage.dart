@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:vlc/model/mediaType.dart';
 import 'package:vlc/ui/customWidget/myImageView.dart';
-import '../customWidget/myImageView.dart';
-import '../../model/media.dart';
+import '../../customWidget/myImageView.dart';
+import '../../../model/media.dart';
 
-class AlbumPage extends StatelessWidget {
+class GalleryAlbumPage extends StatelessWidget {
   final List<MediaModel> mediaModels;
   final String title;
 
-  AlbumPage({this.title, this.mediaModels});
+  GalleryAlbumPage({this.title, this.mediaModels});
 
   @override
   Widget build(BuildContext context) {

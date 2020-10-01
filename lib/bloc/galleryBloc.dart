@@ -6,13 +6,8 @@ import 'package:vlc/model/album.dart';
 import 'package:vlc/model/media.dart';
 import 'package:vlc/model/mediaType.dart';
 
-class ImageBloc extends Disposable {
-  GalleryRepo _galleryRepo = GetIt.instance.get();
-
-  get galleryStream => _galleryRepo.getStream<List<AlbumModel>>((value) => value);
-
-  void loadImage() async {
-    List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(type: RequestType.common);
+abstract class MediaBloc extends Disposable {
+  Future<List<AlbumModel>> getAlbumModels(List<AssetPathEntity> albums) async {
     List<AlbumModel> albumModels = List();
     for (AssetPathEntity album in albums) {
       List<AssetEntity> assets = await album.assetList;
@@ -35,7 +30,7 @@ class ImageBloc extends Disposable {
         firstAlbumFile: await assets[0].file,
       ));
     }
-    _galleryRepo.updateStream(albumModels);
+    return albumModels;
   }
 
   String getAlbumName(String name) {
@@ -45,6 +40,34 @@ class ImageBloc extends Disposable {
       return 'Camera Shots';
     else
       return name;
+  }
+}
+
+class ImageBloc extends MediaBloc {
+  GalleryRepo _galleryRepo = GetIt.instance.get();
+  ImageRepo _imageRepo = GetIt.instance.get();
+  VideoRepo _videoRepo = GetIt.instance.get();
+
+  get galleryStream => _galleryRepo.getStream<List<AlbumModel>>((value) => value);
+
+  get imageStream => _imageRepo.getStream<List<AlbumModel>>((value) => value);
+
+  get videoStream => _videoRepo.getStream<List<AlbumModel>>((value) => value);
+
+  void loadMedia(MediaType loadType) async {
+    List<AssetPathEntity> albums;
+    if (loadType == MediaType.COMMON)
+      albums = await PhotoManager.getAssetPathList(type: RequestType.common);
+    else if (loadType == MediaType.IMAGE)
+      albums = await PhotoManager.getAssetPathList(type: RequestType.image);
+    else if (loadType == MediaType.VIDEO)
+      albums = await PhotoManager.getAssetPathList(type: RequestType.image);
+
+    if (loadType == MediaType.COMMON)
+      _galleryRepo.updateStream(await getAlbumModels(albums));
+    else if (loadType == MediaType.IMAGE)
+      _imageRepo.updateStream(await getAlbumModels(albums));
+    else if (loadType == MediaType.VIDEO) _videoRepo.updateStream(await getAlbumModels(albums));
   }
 
   @override
