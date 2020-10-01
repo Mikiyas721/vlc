@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class MyImageView extends StatelessWidget {
-  final String imagePath;
+  final File imageFile;
   final int width;
   final int height;
 
-  MyImageView({@required this.imagePath, this.width, this.height});
+  MyImageView({@required this.imageFile, this.width, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class MyImageView extends StatelessWidget {
           child: Container(
             width: double.parse(width.toString()),
             height: double.parse(height.toString()),
-            decoration: BoxDecoration(image: DecorationImage(image: AssetImage(imagePath), fit: BoxFit.fill)),
+            decoration: BoxDecoration(image: DecorationImage(image: FileImage(imageFile), fit: BoxFit.fill)),
           ),
         ));
   }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:vlc/ui/pages/galleryPage.dart';
 import 'injector.dart';
 import './ui/pages/aboutPage.dart';
 import './ui/pages/directoriesPage.dart';
 import './ui/pages/historyPage.dart';
-import 'ui/pages/imagePage.dart';
 import './ui/pages/localNetworkPage.dart';
 import './ui/pages/playlistsPage.dart';
 import './ui/pages/settingsPage.dart';
 import './ui/pages/streamPage.dart';
-import './ui/pages/videoPage.dart';
+import './ui/pages/albumPage.dart';
 import './ui/pages/audioPage.dart';
 
 void main() async {
@@ -32,14 +32,13 @@ class MyApp extends StatelessWidget {
 
   final routes = {
     '/aboutPage': (BuildContext context) => AboutPage(),
-    '/': (BuildContext context) => AudioPage(),
+    '/audioPage': (BuildContext context) => AudioPage(),
     '/directoriesPage': (BuildContext context) => DirectoriesPage(),
     '/historyPage': (BuildContext context) => HistoryPage(),
-    '/imagePage': (BuildContext context) => ImagePage(),
+    '/': (BuildContext context) => GalleryPage(),
     '/localNetworkPage': (BuildContext context) => LocalNetworkPage(),
     '/playlistsPage': (BuildContext context) => PlayListsPage(),
     '/settingsPage': (BuildContext context) => SettingsPage(),
     '/streamPage': (BuildContext context) => StreamPage(),
-    '/videoPage': (BuildContext context) => VideoPage()
   };
 }

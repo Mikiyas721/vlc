@@ -9,21 +9,15 @@ class MyDrawer extends StatelessWidget {
         children: <Widget>[
           MyListTile(
               leadingIcon: Icons.image,
-              title: 'Image',
+              title: 'Gallery',
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/imagePage');
+                Navigator.pushReplacementNamed(context, '/');
               }),
           MyListTile(
               leadingIcon: Icons.audiotrack,
               title: 'Audio',
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/');
-              }),
-          MyListTile(
-              leadingIcon: Icons.videocam,
-              title: 'Video',
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/videoPage');
+                Navigator.pushReplacementNamed(context, '/audioPage');
               }),
           MyListTile(
               leadingIcon: Icons.list,

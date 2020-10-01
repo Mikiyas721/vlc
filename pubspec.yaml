@@ -26,7 +26,7 @@ dependencies:
   shared_preferences: ^0.5.7+2
   rxdart: ^0.24.1
   equatable: ^1.2.3
-  flutter_multimedia_picker: ^1.0.3
+  photo_manager: ^0.5.8
   file_picker: ^2.0.2
 
   cupertino_icons: ^0.1.2

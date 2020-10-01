@@ -7,10 +7,10 @@ class AudioBloc extends Disposable {
   AudioRepo _audioRepo = GetIt.instance.get();
 
   onAudioUrlEntered(String newValue) {
-    _audioRepo.updateStream(MediaModel(mediaPath: newValue));
+    _audioRepo.updateStream(MediaModel());
   }
 
-  String get currentUrl => _audioRepo.subjectValue.mediaPath;
+  String get currentUrl => _audioRepo.subjectValue.path;
 
   @override
   void dispose() {}
