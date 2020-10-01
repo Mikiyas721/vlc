@@ -7,7 +7,7 @@ class AudioPage extends StatelessWidget {
     return DefaultTabController(
         length: 4,
         child: Scaffold(
-          drawer: MyDrawer(),
+          drawer: MyDrawer(isAudioSelected: true),
           appBar: AppBar(
             title: Text('Audio'),
             bottom: TabBar(

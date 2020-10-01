@@ -5,7 +5,7 @@ class LocalNetworkPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
+      drawer: MyDrawer(isLocalNetworkSelected: true),
       appBar: AppBar(
         title: Text('Local Network'),
       ),

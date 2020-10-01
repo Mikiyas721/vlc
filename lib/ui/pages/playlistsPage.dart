@@ -5,7 +5,7 @@ class PlayListsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
+      drawer: MyDrawer(isPlaylistSelected: true),
       appBar: AppBar(
         title: Text('Playlists'),
         actions: <Widget>[IconButton(icon: Icon(Icons.add), onPressed: () {})],

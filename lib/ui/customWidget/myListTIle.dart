@@ -6,20 +6,27 @@ class MyListTile extends StatelessWidget {
   final String subTitle;
   final void Function() onTrailingTap;
   final void Function() onTap;
+  final bool isSelected;
 
   MyListTile(
       {@required this.leadingIcon,
       @required this.title,
       @required this.onTap,
       this.subTitle,
-      this.onTrailingTap});
+      this.onTrailingTap,
+      this.isSelected});
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return ListTile(
-      leading: Icon(leadingIcon),
-      title: Text(title),
+      leading: Icon(
+        leadingIcon,
+      ),
+      title: Text(
+        title,
+        style: isSelected != null ? TextStyle(fontWeight: FontWeight.bold, fontSize: 16) : null,
+      ),
       subtitle: subTitle != null ? Text(subTitle) : null,
       onTap: onTap,
       trailing: onTrailingTap != null

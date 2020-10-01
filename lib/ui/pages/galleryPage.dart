@@ -22,7 +22,7 @@ class GalleryPage extends StatelessWidget {
       builder: (BuildContext context, ImageBloc bloc) {
         bloc.loadImage();
         return Scaffold(
-          drawer: MyDrawer(),
+          drawer: MyDrawer(isGallerySelected: true),
           appBar: AppBar(
             title: Text('Albums'),
             actions: <Widget>[

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vlc/model/mediaType.dart';
-import 'package:vlc/ui/customWidget/myDrawer.dart';
 import 'package:vlc/ui/customWidget/myImageView.dart';
 import '../customWidget/myImageView.dart';
 import '../../model/media.dart';
-import '../customWidget/myDrawer.dart';
 
 class AlbumPage extends StatelessWidget {
   final List<MediaModel> mediaModels;

@@ -13,7 +13,7 @@ class StreamPage extends StatelessWidget {
       blocFactory: () => AudioBloc(),
       builder: (BuildContext context, AudioBloc bloc) {
         return Scaffold(
-          drawer: MyDrawer(),
+          drawer: MyDrawer(isStreamSelected: true),
           appBar: AppBar(
             title: Text('Stream'),
           ),
