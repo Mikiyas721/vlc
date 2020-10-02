@@ -3,7 +3,6 @@ import '../../../ui/customWidget/audioControlls.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../customWidget/myDrawer.dart';
-import 'audioAlbumPage.dart';
 
 class StreamPage extends StatelessWidget {
   @override
@@ -35,7 +34,7 @@ class StreamPage extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(10),
               )),
-          bottomSheet: AudioControls(audioPlayer: audioPlayer,),
+          bottomSheet: AudioControls(),
         );
       },
     );

@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../../model/url.dart';
@@ -30,7 +31,6 @@ class AudioAlbumPage extends StatelessWidget {
                 stream: bloc.playingStream,
                 builder: (BuildContext context, AsyncSnapshot<UrlModel> snapShot) {
                   return AudioControls(
-                    audioPlayer: audioPlayer,
                     url: snapShot.data == null ? albumAudio[0].mediaFile.path : snapShot.data.url,
                   );
                 }),
@@ -45,13 +45,9 @@ class AudioAlbumPage extends StatelessWidget {
           leadingIcon: Icons.audiotrack,
           title: audio.getName(),
           onTap: () {
-            audioPlayer.stop();
-            audioPlayer.play(audio.mediaFile.path);
-            bloc.url = audio.mediaFile.path;
+            bloc.onAudioTap(audio.mediaFile.path);
           }));
     }
     return elements;
   }
 }
-
-final AudioPlayer audioPlayer = AudioPlayer(); //TODO ?

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 import 'package:vlc/model/mediaType.dart';
 import 'package:vlc/ui/customWidget/myImageView.dart';
+import 'package:vlc/ui/customWidget/myVideoPlayer.dart';
 import '../../customWidget/myImageView.dart';
 import '../../../model/media.dart';
 
@@ -55,7 +56,11 @@ class GalleryAlbumPage extends StatelessWidget {
                 );
               }));
             } else {
-              Toast.show('Video Playing', context);
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                return MyVideoPlayer(
+                 videoUrl: mediaModel.mediaFile.path
+                );
+              }));
             }
           },
         ));

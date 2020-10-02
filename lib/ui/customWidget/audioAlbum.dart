@@ -24,8 +24,9 @@ class AudioAlbum extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: IconButton(
                   icon: Icon(
-                    Icons.play_circle_filled,
+                    Icons.play_arrow,
                     size: 35,
+                    color: Colors.blue,
                   ),
                   onPressed: onPlayPressed,
                 ),

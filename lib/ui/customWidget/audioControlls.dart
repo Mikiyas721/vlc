@@ -1,12 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:toast/toast.dart';
 
 class AudioControls extends StatefulWidget {
-  final AudioPlayer audioPlayer;
+  final AudioPlayer audioPlayer = GetIt.instance.get();
   final String url;
 
-  AudioControls({@required this.audioPlayer, @required this.url});
+  AudioControls({@required this.url});
 
   @override
   _AudioControlsState createState() => _AudioControlsState();
