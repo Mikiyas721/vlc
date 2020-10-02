@@ -1,10 +1,7 @@
-import 'dart:math';
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/bloc/galleryBloc.dart';
+import 'package:vlc/model/url.dart';
+import 'package:vlc/ui/customWidget/audioControlls.dart';
 import '../../../ui/pages/audio/audioAlbumPage.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
@@ -24,7 +21,17 @@ class AudioPage extends StatelessWidget {
             builder: (BuildContext context, AsyncSnapshot snapShot) {
               return Scaffold(
                 drawer: MyDrawer(isAudioSelected: true),
-                appBar: AppBar(title: Text('Audio')),
+                appBar: AppBar(
+                  title: Text('Audio'),
+                  actions: <Widget>[
+                    IconButton(
+                        icon: Icon(Icons.shuffle),
+                        onPressed: () {
+                          if (!bloc.onShuffleClicked(snapShot.data))
+                            Toast.show('No Audio file found', context);
+                        })
+                  ],
+                ),
                 body: snapShot.data == null
                     ? Center(child: CircularProgressIndicator())
                     : Align(
@@ -34,12 +41,14 @@ class AudioPage extends StatelessWidget {
                           children: getGridElements(context, snapShot.data, bloc),
                         ),
                       ),
-                floatingActionButton: FloatingActionButton(
-                  child: Icon(Icons.shuffle),
-                  onPressed: () {
-                    if (!bloc.onShuffleClicked(snapShot.data)) Toast.show('No Audio file found', context);
-                  },
-                ),
+                bottomSheet: StreamBuilder(
+                    stream: bloc.playingStream,
+                    builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
+                      return AudioControls(
+                        isPlaying: snapShot.data == null ? false : snapShot.data.isPlaying,
+                        value: 0,
+                      );
+                    }),
               );
             });
       },

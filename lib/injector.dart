@@ -19,5 +19,5 @@ void inject() async {
   GetIt.instance.registerLazySingleton<RemoteAudioRepo>(() => RemoteAudioRepo(BehaviorSubject<MediaModel>()));
   GetIt.instance
       .registerLazySingleton<DeviceAudioRepo>(() => DeviceAudioRepo(BehaviorSubject<List<AlbumModel>>()));
-  GetIt.instance.registerLazySingleton<PlayingRepo>(() => PlayingRepo(BehaviorSubject<UrlModel>()));
+  GetIt.instance.registerLazySingleton<CurrentAudioRepo>(() => CurrentAudioRepo(BehaviorSubject<CurrentAudioModel>()));
 }

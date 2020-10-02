@@ -1,9 +1,10 @@
 import '../core/jsonModel.dart';
 
-class UrlModel extends JSONModel {
+class CurrentAudioModel extends JSONModel {
+  final bool isPlaying;
   final String url;
 
-  UrlModel({this.url}) : super(url);
+  CurrentAudioModel({this.url, this.isPlaying}) : super(url);
 
   @override
   Map<String, dynamic> toMap() {

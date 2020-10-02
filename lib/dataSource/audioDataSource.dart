@@ -12,6 +12,6 @@ class DeviceAudioRepo extends ListRepo<AlbumModel> {
   DeviceAudioRepo(BehaviorSubject<List<AlbumModel>> subject) : super(subject);
 }
 
-class PlayingRepo extends ItemRepo<UrlModel> {
-  PlayingRepo(BehaviorSubject<UrlModel> subject) : super(subject);
+class CurrentAudioRepo extends ItemRepo<CurrentAudioModel> {
+  CurrentAudioRepo(BehaviorSubject<CurrentAudioModel> subject) : super(subject);
 }

@@ -29,10 +29,8 @@ class AudioAlbumPage extends StatelessWidget {
             ),
             bottomSheet: StreamBuilder(
                 stream: bloc.playingStream,
-                builder: (BuildContext context, AsyncSnapshot<UrlModel> snapShot) {
-                  return AudioControls(
-                    url: snapShot.data == null ? albumAudio[0].mediaFile.path : snapShot.data.url,
-                  );
+                builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
+                  return AudioControls();
                 }),
           );
         });
