@@ -20,15 +20,15 @@ abstract class MediaBloc extends Disposable {
             height: asset.height,
             size: asset.size,
             id: asset.id,
-            mediaType: mapMediaType(asset.type)));
+            mediaType: mapMediaType(asset.type),
+            thumbNail: await asset.thumbDataWithSize(200, 200)));
       }
       albumModels.add(AlbumModel(
-        id: album.id,
-        name: getAlbumName(album.name),
-        assetCount: album.assetCount,
-        mediaList: albumMedia,
-        firstAlbumFile: await assets[0].file,
-      ));
+          id: album.id,
+          name: getAlbumName(album.name),
+          assetCount: album.assetCount,
+          mediaList: albumMedia,
+          thumbNail: await assets[0].thumbDataWithSize(200, 200)));
     }
     return albumModels;
   }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import '../model/mediaType.dart';
 import '../core/jsonModel.dart';
@@ -12,6 +13,7 @@ class MediaModel extends JSONModel {
   final int duration;
   final Size size;
   final MediaType mediaType;
+  final Uint8List thumbNail;
 
   MediaModel(
       {@required this.id,
@@ -21,7 +23,8 @@ class MediaModel extends JSONModel {
       @required this.size,
       @required this.duration,
       @required this.mediaFile,
-      @required this.mediaType})
+      @required this.mediaType,
+      @required this.thumbNail})
       : super(id);
 
   String getName() {

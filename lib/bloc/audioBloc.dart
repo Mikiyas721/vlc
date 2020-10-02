@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../bloc/galleryBloc.dart';

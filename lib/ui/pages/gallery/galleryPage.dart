@@ -31,8 +31,8 @@ class GalleryPage extends StatelessWidget {
                     onPressed: () async {
                       await bloc.loadMedia(MediaType.COMMON);
                       await bloc.loadMedia(MediaType.IMAGE);
-                      await bloc.loadMedia(
-                          MediaType.VIDEO); // TODO Check if its is possible to know the active tab
+                      await bloc
+                          .loadMedia(MediaType.VIDEO); // TODO Check if its is possible to know the active tab
                     },
                   )
                 ],
@@ -81,7 +81,7 @@ List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels) {
       child: Container(
         margin: EdgeInsets.only(bottom: 3),
         decoration:
-            BoxDecoration(image: DecorationImage(image: FileImage(album.firstAlbumFile), fit: BoxFit.cover)),
+            BoxDecoration(image: DecorationImage(image: MemoryImage(album.thumbNail), fit: BoxFit.cover)),
         child: Stack(
           children: <Widget>[
             Padding(

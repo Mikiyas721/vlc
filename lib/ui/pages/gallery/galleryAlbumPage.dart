@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import 'package:vlc/model/mediaType.dart';
 import 'package:vlc/ui/customWidget/myImageView.dart';
 import '../../customWidget/myImageView.dart';
@@ -29,23 +30,23 @@ class GalleryAlbumPage extends StatelessWidget {
     if (mediaModels != null) {
       double width = MediaQuery.of(context).size.width;
       mediaModels.forEach((mediaModel) {
-        if (mediaModel.mediaType == MediaType.IMAGE) {
-          mediaWidgets.add(GestureDetector(
-            child: Container(
-              width: width * 0.33,
-              height: width * 0.33,
-              decoration: BoxDecoration(
-                  image: DecorationImage(image: FileImage(mediaModel.mediaFile), fit: BoxFit.cover)),
-              margin: EdgeInsets.all(2),
-              child: Align(
-                child: Icon(
-                  Icons.image,
-                  color: Colors.white,
-                ),
-                alignment: Alignment.bottomRight,
+        mediaWidgets.add(GestureDetector(
+          child: Container(
+            width: width * 0.33,
+            height: width * 0.33,
+            decoration: BoxDecoration(
+                image: DecorationImage(image: MemoryImage(mediaModel.thumbNail), fit: BoxFit.cover)),
+            margin: EdgeInsets.all(2),
+            child: Align(
+              child: Icon(
+                mediaModel.mediaType == MediaType.IMAGE ? Icons.image : Icons.videocam,
+                color: Colors.white,
               ),
+              alignment: Alignment.bottomRight,
             ),
-            onTap: () {
+          ),
+          onTap: () {
+            if (mediaModel.mediaType == MediaType.IMAGE) {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                 return MyImageView(
                   width: mediaModel.width,
@@ -53,27 +54,11 @@ class GalleryAlbumPage extends StatelessWidget {
                   imageFile: mediaModel.mediaFile,
                 );
               }));
-            },
-          ));
-        } else {
-          mediaWidgets.add(GestureDetector(
-            child: Container(
-              width: width * 0.33,
-              height: width * 0.33,
-              decoration: BoxDecoration(
-                  image: DecorationImage(image: FileImage(mediaModel.mediaFile), fit: BoxFit.cover)),
-              margin: EdgeInsets.all(2),
-              child: Align(
-                child: Icon(
-                  Icons.videocam,
-                  color: Colors.white,
-                ),
-                alignment: Alignment.bottomRight,
-              ),
-            ),
-            onTap: () {},
-          ));
-        }
+            } else {
+              Toast.show('Video Playing', context);
+            }
+          },
+        ));
       });
     }
     return mediaWidgets;
