@@ -18,13 +18,21 @@ class AudioBloc extends MediaBloc {
   Stream<List<AlbumModel>> get deviceAudioStream =>
       _deviceAudioRepo.getStream<List<AlbumModel>>((value) => value);
 
+  Stream<CurrentAudioModel> get onlineStream =>
+      _remoteAudioRepo.getStream<CurrentAudioModel>((value) => value);
+
   Stream<CurrentAudioModel> get playingStream =>
       _currentAudioRepo.getStream<CurrentAudioModel>((value) => value);
 
   set currentAudio(CurrentAudioModel currentAudioModel) => _currentAudioRepo.updateStream(currentAudioModel);
 
   void onAudioUrlEntered(String newValue) {
-    _remoteAudioRepo.updateStream(MediaModel());
+    _remoteAudioRepo
+        .updateStream(CurrentAudioModel(path: newValue, isPlaying: false, name: getName(newValue)));
+  }
+
+  void onSendUrl() {
+
   }
 
   bool onShuffleClicked(List<AlbumModel> audioModels) {
@@ -39,7 +47,7 @@ class AudioBloc extends MediaBloc {
       positionChangeListen(mediaModel);
       onCurrentAudioDone(getRandomTrackFromAlbums(audioModels));
       this.currentAudio =
-          CurrentAudioModel(path: mediaModel.path, isPlaying: true, name: mediaModel.getName());
+          CurrentAudioModel(path: mediaModel.mediaFile.path, isPlaying: true, name: mediaModel.getName());
       return true;
     }
     return false;
@@ -56,7 +64,8 @@ class AudioBloc extends MediaBloc {
     _audioPlayer.play(mediaModel.mediaFile.path);
     positionChangeListen(mediaModel);
     onCurrentAudioDone(album.mediaList[album.mediaList.length - 1]);
-    this.currentAudio = CurrentAudioModel(path: mediaModel.path, isPlaying: true, name: mediaModel.getName());
+    this.currentAudio =
+        CurrentAudioModel(path: mediaModel.mediaFile.path, isPlaying: true, name: mediaModel.getName());
   }
 
   void onAudioTap(MediaModel mediaModel, List<MediaModel> albumAudio) {
@@ -68,7 +77,8 @@ class AudioBloc extends MediaBloc {
     _audioPlayer.play(mediaModel.mediaFile.path);
     positionChangeListen(mediaModel);
     onCurrentAudioDone(mediaModel);
-    this.currentAudio = CurrentAudioModel(path: mediaModel.path, isPlaying: true, name: mediaModel.getName());
+    this.currentAudio =
+        CurrentAudioModel(path: mediaModel.mediaFile.path, isPlaying: true, name: mediaModel.getName());
   }
 
   void loadDeviceAudio() async {
@@ -84,7 +94,7 @@ class AudioBloc extends MediaBloc {
   Future<void> positionChangeListen(MediaModel mediaModel) async {
     _audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
       _currentAudioRepo.updateStream(CurrentAudioModel(
-          path: mediaModel.path,
+          path: mediaModel.mediaFile.path,
           isPlaying: true,
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
           audioDuration: await _audioPlayer.getDuration(),
@@ -95,9 +105,9 @@ class AudioBloc extends MediaBloc {
   Future<void> onCurrentAudioDone(MediaModel mediaModel) async {
     // TODO accept a list instead
     _audioPlayer.onPlayerCompletion.listen((data) async {
-      _audioPlayer.play(mediaModel.path);
+      _audioPlayer.play(mediaModel.mediaFile.path);
       _currentAudioRepo.updateStream(CurrentAudioModel(
-          path: mediaModel.path,
+          path: mediaModel.mediaFile.path,
           isPlaying: true,
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
           audioDuration: await _audioPlayer.getDuration(),
@@ -105,7 +115,10 @@ class AudioBloc extends MediaBloc {
     });
   }
 
-  String get currentUrl => _remoteAudioRepo.subjectValue.path;
+  static String getName(String path) {
+    List<String> split = path.split('/');
+    return split.elementAt(split.length - 1);
+  }
 
   @override
   void dispose() {}

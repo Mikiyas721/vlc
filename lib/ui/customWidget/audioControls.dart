@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/core/mixins/dateTime.dart';
+import '../../core/mixins/dateTime.dart';
 import '../../bloc/audioBloc.dart';
 import '../../bloc/provider/provider.dart';
 import '../../model/currentAudio.dart';
@@ -12,14 +12,14 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
   final bool isPlaying;
   final int currentAudioPosition;
   final int audioTotalDuration;
-  final String url;
+  final String path;
   final String audioName;
 
   AudioControls(
       {@required this.isPlaying,
       @required this.currentAudioPosition,
       @required this.audioTotalDuration,
-      @required this.url,
+      @required this.path,
       @required this.audioName});
 
   @override
@@ -61,18 +61,20 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                         icon: Icon(Icons.pause),
                         onPressed: () async {
                           bloc.currentAudio = CurrentAudioModel(
-                              path: url,
+                              path: path,
                               isPlaying: false,
                               currentAudioPosition: await _audioPlayer.getCurrentPosition(),
-                              audioDuration: await _audioPlayer.getDuration());
+                              audioDuration: await _audioPlayer.getDuration(),
+                              name: audioName);
                           _audioPlayer.pause();
                         },
                       )
                     : IconButton(
                         icon: Icon(Icons.play_arrow),
                         onPressed: () {
-                          if (url != null) {
-                            bloc.currentAudio = CurrentAudioModel(path: url, isPlaying: true);
+                          if (path != null) {
+                            bloc.currentAudio =
+                                CurrentAudioModel(path: path, isPlaying: true, name: audioName);
                             _audioPlayer.resume();
                           } else
                             Toast.show('No Audio file to play', context);
@@ -83,7 +85,7 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                   child: IconButton(
                       icon: Icon(Icons.stop),
                       onPressed: () {
-                        bloc.currentAudio = CurrentAudioModel(path: url, isPlaying: false);
+                        bloc.currentAudio = CurrentAudioModel(path: path, isPlaying: false, name: audioName);
                         _audioPlayer.stop();
                       }),
                 ),

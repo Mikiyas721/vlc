@@ -9,13 +9,13 @@ class CurrentAudioModel extends JSONModel {
   final int currentAudioPosition;
   final int audioDuration;
 
-  CurrentAudioModel({
-    @required this.path,
-    @required this.isPlaying,
-    @required this.name,
-    this.currentAudioPosition = 0,
-    this.audioDuration = 1,
-  }) : super(path);
+  CurrentAudioModel(
+      {@required this.path,
+      @required this.isPlaying,
+      @required this.name,
+      this.currentAudioPosition = 0,
+      this.audioDuration = 1})
+      : super(path);
 
   @override
   Map<String, dynamic> toMap() {

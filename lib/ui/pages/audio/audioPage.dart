@@ -49,14 +49,14 @@ class AudioPage extends StatelessWidget {
                               isPlaying: false,
                               currentAudioPosition: 0,
                               audioTotalDuration: 1,
-                              url: null,
+                              path: null,
                               audioName: '',
                             )
                           : AudioControls(
                               isPlaying: snapShot.data.isPlaying,
                               currentAudioPosition: snapShot.data.currentAudioPosition,
                               audioTotalDuration: snapShot.data.audioDuration,
-                              url: snapShot.data.path,
+                              path: snapShot.data.path,
                               audioName: snapShot.data.name,
                             );
                     }),

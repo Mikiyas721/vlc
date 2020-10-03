@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vlc/model/currentAudio.dart';
 import '../../../ui/customWidget/audioControls.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
@@ -22,7 +23,7 @@ class StreamPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.9,
+                        width: MediaQuery.of(context).size.width * 0.8,
                         child: TextField(
                           keyboardType: TextInputType.url,
                           decoration: InputDecoration(labelText: 'Enter a network address with audio file.'),
@@ -30,16 +31,37 @@ class StreamPage extends StatelessWidget {
                             bloc.onAudioUrlEntered(newValue);
                           },
                         )),
+                    IconButton(
+                        icon: Icon(
+                          Icons.send,
+                          size: 35,
+                          color: Colors.blue,
+                        ),
+                        onPressed: bloc.onSendUrl)
                   ],
                 ),
                 padding: EdgeInsets.all(10),
               )),
-          bottomSheet: AudioControls(
-            url: '',
-            currentAudioPosition: 0,
-            audioTotalDuration: 1,
-            isPlaying: false,
-          ),
+          bottomSheet:
+              StreamBuilder(
+                stream: bloc.onlineStream,
+                  builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
+            return snapShot.data == null
+                ? AudioControls(
+                    path: '',
+                    audioName: '',
+                    currentAudioPosition: 0,
+                    audioTotalDuration: 1,
+                    isPlaying: false,
+                  )
+                : AudioControls(
+                    path: snapShot.data.path,
+                    audioName: snapShot.data.name,
+                    currentAudioPosition: snapShot.data.currentAudioPosition,
+                    audioTotalDuration: snapShot.data.audioDuration,
+                    isPlaying: snapShot.data.isPlaying,
+                  );
+          }),
         );
       },
     );
