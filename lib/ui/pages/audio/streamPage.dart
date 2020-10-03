@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../ui/customWidget/audioControlls.dart';
+import '../../../ui/customWidget/audioControls.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../customWidget/myDrawer.dart';
@@ -34,7 +34,11 @@ class StreamPage extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(10),
               )),
-          bottomSheet: AudioControls(),
+          bottomSheet: AudioControls(
+            url: '',
+            value: 0,
+            isPlaying: false,
+          ),
         );
       },
     );

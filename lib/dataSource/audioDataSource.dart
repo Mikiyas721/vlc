@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import '../model/album.dart';
-import '../model/url.dart';
+import '../model/currentAudio.dart';
 import '../core/repository.dart';
 import '../model/media.dart';
 

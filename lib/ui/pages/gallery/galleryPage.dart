@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:vlc/bloc/galleryBloc.dart';
-import 'package:vlc/bloc/provider/provider.dart';
-import 'package:vlc/model/album.dart';
-import 'package:vlc/model/mediaType.dart';
-import 'package:vlc/ui/customWidget/myDrawer.dart';
-import 'package:vlc/ui/pages/gallery/galleryAlbumPage.dart';
 import '../../../bloc/galleryBloc.dart';
 import '../../../bloc/provider/provider.dart';
+import '../../../model/album.dart';
+import '../../../model/mediaType.dart';
+import '../../../ui/customWidget/myDrawer.dart';
+import '../../../ui/pages/gallery/galleryAlbumPage.dart';
 import '../../customWidget/myDrawer.dart';
 
 class GalleryPage extends StatelessWidget {
@@ -88,9 +86,14 @@ List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels) {
               padding: EdgeInsets.all(8),
               child: Align(
                 alignment: Alignment.bottomLeft,
-                child: Text(
-                  album.name,
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.black38),
+                  child: Text(
+                    album.name,
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -98,10 +101,14 @@ List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels) {
               padding: EdgeInsets.all(8),
               child: Align(
                 alignment: Alignment.bottomRight,
-                child: Text(
-                  '(${album.assetCount})',
-                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16, color: Colors.white),
-                ),
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.black38),
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      '(${album.assetCount})',
+                      style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16, color: Colors.white),
+                    )),
               ),
             )
           ],

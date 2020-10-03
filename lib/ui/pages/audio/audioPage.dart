@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/model/url.dart';
-import 'package:vlc/ui/customWidget/audioControlls.dart';
+import '../../../model/currentAudio.dart';
+import '../../../ui/customWidget/audioControls.dart';
 import '../../../ui/pages/audio/audioAlbumPage.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
@@ -46,7 +46,7 @@ class AudioPage extends StatelessWidget {
                     builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
                       return AudioControls(
                         isPlaying: snapShot.data == null ? false : snapShot.data.isPlaying,
-                        value: 0,
+                        value: 0, url: snapShot.data?.url,
                       );
                     }),
               );

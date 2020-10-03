@@ -6,7 +6,7 @@ import './model/media.dart';
 import './dataSource/galleryDataSource.dart';
 import 'dataSource/audioDataSource.dart';
 import 'model/album.dart';
-import 'model/url.dart';
+import 'model/currentAudio.dart';
 
 void inject() async {
   final preference = await SharedPreferences.getInstance();

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
-import 'package:vlc/model/mediaType.dart';
-import 'package:vlc/ui/customWidget/myImageView.dart';
-import 'package:vlc/ui/customWidget/myVideoPlayer.dart';
+import '../../../model/mediaType.dart';
 import '../../customWidget/myImageView.dart';
+import '../../customWidget/myVideoPlayer.dart';
 import '../../../model/media.dart';
 
 class GalleryAlbumPage extends StatelessWidget {
@@ -36,7 +34,11 @@ class GalleryAlbumPage extends StatelessWidget {
             width: width * 0.33,
             height: width * 0.33,
             decoration: BoxDecoration(
-                image: DecorationImage(image: MemoryImage(mediaModel.thumbNail), fit: BoxFit.cover)),
+                image: DecorationImage(
+                    image: mediaModel.thumbNail != null
+                        ? MemoryImage(mediaModel.thumbNail)
+                        : FileImage(mediaModel.mediaFile),
+                    fit: BoxFit.cover)),
             margin: EdgeInsets.all(2),
             child: Align(
               child: Icon(
@@ -57,9 +59,7 @@ class GalleryAlbumPage extends StatelessWidget {
               }));
             } else {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                return MyVideoPlayer(
-                 videoUrl: mediaModel.mediaFile.path
-                );
+                return MyVideoPlayer(videoUrl: mediaModel.mediaFile.path);
               }));
             }
           },
