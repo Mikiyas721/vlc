@@ -35,13 +35,17 @@ class AudioAlbum extends StatelessWidget {
             Row(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(left: 5),
+                  padding: EdgeInsets.only(right: 5),
+                ),
+                Expanded(
                   child: Text(
                     albumName,
                     style: TextStyle(color: Colors.white),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
                   ),
                 ),
-                Spacer(),
                 IconButton(
                     icon: Icon(
                       Icons.add,

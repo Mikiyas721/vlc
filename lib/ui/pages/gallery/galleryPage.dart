@@ -85,7 +85,7 @@ List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels) {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(8),
-              child: MyTextDisplay(text: '(${album.name})', alignment: Alignment.bottomLeft),
+              child: MyTextDisplay(text: '${album.name}', alignment: Alignment.bottomLeft),
             ),
             Padding(
               padding: EdgeInsets.all(8),

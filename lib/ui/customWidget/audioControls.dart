@@ -13,12 +13,14 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
   final int currentAudioPosition;
   final int audioTotalDuration;
   final String url;
+  final String audioName;
 
   AudioControls(
       {@required this.isPlaying,
       @required this.currentAudioPosition,
       @required this.audioTotalDuration,
-      @required this.url});
+      @required this.url,
+      @required this.audioName});
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,14 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
+                Padding(padding: EdgeInsets.only(right: 5)),
+                Expanded(
+                    child: Text(
+                  audioName,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  softWrap: false,
+                )),
                 isPlaying
                     ? IconButton(
                         icon: Icon(Icons.pause),
@@ -68,12 +78,15 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                             Toast.show('No Audio file to play', context);
                         },
                       ),
-                IconButton(
-                    icon: Icon(Icons.stop),
-                    onPressed: () {
-                      bloc.currentAudio = CurrentAudioModel(path: url, isPlaying: false);
-                      _audioPlayer.stop();
-                    }),
+                Padding(
+                  padding: EdgeInsets.only(right: 10, left: 5),
+                  child: IconButton(
+                      icon: Icon(Icons.stop),
+                      onPressed: () {
+                        bloc.currentAudio = CurrentAudioModel(path: url, isPlaying: false);
+                        _audioPlayer.stop();
+                      }),
+                ),
               ],
             )
           ],

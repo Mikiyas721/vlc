@@ -29,15 +29,17 @@ class AudioBloc extends MediaBloc {
 
   bool onShuffleClicked(List<AlbumModel> audioModels) {
     if (audioModels != null) {
-      String path = getRandomTrackFromAlbums(audioModels);
+      MediaModel mediaModel = getRandomTrackFromAlbums(audioModels);
       try {
         _audioPlayer.stop();
       } catch (Exception) {
         debugPrint('Error at onShuffleClicked. No audio file to stop playing');
       }
-      _audioPlayer.play(path);
-      positionChangeListen(path);
+      _audioPlayer.play(mediaModel.mediaFile.path);
+      positionChangeListen(mediaModel);
       onCurrentAudioDone(getRandomTrackFromAlbums(audioModels));
+      this.currentAudio =
+          CurrentAudioModel(path: mediaModel.path, isPlaying: true, name: mediaModel.getName());
       return true;
     }
     return false;
@@ -50,23 +52,23 @@ class AudioBloc extends MediaBloc {
     } catch (Exception) {
       debugPrint('Error at onAlbumRandomPlayClicked. No audio file to stop playing');
     }
-    String path = album.mediaList[random].mediaFile.path;
-    _audioPlayer.play(path);
-    positionChangeListen(path);
-    onCurrentAudioDone(album.mediaList[album.mediaList.length - 1].mediaFile.path);
-    this.currentAudio = CurrentAudioModel(path: path, isPlaying: true);
+    MediaModel mediaModel = album.mediaList[random];
+    _audioPlayer.play(mediaModel.mediaFile.path);
+    positionChangeListen(mediaModel);
+    onCurrentAudioDone(album.mediaList[album.mediaList.length - 1]);
+    this.currentAudio = CurrentAudioModel(path: mediaModel.path, isPlaying: true, name: mediaModel.getName());
   }
 
-  void onAudioTap(CurrentAudioModel audioModel, List<MediaModel> albumAudio) {
+  void onAudioTap(MediaModel mediaModel, List<MediaModel> albumAudio) {
     try {
       _audioPlayer.stop();
     } catch (Exception) {
       debugPrint('Error at onAudioTap. No audio file to stop playing');
     }
-    _audioPlayer.play(audioModel.path);
-    positionChangeListen(audioModel.path);
-    onCurrentAudioDone(albumAudio[albumAudio.length - 1].mediaFile.path);
-    this.currentAudio = audioModel;
+    _audioPlayer.play(mediaModel.mediaFile.path);
+    positionChangeListen(mediaModel);
+    onCurrentAudioDone(mediaModel);
+    this.currentAudio = CurrentAudioModel(path: mediaModel.path, isPlaying: true, name: mediaModel.getName());
   }
 
   void loadDeviceAudio() async {
@@ -74,34 +76,36 @@ class AudioBloc extends MediaBloc {
     _deviceAudioRepo.updateStream(await getAlbumModels(albums));
   }
 
-  String getRandomTrackFromAlbums(List<AlbumModel> audioModels) {
+  MediaModel getRandomTrackFromAlbums(List<AlbumModel> audioModels) {
     final selectedAlbum = audioModels[Random().nextInt(audioModels.length - 1)];
-    String path = selectedAlbum.mediaList[selectedAlbum.mediaList.length - 1].mediaFile.path;
-    return path;
+    return selectedAlbum.mediaList[selectedAlbum.mediaList.length - 1];
   }
 
-  Future<void> positionChangeListen(String path) async {
+  Future<void> positionChangeListen(MediaModel mediaModel) async {
     _audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
       _currentAudioRepo.updateStream(CurrentAudioModel(
-          path: path,
+          path: mediaModel.path,
           isPlaying: true,
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
-          audioDuration: await _audioPlayer.getDuration()));
+          audioDuration: await _audioPlayer.getDuration(),
+          name: mediaModel.getName()));
     });
   }
 
-  Future<void> onCurrentAudioDone(String path) async {
+  Future<void> onCurrentAudioDone(MediaModel mediaModel) async {
+    // TODO accept a list instead
     _audioPlayer.onPlayerCompletion.listen((data) async {
-      _audioPlayer.play(path); // TODO Handle Error
+      _audioPlayer.play(mediaModel.path);
       _currentAudioRepo.updateStream(CurrentAudioModel(
-          path: path,
+          path: mediaModel.path,
           isPlaying: true,
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
-          audioDuration: await _audioPlayer.getDuration()));
+          audioDuration: await _audioPlayer.getDuration(),
+          name: mediaModel.getName()));
     });
   }
 
-  String get currentUrl => _remoteAudioRepo.subjectValue.url;
+  String get currentUrl => _remoteAudioRepo.subjectValue.path;
 
   @override
   void dispose() {}

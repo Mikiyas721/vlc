@@ -34,12 +34,14 @@ class AudioAlbumPage extends StatelessWidget {
                           currentAudioPosition: 0,
                           audioTotalDuration: 1,
                           url: null,
+                          audioName: '',
                         )
                       : AudioControls(
                           isPlaying: snapShot.data.isPlaying,
                           currentAudioPosition: snapShot.data.currentAudioPosition,
                           audioTotalDuration: snapShot.data.audioDuration,
                           url: snapShot.data.path,
+                          audioName: snapShot.data.name,
                         );
                 }),
           );
@@ -48,12 +50,12 @@ class AudioAlbumPage extends StatelessWidget {
 
   List<Widget> getBody(AudioBloc bloc) {
     List<Widget> elements = [];
-    for (MediaModel audio in albumAudio) {
+    for (MediaModel mediaModel in albumAudio) {
       elements.add(MyListTile(
           leadingIcon: Icons.audiotrack,
-          title: audio.getName(),
+          title: mediaModel.getName(),
           onTap: () {
-            bloc.onAudioTap(CurrentAudioModel(path: audio.mediaFile.path, isPlaying: true), albumAudio);
+            bloc.onAudioTap(mediaModel, albumAudio);
           }));
     }
     return elements;

@@ -6,7 +6,7 @@ import '../core/jsonModel.dart';
 
 class MediaModel extends JSONModel {
   final String id;
-  final String url;
+  final String path;
   final File mediaFile;
   final int width;
   final int height;
@@ -17,7 +17,7 @@ class MediaModel extends JSONModel {
 
   MediaModel(
       {@required this.id,
-      this.url,
+      this.path,
       @required this.height,
       @required this.width,
       @required this.size,
