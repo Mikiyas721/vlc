@@ -2,9 +2,12 @@ import '../core/jsonModel.dart';
 
 class CurrentAudioModel extends JSONModel {
   final bool isPlaying;
-  final String url;
+  final String path;
+  final int currentAudioPosition;
+  final int audioDuration;
 
-  CurrentAudioModel({this.url, this.isPlaying}) : super(url);
+  CurrentAudioModel({this.path, this.isPlaying, this.currentAudioPosition = 0, this.audioDuration = 1})
+      : super(path);
 
   @override
   Map<String, dynamic> toMap() {

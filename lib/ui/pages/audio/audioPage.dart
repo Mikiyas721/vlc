@@ -46,7 +46,10 @@ class AudioPage extends StatelessWidget {
                     builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
                       return AudioControls(
                         isPlaying: snapShot.data == null ? false : snapShot.data.isPlaying,
-                        value: 0, url: snapShot.data?.url,
+                        value: snapShot.data != null
+                            ? (snapShot.data.currentAudioPosition / snapShot.data.audioDuration)
+                            : 0,
+                        url: snapShot.data?.path,
                       );
                     }),
               );

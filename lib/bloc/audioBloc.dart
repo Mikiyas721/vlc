@@ -28,11 +28,11 @@ class AudioBloc extends MediaBloc {
 
   bool onShuffleClicked(List<AlbumModel> audioModels) {
     if (audioModels != null) {
-      final selectedAlbum = audioModels[Random().nextInt(audioModels.length - 1)];
+      String path = getRandomTrackFromAlbums(audioModels);
       _audioPlayer.stop();
-      String path = selectedAlbum.mediaList[selectedAlbum.mediaList.length - 1].mediaFile.path;
       _audioPlayer.play(path);
-      _currentAudioRepo.updateStream(CurrentAudioModel(url: path, isPlaying: true));
+      positionChangeListen(path);
+      onCurrentAudioDone(getRandomTrackFromAlbums(audioModels));
       return true;
     }
     return false;
@@ -41,20 +41,51 @@ class AudioBloc extends MediaBloc {
   void onAlbumRandomPlayClicked(AlbumModel album) {
     int random = Random().nextInt(album.mediaList.length - 1);
     _audioPlayer.stop();
-    String url = album.mediaList[random].mediaFile.path;
-    _audioPlayer.play(url);
-    this.currentAudio = CurrentAudioModel(url: url, isPlaying: true);
+    String path = album.mediaList[random].mediaFile.path;
+    _audioPlayer.play(path);
+    positionChangeListen(path);
+    onCurrentAudioDone(album.mediaList[album.mediaList.length - 1].mediaFile.path);
+    this.currentAudio = CurrentAudioModel(path: path, isPlaying: true);
   }
 
-  void onAudioTap(CurrentAudioModel audioModel) {
+  void onAudioTap(CurrentAudioModel audioModel, List<MediaModel> albumAudio) {
     _audioPlayer.stop();
-    _audioPlayer.play(audioModel.url);
+    _audioPlayer.play(audioModel.path);
+    positionChangeListen(audioModel.path);
+    onCurrentAudioDone(albumAudio[albumAudio.length - 1].mediaFile.path);
     this.currentAudio = audioModel;
   }
 
   void loadDeviceAudio() async {
     List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(type: RequestType.audio);
     _deviceAudioRepo.updateStream(await getAlbumModels(albums));
+  }
+
+  String getRandomTrackFromAlbums(List<AlbumModel> audioModels) {
+    final selectedAlbum = audioModels[Random().nextInt(audioModels.length - 1)];
+    String path = selectedAlbum.mediaList[selectedAlbum.mediaList.length - 1].mediaFile.path;
+    return path;
+  }
+
+  Future<void> positionChangeListen(String path) async {
+    _audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
+      _currentAudioRepo.updateStream(CurrentAudioModel(
+          path: path,
+          isPlaying: true,
+          currentAudioPosition: await _audioPlayer.getCurrentPosition(),
+          audioDuration: await _audioPlayer.getDuration()));
+    });
+  }
+
+  Future<void> onCurrentAudioDone(String path) async {
+    _audioPlayer.onPlayerCompletion.listen((data) async {
+      _audioPlayer.play(path);
+      _currentAudioRepo.updateStream(CurrentAudioModel(
+          path: path,
+          isPlaying: true,
+          currentAudioPosition: await _audioPlayer.getCurrentPosition(),
+          audioDuration: await _audioPlayer.getDuration()));
+    });
   }
 
   String get currentUrl => _remoteAudioRepo.subjectValue.url;

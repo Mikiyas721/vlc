@@ -30,7 +30,7 @@ class AudioAlbumPage extends StatelessWidget {
                 builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
                   return AudioControls(
                     isPlaying: snapShot.data == null ? false : snapShot.data.isPlaying,
-                    value: 0, url: snapShot.data?.url,
+                    value: 0, url: snapShot.data?.path,
                   );
                 }),
           );
@@ -44,7 +44,7 @@ class AudioAlbumPage extends StatelessWidget {
           leadingIcon: Icons.audiotrack,
           title: audio.getName(),
           onTap: () {
-            bloc.onAudioTap(CurrentAudioModel(url: audio.mediaFile.path, isPlaying: true));
+            bloc.onAudioTap(CurrentAudioModel(path: audio.mediaFile.path, isPlaying: true), albumAudio);
           }));
     }
     return elements;

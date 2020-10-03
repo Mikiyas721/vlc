@@ -11,7 +11,9 @@ import 'model/currentAudio.dart';
 void inject() async {
   final preference = await SharedPreferences.getInstance();
   GetIt.instance.registerSingleton<SharedPreferences>(preference);
-  GetIt.instance.registerSingleton<AudioPlayer>(AudioPlayer());
+  final _audioPlayer = AudioPlayer();
+
+  GetIt.instance.registerSingleton<AudioPlayer>(_audioPlayer);
 
   GetIt.instance.registerLazySingleton<GalleryRepo>(() => GalleryRepo(BehaviorSubject<List<AlbumModel>>()));
   GetIt.instance.registerLazySingleton<VideoRepo>(() => VideoRepo(BehaviorSubject<List<AlbumModel>>()));
@@ -19,5 +21,6 @@ void inject() async {
   GetIt.instance.registerLazySingleton<RemoteAudioRepo>(() => RemoteAudioRepo(BehaviorSubject<MediaModel>()));
   GetIt.instance
       .registerLazySingleton<DeviceAudioRepo>(() => DeviceAudioRepo(BehaviorSubject<List<AlbumModel>>()));
-  GetIt.instance.registerLazySingleton<CurrentAudioRepo>(() => CurrentAudioRepo(BehaviorSubject<CurrentAudioModel>()));
+  GetIt.instance
+      .registerLazySingleton<CurrentAudioRepo>(() => CurrentAudioRepo(BehaviorSubject<CurrentAudioModel>()));
 }

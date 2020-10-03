@@ -32,8 +32,12 @@ class AudioControls extends StatelessWidget {
                 isPlaying
                     ? IconButton(
                         icon: Icon(Icons.pause),
-                        onPressed: () {
-                          bloc.currentAudio = CurrentAudioModel(url: url, isPlaying: false);
+                        onPressed: () async {
+                          bloc.currentAudio = CurrentAudioModel(
+                              path: url,
+                              isPlaying: false,
+                              currentAudioPosition: await _audioPlayer.getCurrentPosition(),
+                              audioDuration: await _audioPlayer.getDuration());
                           _audioPlayer.pause();
                         },
                       )
@@ -41,7 +45,7 @@ class AudioControls extends StatelessWidget {
                         icon: Icon(Icons.play_arrow),
                         onPressed: () {
                           if (url != null) {
-                            bloc.currentAudio = CurrentAudioModel(url: url, isPlaying: true);
+                            bloc.currentAudio = CurrentAudioModel(path: url, isPlaying: true);
                             _audioPlayer.resume();
                           } else
                             Toast.show('No Audio file to play', context);
@@ -50,7 +54,7 @@ class AudioControls extends StatelessWidget {
                 IconButton(
                     icon: Icon(Icons.stop),
                     onPressed: () {
-                      bloc.currentAudio = CurrentAudioModel(url: url, isPlaying: false);
+                      bloc.currentAudio = CurrentAudioModel(path: url, isPlaying: false);
                       _audioPlayer.stop();
                     }),
               ],
