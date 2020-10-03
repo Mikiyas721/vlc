@@ -2,17 +2,23 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:toast/toast.dart';
+import 'package:vlc/core/mixins/dateTime.dart';
 import '../../bloc/audioBloc.dart';
 import '../../bloc/provider/provider.dart';
 import '../../model/currentAudio.dart';
 
-class AudioControls extends StatelessWidget {
+class AudioControls extends StatelessWidget with DateTimeMixin {
   final AudioPlayer _audioPlayer = GetIt.instance.get();
   final bool isPlaying;
-  final double value;
+  final int currentAudioPosition;
+  final int audioTotalDuration;
   final String url;
 
-  AudioControls({@required this.isPlaying, @required this.value, @required this.url});
+  AudioControls(
+      {@required this.isPlaying,
+      @required this.currentAudioPosition,
+      @required this.audioTotalDuration,
+      @required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +28,19 @@ class AudioControls extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(2),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Text(Duration(milliseconds: currentAudioPosition).toString().split('.')[0]),
+                  Spacer(),
+                  Text(Duration(milliseconds: audioTotalDuration).toString().split('.')[0]),
+                ],
+              ),
+            ),
             LinearProgressIndicator(
-              value: value,
+              value: currentAudioPosition / audioTotalDuration,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

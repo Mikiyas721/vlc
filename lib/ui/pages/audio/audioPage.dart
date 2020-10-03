@@ -44,13 +44,19 @@ class AudioPage extends StatelessWidget {
                 bottomSheet: StreamBuilder(
                     stream: bloc.playingStream,
                     builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
-                      return AudioControls(
-                        isPlaying: snapShot.data == null ? false : snapShot.data.isPlaying,
-                        value: snapShot.data != null
-                            ? (snapShot.data.currentAudioPosition / snapShot.data.audioDuration)
-                            : 0,
-                        url: snapShot.data?.path,
-                      );
+                      return snapShot.data == null
+                          ? AudioControls(
+                              isPlaying: false,
+                              currentAudioPosition: 0,
+                              audioTotalDuration: 1,
+                              url: null,
+                            )
+                          : AudioControls(
+                              isPlaying: snapShot.data.isPlaying,
+                              currentAudioPosition: snapShot.data.currentAudioPosition,
+                              audioTotalDuration: snapShot.data.audioDuration,
+                              url: snapShot.data.path,
+                            );
                     }),
               );
             });

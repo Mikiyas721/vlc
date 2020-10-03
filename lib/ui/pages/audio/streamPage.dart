@@ -36,7 +36,8 @@ class StreamPage extends StatelessWidget {
               )),
           bottomSheet: AudioControls(
             url: '',
-            value: 0,
+            currentAudioPosition: 0,
+            audioTotalDuration: 1,
             isPlaying: false,
           ),
         );

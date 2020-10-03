@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import '../../../ui/customWidget/myTextDisplay.dart';
 import '../../../bloc/galleryBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../../model/album.dart';
@@ -84,32 +85,11 @@ List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels) {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(8),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.black38),
-                  child: Text(
-                    album.name,
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ),
-              ),
+              child: MyTextDisplay(text: '(${album.name})', alignment: Alignment.bottomLeft),
             ),
             Padding(
               padding: EdgeInsets.all(8),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.black38),
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      '(${album.assetCount})',
-                      style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16, color: Colors.white),
-                    )),
-              ),
+              child: MyTextDisplay(text: '(${album.assetCount})', alignment: Alignment.bottomRight),
             )
           ],
         ),
