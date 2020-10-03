@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../bloc/galleryBloc.dart';
@@ -29,7 +30,11 @@ class AudioBloc extends MediaBloc {
   bool onShuffleClicked(List<AlbumModel> audioModels) {
     if (audioModels != null) {
       String path = getRandomTrackFromAlbums(audioModels);
-      _audioPlayer.stop();
+      try {
+        _audioPlayer.stop();
+      } catch (Exception) {
+        debugPrint('Error at onShuffleClicked. No audio file to stop playing');
+      }
       _audioPlayer.play(path);
       positionChangeListen(path);
       onCurrentAudioDone(getRandomTrackFromAlbums(audioModels));
@@ -40,7 +45,11 @@ class AudioBloc extends MediaBloc {
 
   void onAlbumRandomPlayClicked(AlbumModel album) {
     int random = Random().nextInt(album.mediaList.length - 1);
-    _audioPlayer.stop();
+    try {
+      _audioPlayer.stop();
+    } catch (Exception) {
+      debugPrint('Error at onAlbumRandomPlayClicked. No audio file to stop playing');
+    }
     String path = album.mediaList[random].mediaFile.path;
     _audioPlayer.play(path);
     positionChangeListen(path);
@@ -49,7 +58,11 @@ class AudioBloc extends MediaBloc {
   }
 
   void onAudioTap(CurrentAudioModel audioModel, List<MediaModel> albumAudio) {
-    _audioPlayer.stop();
+    try {
+      _audioPlayer.stop();
+    } catch (Exception) {
+      debugPrint('Error at onAudioTap. No audio file to stop playing');
+    }
     _audioPlayer.play(audioModel.path);
     positionChangeListen(audioModel.path);
     onCurrentAudioDone(albumAudio[albumAudio.length - 1].mediaFile.path);
@@ -79,7 +92,7 @@ class AudioBloc extends MediaBloc {
 
   Future<void> onCurrentAudioDone(String path) async {
     _audioPlayer.onPlayerCompletion.listen((data) async {
-      _audioPlayer.play(path);
+      _audioPlayer.play(path); // TODO Handle Error
       _currentAudioRepo.updateStream(CurrentAudioModel(
           path: path,
           isPlaying: true,
