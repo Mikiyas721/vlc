@@ -89,28 +89,28 @@ class AudioBloc extends MediaBloc {
     return selectedAlbum.mediaList[selectedAlbum.mediaList.length - 1];
   }
 
-  Future<void> positionChangeListen(MediaModel mediaModel) async {
-    _audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
-      _currentAudioRepo.updateStream(CurrentAudioModel(
+  void positionChangeListen(MediaModel mediaModel) {
+    _audioPlayer.onAudioPositionChanged.listen((Duration duration) async{
+      this.currentAudio = CurrentAudioModel(
           path: mediaModel.mediaFile.path,
           isPlaying: true,
           // Not for fast forward and fast rewind
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
           audioDuration: await _audioPlayer.getDuration(),
-          name: mediaModel.getName()));
+          name: mediaModel.getName());
     });
   }
 
-  Future<void> onCurrentAudioDone(MediaModel mediaModel) async {
+  void onCurrentAudioDone(MediaModel mediaModel) {
     // TODO accept a list instead
     _audioPlayer.onPlayerCompletion.listen((data) async {
       _audioPlayer.play(mediaModel.mediaFile.path);
-      _currentAudioRepo.updateStream(CurrentAudioModel(
+      this.currentAudio = CurrentAudioModel(
           path: mediaModel.mediaFile.path,
           isPlaying: true,
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
           audioDuration: await _audioPlayer.getDuration(),
-          name: mediaModel.getName()));
+          name: mediaModel.getName());
     });
   }
 

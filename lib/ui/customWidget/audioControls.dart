@@ -57,6 +57,8 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
               ),
             ),
             Slider(
+              min: 0,
+              max: 1,
               onChanged: (double value) async {
                 _audioPlayer
                     .seek(Duration(milliseconds: ((await _audioPlayer.getDuration()) * value).toInt()));
