@@ -29,6 +29,7 @@ dependencies:
   photo_manager: ^0.5.8
   file_picker: ^2.0.2
   flick_video_player: ^0.1.1
+  holding_gesture: ^0.0.3
 
   cupertino_icons: ^0.1.2
   sliding_up_panel: ^1.0.2

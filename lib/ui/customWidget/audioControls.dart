@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:holding_gesture/holding_gesture.dart';
 import 'package:toast/toast.dart';
 import '../../core/mixins/dateTime.dart';
 import '../../bloc/audioBloc.dart';
@@ -35,27 +36,47 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Text(Duration(milliseconds: currentAudioPosition).toString().split('.')[0]),
-                  Spacer(),
-                  Text(Duration(milliseconds: audioTotalDuration).toString().split('.')[0]),
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Text(Duration(milliseconds: currentAudioPosition).toString().split('.')[0]),
+                  ),
+                  Expanded(
+                      child: Text(
+                    audioName,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                    textAlign: TextAlign.center,
+                  )),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(Duration(milliseconds: audioTotalDuration).toString().split('.')[0]),
+                  )
                 ],
               ),
             ),
-            LinearProgressIndicator(
+            Slider(
+              onChanged: (double value) async {
+                _audioPlayer
+                    .seek(Duration(milliseconds: ((await _audioPlayer.getDuration()) * value).toInt()));
+              },
               value: currentAudioPosition / audioTotalDuration,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Padding(padding: EdgeInsets.only(right: 5)),
-                Expanded(
-                    child: Text(
-                  audioName,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  softWrap: false,
-                )),
+                HoldDetector(
+                  child: Icon(Icons.fast_rewind),
+                  onHold: () async {
+                    _audioPlayer
+                        .seek(Duration(milliseconds: (await _audioPlayer.getCurrentPosition()) - 5000));
+                  },
+                  onTap: () {
+                    //TODO Previous Audio
+                  },
+                  holdTimeout: Duration(milliseconds: 300),
+                ),
                 isPlaying
                     ? IconButton(
                         icon: Icon(Icons.pause),
@@ -80,14 +101,22 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                             Toast.show('No Audio file to play', context);
                         },
                       ),
-                Padding(
-                  padding: EdgeInsets.only(right: 10, left: 5),
-                  child: IconButton(
-                      icon: Icon(Icons.stop),
-                      onPressed: () {
-                        bloc.currentAudio = CurrentAudioModel(path: path, isPlaying: false, name: audioName);
-                        _audioPlayer.stop();
-                      }),
+                IconButton(
+                    icon: Icon(Icons.stop),
+                    onPressed: () {
+                      bloc.currentAudio = CurrentAudioModel(path: path, isPlaying: false, name: audioName);
+                      _audioPlayer.stop();
+                    }),
+                HoldDetector(
+                  child: Icon(Icons.fast_forward),
+                  onHold: () async {
+                    _audioPlayer
+                        .seek(Duration(milliseconds: (await _audioPlayer.getCurrentPosition()) + 5000));
+                  },
+                  onTap: () {
+                    //TODO Next Audio
+                  },
+                  holdTimeout: Duration(milliseconds: 300),
                 ),
               ],
             )
