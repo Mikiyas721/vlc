@@ -6,7 +6,6 @@ class MyDrawer extends StatelessWidget {
   final bool isAudioSelected;
   final bool isPlaylistSelected;
   final bool isDirectoriesSelected;
-  final bool isLocalNetworkSelected;
   final bool isStreamSelected;
   final bool isHistorySelected;
 
@@ -15,7 +14,6 @@ class MyDrawer extends StatelessWidget {
     this.isAudioSelected,
     this.isPlaylistSelected,
     this.isDirectoriesSelected,
-    this.isLocalNetworkSelected,
     this.isStreamSelected,
     this.isHistorySelected,
   });
@@ -58,14 +56,6 @@ class MyDrawer extends StatelessWidget {
             isSelected: isDirectoriesSelected,
           ),
           MyListTile(
-            leadingIcon: Icons.network_check,
-            title: 'Local Network',
-            onTap: () {
-              Navigator.pushReplacementNamed(context, '/localNetworkPage');
-            },
-            isSelected: isLocalNetworkSelected,
-          ),
-          MyListTile(
             leadingIcon: Icons.network_wifi,
             title: 'Stream',
             onTap: () {
@@ -87,12 +77,6 @@ class MyDrawer extends StatelessWidget {
               title: 'Settings',
               onTap: () {
                 Navigator.pushNamed(context, '/settingsPage');
-              }),
-          MyListTile(
-              leadingIcon: Icons.play_circle_filled,
-              title: 'About',
-              onTap: () {
-                Navigator.pushNamed(context, '/aboutPage');
               }),
         ],
       ),

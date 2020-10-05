@@ -62,7 +62,7 @@ class ImageBloc extends MediaBloc {
     else if (loadType == MediaType.IMAGE)
       albums = await PhotoManager.getAssetPathList(type: RequestType.image);
     else if (loadType == MediaType.VIDEO)
-      albums = await PhotoManager.getAssetPathList(type: RequestType.image);
+      albums = await PhotoManager.getAssetPathList(type: RequestType.video);
 
     if (loadType == MediaType.COMMON)
       _galleryRepo.updateStream(await getAlbumModels(albums));

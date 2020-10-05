@@ -24,12 +24,12 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
     _flickManager = FlickManager(
         videoPlayerController: VideoPlayerController.file(widget.mediaFile),
         onVideoEnd: () {
-          //TODO play next video
+          //TODO play next video and adjust device orientation accordingly
           Navigator.pop(context);
         });
     _flickVideoPlayer = FlickVideoPlayer(
       flickManager: _flickManager,
-      preferredDeviceOrientation: [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+      preferredDeviceOrientation: [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp],
     );
     super.initState();
   }
