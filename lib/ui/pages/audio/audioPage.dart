@@ -36,10 +36,10 @@ class AudioPage extends StatelessWidget {
                     ? Center(child: CircularProgressIndicator())
                     : Align(
                         alignment: Alignment.topLeft,
-                        child: GridView.count(
+                        child: Padding(child:GridView.count(
                           crossAxisCount: 2,
                           children: getGridElements(context, snapShot.data, bloc),
-                        ),
+                        ),padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.width*0.33)),
                       ),
                 bottomSheet: StreamBuilder(
                     stream: bloc.playingStream,

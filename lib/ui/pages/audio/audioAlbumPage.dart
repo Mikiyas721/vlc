@@ -22,8 +22,11 @@ class AudioAlbumPage extends StatelessWidget {
             appBar: AppBar(
               title: Text(title),
             ),
-            body: ListView(
-              children: getBody(bloc),
+            body: Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.width * 0.33),
+              child: ListView(
+                children: getBody(bloc),
+              ),
             ),
             bottomSheet: StreamBuilder(
                 stream: bloc.playingStream,
