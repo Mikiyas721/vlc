@@ -47,6 +47,7 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                     maxLines: 1,
                     softWrap: false,
                     textAlign: TextAlign.center,
+                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),
                   )),
                   Padding(
                     padding: EdgeInsets.only(left: 10),

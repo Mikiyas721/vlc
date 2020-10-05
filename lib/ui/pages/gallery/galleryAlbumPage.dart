@@ -59,7 +59,10 @@ class GalleryAlbumPage extends StatelessWidget {
               }));
             } else {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                return MyVideoPlayer(videoUrl: mediaModel.mediaFile.path);
+                return MyVideoPlayer(
+                  mediaFile: mediaModel.mediaFile,
+                  fileName: mediaModel.getName(),
+                );
               }));
             }
           },

@@ -14,6 +14,7 @@ class MediaModel extends JSONModel {
   final MediaType mediaType;
   final Uint8List thumbNail;
   final String streamUrl;
+  final int orientation; // flutter_exif_rotation: ^0.2.7
 
   MediaModel(
       {@required this.id,
@@ -24,7 +25,8 @@ class MediaModel extends JSONModel {
       @required this.mediaFile,
       @required this.mediaType,
       @required this.thumbNail,
-      this.streamUrl})
+      this.streamUrl,
+      this.orientation = 0})
       : super(id);
 
   String getName() {

@@ -31,9 +31,7 @@ class AudioBloc extends MediaBloc {
         .updateStream(CurrentAudioModel(path: newValue, isPlaying: false, name: getName(newValue)));
   }
 
-  void onSendUrl() {
-
-  }
+  void onSendUrl() {}
 
   bool onShuffleClicked(List<AlbumModel> audioModels) {
     if (audioModels != null) {
@@ -96,6 +94,7 @@ class AudioBloc extends MediaBloc {
       _currentAudioRepo.updateStream(CurrentAudioModel(
           path: mediaModel.mediaFile.path,
           isPlaying: true,
+          // Not for fast forward and fast rewind
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
           audioDuration: await _audioPlayer.getDuration(),
           name: mediaModel.getName()));

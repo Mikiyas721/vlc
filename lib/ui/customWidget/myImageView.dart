@@ -10,6 +10,7 @@ class MyImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -18,8 +19,8 @@ class MyImageView extends StatelessWidget {
         ),
         body: Center(
           child: Container(
-            width: double.parse(width.toString()),
-            height: double.parse(height.toString()),
+            width: screenWidth,
+            height: (height * screenWidth) / width,
             decoration: BoxDecoration(image: DecorationImage(image: FileImage(imageFile), fit: BoxFit.fill)),
           ),
         ));
