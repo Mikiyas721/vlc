@@ -53,7 +53,7 @@ class GalleryPage extends StatelessWidget {
     );
   }
 
-  getBody(Stream<List<AlbumModel>> stream) {
+  Widget getBody(Stream<List<AlbumModel>> stream) {
     return StreamBuilder(
         stream: stream,
         builder: (BuildContext context, AsyncSnapshot<List<AlbumModel>> snapShot) {

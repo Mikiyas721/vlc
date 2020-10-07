@@ -3,6 +3,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:vlc/dataSource/playlistDataSource.dart';
+import 'package:vlc/ui/customWidget/myPlaylistSelectionDialog.dart';
 import '../bloc/galleryBloc.dart';
 import '../model/album.dart';
 import '../model/currentAudio.dart';
@@ -13,6 +15,7 @@ class AudioBloc extends MediaBloc {
   final RemoteAudioRepo _remoteAudioRepo = GetIt.instance.get();
   final DeviceAudioRepo _deviceAudioRepo = GetIt.instance.get();
   final CurrentAudioRepo _currentAudioRepo = GetIt.instance.get();
+  final PlaylistRepo _playlistRepo = GetIt.instance.get();
   final AudioPlayer _audioPlayer = GetIt.instance.get();
 
   Stream<List<AlbumModel>> get deviceAudioStream =>
@@ -23,6 +26,8 @@ class AudioBloc extends MediaBloc {
 
   Stream<CurrentAudioModel> get playingStream =>
       _currentAudioRepo.getStream<CurrentAudioModel>((value) => value);
+
+  List<String> get getPlaylists => _playlistRepo.getPlayLists;
 
   set currentAudio(CurrentAudioModel currentAudioModel) => _currentAudioRepo.updateStream(currentAudioModel);
 
@@ -90,7 +95,7 @@ class AudioBloc extends MediaBloc {
   }
 
   void positionChangeListen(MediaModel mediaModel) {
-    _audioPlayer.onAudioPositionChanged.listen((Duration duration) async{
+    _audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
       this.currentAudio = CurrentAudioModel(
           path: mediaModel.mediaFile.path,
           isPlaying: true,
@@ -114,13 +119,19 @@ class AudioBloc extends MediaBloc {
     });
   }
 
-  static String getName(String path) {
-    List<String> split = path.split('/');
-    return split.elementAt(split.length - 1);
-  }
-  void onAddAudioTap(){
+  void onAddAudioToPlaylistTap(List<CheckValue> checkValues, String path) {
+    checkValues.forEach((CheckValue checkValues) {
+      if (checkValues.value) {
+        _playlistRepo.addToPlayList(checkValues.title, path);
+      }
+    });
   }
 
   @override
   void dispose() {}
+
+  static String getName(String path) {
+    List<String> split = path.split('/');
+    return split.elementAt(split.length - 1);
+  }
 }

@@ -32,6 +32,20 @@ class PlayListBloc extends Disposable {
     _playlistRepo.updateStream(savedPlaylists);
   }
 
+  List<String> onPlayListTap(String playlistName) {
+    List<String> tracks = _playlistRepo.getPreference<List>(playlistName);
+    print(tracks);
+    return tracks;
+  }
+
+  bool onPlaylistPlay(String playlistName) {
+    List<String> tracks = _playlistRepo.getPreference<List>(playlistName);
+    if (tracks != null) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   void dispose() {}
 }

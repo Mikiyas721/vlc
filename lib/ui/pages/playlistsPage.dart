@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
+import 'package:vlc/model/media.dart';
+import '../../ui/pages/audio/audioAlbumPage.dart';
 import '../../bloc/playlistBloc.dart';
 import '../../bloc/provider/provider.dart';
 import '../../model/stringModel.dart';
@@ -43,7 +46,7 @@ class PlayListsPage extends StatelessWidget {
                         )
                       : GridView.count(
                           crossAxisCount: 2,
-                          children: getBody(snapshot.data),
+                          children: getBody(snapshot.data, bloc, context),
                         ));
             },
           ),
@@ -52,10 +55,26 @@ class PlayListsPage extends StatelessWidget {
     );
   }
 
-  List<Widget> getBody(List<StringModel> list) {
+  List<Widget> getBody(List<StringModel> list, PlayListBloc bloc, BuildContext context) {
     List<Widget> body = [];
     list.forEach((element) {
-      body.add(AudioAlbum(albumName: element.value, onPlayPressed: () {}, onAlbumTap: () {}));
+      body.add(AudioAlbum(
+          albumName: element.value,
+          onPlayPressed: () {
+            if (bloc.onPlaylistPlay(element.value)) Toast.show('No Tracks to play', context);
+          },
+          onAlbumTap: () {
+            List<String> tracks = bloc.onPlayListTap(element.value);
+            if (tracks == null)
+              Toast.show('No Tracks in this Playlist', context);
+            else {
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                return AudioAlbumPage(
+                  title: element.value, albumAudio: <MediaModel>[],
+                );
+              }));
+            }
+          }));
     });
     return body;
   }

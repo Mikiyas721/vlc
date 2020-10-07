@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
+import 'package:vlc/ui/customWidget/myPlaylistSelectionDialog.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../../model/currentAudio.dart';
@@ -25,7 +27,7 @@ class AudioAlbumPage extends StatelessWidget {
             body: Padding(
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.width * 0.33),
               child: ListView(
-                children: getBody(bloc),
+                children: getAlbumBody(bloc, context),
               ),
             ),
             bottomSheet: StreamBuilder(
@@ -51,7 +53,7 @@ class AudioAlbumPage extends StatelessWidget {
         });
   }
 
-  List<Widget> getBody(AudioBloc bloc) {
+  List<Widget> getAlbumBody(AudioBloc bloc, BuildContext context) {
     List<Widget> elements = [];
     for (MediaModel mediaModel in albumAudio) {
       elements.add(MyListTile(
@@ -61,8 +63,20 @@ class AudioAlbumPage extends StatelessWidget {
         onTap: () {
           bloc.onAudioTap(mediaModel, albumAudio);
         },
-        onAddAudioTap: (){
-
+        onAddAudioTap: () {
+          List<String> playlists = bloc.getPlaylists;
+          playlists == null
+              ? Toast.show('There are no playlists. Please first create a playlist', context)
+              : showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return MyPlaylistSelectionDialog(
+                      options: playlists,
+                      onOKClicked: (List<CheckValue> checkValues) {
+                        bloc.onAddAudioToPlaylistTap(checkValues, mediaModel.mediaFile.path);
+                      },
+                    );
+                  });
         },
       ));
     }
