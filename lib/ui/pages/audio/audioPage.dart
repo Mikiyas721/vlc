@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
+import 'package:vlc/ui/customWidget/myPlaylistSelectionDialog.dart';
 import '../../../model/currentAudio.dart';
 import '../../../ui/customWidget/audioControls.dart';
 import '../../../ui/pages/audio/audioAlbumPage.dart';
@@ -82,7 +83,21 @@ class AudioPage extends StatelessWidget {
             return AudioAlbumPage(title: album.name, albumAudio: album.mediaList);
           }));
         },
-        onAlbumAdd: () {},
+        onAlbumAdd: () {
+          List<String> playlists = bloc.getPlaylists;
+          playlists == null
+              ? Toast.show('There are no playlists. Please first create a playlist', context)
+              : showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return MyPlaylistSelectionDialog(
+                      options: playlists,
+                      onOKClicked: (List<CheckValue> checkValues) {
+                        bloc.onAddAlbumToPlaylistTap(checkValues, album.mediaList);
+                      },
+                    );
+                  });
+        },
       ));
     }
     return widgets;

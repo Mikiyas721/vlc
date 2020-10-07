@@ -127,6 +127,16 @@ class AudioBloc extends MediaBloc {
     });
   }
 
+  void onAddAlbumToPlaylistTap(List<CheckValue> checkValues, List<MediaModel> mediaModels) {
+    checkValues.forEach((CheckValue checkValues) {
+      if (checkValues.value) {
+        mediaModels.forEach((mediaModel) {
+          _playlistRepo.addToPlayList(checkValues.title, mediaModel.mediaFile.path);
+        });
+      }
+    });
+  }
+
   @override
   void dispose() {}
 
