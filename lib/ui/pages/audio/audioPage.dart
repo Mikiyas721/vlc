@@ -36,10 +36,12 @@ class AudioPage extends StatelessWidget {
                     ? Center(child: CircularProgressIndicator())
                     : Align(
                         alignment: Alignment.topLeft,
-                        child: Padding(child:GridView.count(
-                          crossAxisCount: 2,
-                          children: getGridElements(context, snapShot.data, bloc),
-                        ),padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.width*0.33)),
+                        child: Padding(
+                            child: GridView.count(
+                              crossAxisCount: 2,
+                              children: getGridElements(context, snapShot.data, bloc),
+                            ),
+                            padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.width * 0.33)),
                       ),
                 bottomSheet: StreamBuilder(
                     stream: bloc.playingStream,
@@ -70,16 +72,18 @@ class AudioPage extends StatelessWidget {
     List<Widget> widgets = [];
     for (AlbumModel album in audioModels) {
       widgets.add(AudioAlbum(
-          albumName: album.name,
-          onPlayPressed: () {
-            Toast.show('Randomly Playing from Album ${album.name}', context);
-            bloc.onAlbumRandomPlayClicked(album);
-          },
-          onAlbumTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-              return AudioAlbumPage(title: album.name, albumAudio: album.mediaList);
-            }));
+        albumName: album.name,
+        onPlayPressed: () {
+          Toast.show('Randomly Playing from Album ${album.name}', context);
+          bloc.onAlbumRandomPlayClicked(album);
+        },
+        onAlbumTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+            return AudioAlbumPage(title: album.name, albumAudio: album.mediaList);
           }));
+        },
+        onAlbumAdd: () {},
+      ));
     }
     return widgets;
   }

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class MyListTile extends StatelessWidget {
   final IconData leadingIcon;
+  final String path;
   final String title;
   final String subTitle;
-  final void Function() onTrailingTap;
+  final void Function() onAddAudioTap;
   final void Function() onTap;
   final bool isSelected;
 
@@ -12,8 +13,9 @@ class MyListTile extends StatelessWidget {
       {@required this.leadingIcon,
       @required this.title,
       @required this.onTap,
+      this.path,
       this.subTitle,
-      this.onTrailingTap,
+      this.onAddAudioTap,
       this.isSelected});
 
   @override
@@ -29,10 +31,10 @@ class MyListTile extends StatelessWidget {
       ),
       subtitle: subTitle != null ? Text(subTitle) : null,
       onTap: onTap,
-      trailing: onTrailingTap != null
+      trailing: path != null
           ? IconButton(
-              icon: Icon(Icons.linear_scale),
-              onPressed: onTrailingTap,
+              icon: Icon(Icons.add),
+              onPressed: onAddAudioTap,
             )
           : null,
     );

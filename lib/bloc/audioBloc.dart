@@ -118,6 +118,8 @@ class AudioBloc extends MediaBloc {
     List<String> split = path.split('/');
     return split.elementAt(split.length - 1);
   }
+  void onAddAudioTap(){
+  }
 
   @override
   void dispose() {}

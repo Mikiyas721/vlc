@@ -55,11 +55,16 @@ class AudioAlbumPage extends StatelessWidget {
     List<Widget> elements = [];
     for (MediaModel mediaModel in albumAudio) {
       elements.add(MyListTile(
-          leadingIcon: Icons.audiotrack,
-          title: mediaModel.getName(),
-          onTap: () {
-            bloc.onAudioTap(mediaModel, albumAudio);
-          }));
+        leadingIcon: Icons.audiotrack,
+        title: mediaModel.getName(),
+        path: mediaModel.mediaFile.path,
+        onTap: () {
+          bloc.onAudioTap(mediaModel, albumAudio);
+        },
+        onAddAudioTap: (){
+
+        },
+      ));
     }
     return elements;
   }

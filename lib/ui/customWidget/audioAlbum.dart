@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class AudioAlbum extends StatelessWidget {
   final String albumName;
   final void Function() onPlayPressed;
   final void Function() onAlbumTap;
+  final void Function() onAlbumAdd;
 
-  AudioAlbum({@required this.albumName, @required this.onPlayPressed, @required this.onAlbumTap});
+  AudioAlbum(
+      {@required this.albumName, @required this.onPlayPressed, @required this.onAlbumTap, this.onAlbumAdd});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class AudioAlbum extends StatelessWidget {
               height: 120,
               decoration: BoxDecoration(
                   image: DecorationImage(image: AssetImage('assets/audio.jpg'), fit: BoxFit.fill)),
-              child: Align(
+              child: onAlbumAdd!=null?Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
                   icon: Icon(
@@ -30,12 +33,12 @@ class AudioAlbum extends StatelessWidget {
                   ),
                   onPressed: onPlayPressed,
                 ),
-              ),
+              ):null,
             ),
             Row(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(right: 5),
+                  padding: EdgeInsets.only(right: 8),
                 ),
                 Expanded(
                   child: Text(
@@ -46,13 +49,22 @@ class AudioAlbum extends StatelessWidget {
                     softWrap: false,
                   ),
                 ),
-                IconButton(
-                    icon: Icon(
-                      Icons.add,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {}),
+                onAlbumAdd == null
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.playlist_play,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: onPlayPressed,
+                      )
+                    : IconButton(
+                        icon: Icon(
+                          Icons.add,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                        onPressed: onAlbumTap),
               ],
             )
           ],
