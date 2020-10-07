@@ -4,6 +4,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dataSource/galleryDataSource.dart';
 import 'dataSource/audioDataSource.dart';
+import 'dataSource/historyDataSource.dart';
 import 'dataSource/playlistDataSource.dart';
 import 'model/album.dart';
 import 'model/currentAudio.dart';
@@ -27,4 +28,6 @@ void inject() async {
       .registerLazySingleton<CurrentAudioRepo>(() => CurrentAudioRepo(BehaviorSubject<CurrentAudioModel>()));
   GetIt.instance
       .registerLazySingleton<PlaylistRepo>(() => PlaylistRepo(BehaviorSubject<List<StringModel>>()));
+  GetIt.instance
+      .registerLazySingleton<HistoryRepo>(() => HistoryRepo(BehaviorSubject<List<StringModel>>()));
 }
