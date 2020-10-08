@@ -36,7 +36,7 @@ class PlayListsPage extends StatelessWidget {
           ),
           body: StreamBuilder(
             stream: bloc.playlistStream,
-            builder: (BuildContext context, AsyncSnapshot<List<StringModel>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<SavedPathModel>> snapshot) {
               bloc.loadPlayLists();
               return snapshot.data == null
                   ? Center(child: CircularProgressIndicator())
@@ -55,7 +55,7 @@ class PlayListsPage extends StatelessWidget {
     );
   }
 
-  List<Widget> getBody(List<StringModel> list, PlayListBloc bloc, BuildContext context) {
+  List<Widget> getBody(List<SavedPathModel> list, PlayListBloc bloc, BuildContext context) {
     List<Widget> body = [];
     list.forEach((element) {
       body.add(AudioAlbum(

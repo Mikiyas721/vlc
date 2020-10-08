@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../model/stringModel.dart';
+import '../../model/media.dart';
 import '../../bloc/history.dart';
 import '../../bloc/provider/provider.dart';
 import '../../ui/customWidget/myDrawer.dart';
@@ -40,7 +40,7 @@ class HistoryPage extends StatelessWidget {
                     })
               ],
             ),
-            body: StreamBuilder(builder: (BuildContext context, AsyncSnapshot<List<StringModel>> snapshot) {
+            body: StreamBuilder(builder: (BuildContext context, AsyncSnapshot<List<SavedPathModel>> snapshot) {
               return snapshot.data == null
                   ? Center(child: CircularProgressIndicator())
                   : (snapshot.data.isEmpty ? Center(child: Text('No History')) : getBody(snapshot.data));
@@ -49,9 +49,9 @@ class HistoryPage extends StatelessWidget {
         });
   }
 
-  Widget getBody(List<StringModel> models) {
+  Widget getBody(List<SavedPathModel> models) {
     List<Widget> historyList = [];
-    models.forEach((StringModel stringModel) {
+    models.forEach((SavedPathModel stringModel) {
       historyList.add(ListTile(title: Text(stringModel.value)));
     });
     return ListView(

@@ -1,11 +1,11 @@
 import 'package:rxdart/rxdart.dart';
 import '../core/repository.dart';
-import '../model/stringModel.dart';
+import '../model/media.dart';
 
-class HistoryRepo extends ListRepo<StringModel> {
+class HistoryRepo extends ListRepo<SavedPathModel> {
   String preferenceKey = "HISTORY";
 
-  HistoryRepo(BehaviorSubject<List<StringModel>> subject) : super(subject);
+  HistoryRepo(BehaviorSubject<List<SavedPathModel>> subject) : super(subject);
 
 
 }

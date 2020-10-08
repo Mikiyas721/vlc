@@ -4,7 +4,18 @@ import 'package:flutter/material.dart';
 import '../model/mediaType.dart';
 import '../core/jsonModel.dart';
 
-class MediaModel extends JSONModel {
+abstract class PathModel extends JSONModel {
+  final String path;
+
+  PathModel({this.path}) : super(path);
+
+  String getName() {
+    List<String> split = path.split('/');
+    return split.elementAt(split.length - 1);
+  }
+}
+
+class MediaModel extends PathModel {
   final String id;
   final File mediaFile;
   final int width;
@@ -27,16 +38,19 @@ class MediaModel extends JSONModel {
       @required this.thumbNail,
       this.streamUrl,
       this.orientation = 0})
-      : super(id);
-
-  String getName() {
-    String path = mediaFile.path;
-    List<String> split = path.split('/');
-    return split.elementAt(split.length - 1);
-  }
+      : super(path: mediaFile.path);
 
   @override
   Map<String, dynamic> toMap() {
     return {'value': this.value};
+  }
+}
+
+class SavedPathModel extends PathModel {
+  SavedPathModel({path}) : super(path: path);
+
+  @override
+  Map<String, dynamic> toMap() {
+    return null;
   }
 }

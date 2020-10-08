@@ -1,20 +1,20 @@
 import 'package:get_it/get_it.dart';
-import '../model/stringModel.dart';
+import '../model/media.dart';
 import '../core/utils/disposable.dart';
 import '../dataSource/playlistDataSource.dart';
 
 class PlayListBloc extends Disposable {
   PlaylistRepo _playlistRepo = GetIt.instance.get();
 
-  Stream<List<StringModel>> get playlistStream =>
-      _playlistRepo.getStream<List<StringModel>>((value) => value);
+  Stream<List<SavedPathModel>> get playlistStream =>
+      _playlistRepo.getStream<List<SavedPathModel>>((value) => value);
 
   bool onOkClicked(String playListName) {
     List<String> isAdded = _playlistRepo.addPlayList(playListName);
     if (isAdded != null) {
-      List<StringModel> models = [];
+      List<SavedPathModel> models = [];
       isAdded.forEach((playLists) {
-        models.add(StringModel(value: playLists));
+        models.add(SavedPathModel(path: playLists));
       });
       _playlistRepo.updateStream(models);
     }
@@ -22,11 +22,11 @@ class PlayListBloc extends Disposable {
   }
 
   void loadPlayLists() {
-    List<StringModel> savedPlaylists = [];
+    List<SavedPathModel> savedPlaylists = [];
     List<String> savedList = _playlistRepo.getPreference<List>(_playlistRepo.playlistsKey);
     if (savedList != null) {
       savedList.forEach((playList) {
-        savedPlaylists.add(StringModel(value: playList));
+        savedPlaylists.add(SavedPathModel(path: playList));
       });
     }
     _playlistRepo.updateStream(savedPlaylists);

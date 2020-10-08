@@ -8,7 +8,7 @@ import 'dataSource/historyDataSource.dart';
 import 'dataSource/playlistDataSource.dart';
 import 'model/album.dart';
 import 'model/currentAudio.dart';
-import 'model/stringModel.dart';
+import 'model/media.dart';
 
 void inject() async {
   final preference = await SharedPreferences.getInstance();
@@ -27,7 +27,7 @@ void inject() async {
   GetIt.instance
       .registerLazySingleton<CurrentAudioRepo>(() => CurrentAudioRepo(BehaviorSubject<CurrentAudioModel>()));
   GetIt.instance
-      .registerLazySingleton<PlaylistRepo>(() => PlaylistRepo(BehaviorSubject<List<StringModel>>()));
+      .registerLazySingleton<PlaylistRepo>(() => PlaylistRepo(BehaviorSubject<List<SavedPathModel>>()));
   GetIt.instance
-      .registerLazySingleton<HistoryRepo>(() => HistoryRepo(BehaviorSubject<List<StringModel>>()));
+      .registerLazySingleton<HistoryRepo>(() => HistoryRepo(BehaviorSubject<List<SavedPathModel>>()));
 }
