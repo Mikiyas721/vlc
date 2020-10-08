@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
+import '../../model/currentAudio.dart';
+import '../../ui/customWidget/audioControls.dart';
 import '../../model/media.dart';
 import '../../ui/pages/audio/audioAlbumPage.dart';
 import '../../bloc/playlistBloc.dart';
@@ -48,7 +50,25 @@ class PlayListsPage extends StatelessWidget {
                           children: getBody(snapshot.data, bloc, context),
                         ));
             },
-          ),
+          ),bottomSheet: StreamBuilder(
+            stream: bloc.playingStream,
+            builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
+              return snapShot.data == null
+                  ? AudioControls(
+                isPlaying: false,
+                currentAudioPosition: 0,
+                audioTotalDuration: 1,
+                path: null,
+                audioName: '',
+              )
+                  : AudioControls(
+                isPlaying: snapShot.data.isPlaying,
+                currentAudioPosition: snapShot.data.currentAudioPosition,
+                audioTotalDuration: snapShot.data.audioDuration,
+                path: snapShot.data.path,
+                audioName: snapShot.data.name,
+              );
+            }),
         );
       },
     );
@@ -60,7 +80,7 @@ class PlayListsPage extends StatelessWidget {
       body.add(AudioAlbum(
           albumName: element.value,
           onPlayPressed: () {
-            if (bloc.onPlaylistPlay(element.value)) Toast.show('No Tracks to play', context);
+            if (bloc.onPlaylistPlay(element.value)) Toast.show('No Track to play', context);
           },
           onAlbumTap: () {
             List<SavedPathModel> tracks = bloc.onPlayListTap(element.value);

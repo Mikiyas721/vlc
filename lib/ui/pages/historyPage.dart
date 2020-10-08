@@ -33,7 +33,10 @@ class HistoryPage extends StatelessWidget {
                                 ),
                                 FlatButton(
                                   child: Text('Ok'),
-                                  onPressed: bloc.onDeleteHistory,
+                                  onPressed: (){
+                                    bloc.onDeleteHistory();
+                                    Navigator.pop(context);
+                                  },
                                 )
                               ],
                             );
@@ -55,7 +58,7 @@ class HistoryPage extends StatelessWidget {
   Widget getBody(List<SavedPathModel> models) {
     List<Widget> historyList = [];
     models.forEach((SavedPathModel stringModel) {
-      historyList.add(ListTile(leading: Icon(Icons.history), title: Text(stringModel.value)));
+      historyList.add(ListTile(leading: Icon(Icons.history), title: Text(stringModel.getName())));
       //TODO add DateTime and media type
     });
     return ListView(

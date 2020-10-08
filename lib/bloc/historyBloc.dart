@@ -12,9 +12,11 @@ class HistoryBloc extends Disposable {
   void loadHistory() {
     List<String> history = _historyRepo.getPreference<List>(_historyRepo.preferenceKey);
     List<SavedPathModel> mappedHistory = [];
-    history.forEach((String element) {
-      mappedHistory.add(SavedPathModel(path: element));
-    });
+    if (history != null) {
+      history.forEach((String element) {
+        mappedHistory.add(SavedPathModel(path: element));
+      });
+    }
     _historyRepo.updateStream(mappedHistory);
   }
 
@@ -22,8 +24,6 @@ class HistoryBloc extends Disposable {
     _historyRepo.setPreference<List>(_historyRepo.preferenceKey, null);
     _historyRepo.updateStream([]);
   }
-
-
 
   @override
   void dispose() {}

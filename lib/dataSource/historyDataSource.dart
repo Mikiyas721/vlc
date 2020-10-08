@@ -9,12 +9,14 @@ class HistoryRepo extends ListRepo<SavedPathModel> {
 
   void addToHistory(String pathToSave) {
     List<String> history = getPreference<List>(preferenceKey);
+    history = history ?? [];
     history.add(pathToSave);
+
     List<SavedPathModel> mappedHistory = [];
     history.forEach((String element) {
       mappedHistory.add(SavedPathModel(path: element));
     });
-    setPreference(preferenceKey, history);
+    setPreference<List>(preferenceKey, history);
     updateStream(mappedHistory);
   }
 }

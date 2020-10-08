@@ -12,26 +12,59 @@ import '../model/currentAudio.dart';
 import '../dataSource/audioDataSource.dart';
 import '../model/media.dart';
 
-class AudioBloc extends MediaBloc {
+abstract class AudioPlayersBloc extends MediaBloc {
+  @protected
+  final AudioPlayer audioPlayer = GetIt.instance.get();
+  @protected
+  final CurrentAudioRepo currentAudioRepo = GetIt.instance.get();
+  @protected
+  final PlaylistRepo playlistRepo = GetIt.instance.get();
+  @protected
+  final HistoryRepo historyRepo = GetIt.instance.get();
+
+  set currentAudio(CurrentAudioModel currentAudioModel) => currentAudioRepo.updateStream(currentAudioModel);
+
+  Stream<CurrentAudioModel> get playingStream =>
+      currentAudioRepo.getStream<CurrentAudioModel>((value) => value);
+
+  List<String> get getPlaylists => playlistRepo.getPlayLists;
+
+  void positionChangeListen(PathModel pathModel) {
+    audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
+      this.currentAudio = CurrentAudioModel(
+          path: pathModel.path,
+          isPlaying: true,
+          // Not for fast forward and fast rewind
+          currentAudioPosition: await audioPlayer.getCurrentPosition(),
+          audioDuration: await audioPlayer.getDuration(),
+          name: pathModel.getName());
+    });
+  }
+
+  void onCurrentAudioDone(PathModel pathModel) {
+    // TODO accept a list instead
+    audioPlayer.onPlayerCompletion.listen((data) async {
+      audioPlayer.play(pathModel.path);
+      historyRepo.addToHistory(pathModel.path);
+      this.currentAudio = CurrentAudioModel(
+          path: pathModel.path,
+          isPlaying: true,
+          currentAudioPosition: await audioPlayer.getCurrentPosition(),
+          audioDuration: await audioPlayer.getDuration(),
+          name: pathModel.getName());
+    });
+  }
+}
+
+class AudioBloc extends AudioPlayersBloc {
   final RemoteAudioRepo _remoteAudioRepo = GetIt.instance.get();
   final DeviceAudioRepo _deviceAudioRepo = GetIt.instance.get();
-  final CurrentAudioRepo _currentAudioRepo = GetIt.instance.get();
-  final PlaylistRepo _playlistRepo = GetIt.instance.get();
-  final HistoryRepo _historyRepo = GetIt.instance.get();
-  final AudioPlayer _audioPlayer = GetIt.instance.get();
 
   Stream<List<AlbumModel>> get deviceAudioStream =>
       _deviceAudioRepo.getStream<List<AlbumModel>>((value) => value);
 
   Stream<CurrentAudioModel> get onlineStream =>
       _remoteAudioRepo.getStream<CurrentAudioModel>((value) => value);
-
-  Stream<CurrentAudioModel> get playingStream =>
-      _currentAudioRepo.getStream<CurrentAudioModel>((value) => value);
-
-  List<String> get getPlaylists => _playlistRepo.getPlayLists;
-
-  set currentAudio(CurrentAudioModel currentAudioModel) => _currentAudioRepo.updateStream(currentAudioModel);
 
   void onAudioUrlEntered(String newValue) {
     _remoteAudioRepo
@@ -44,12 +77,12 @@ class AudioBloc extends MediaBloc {
     if (audioModels != null) {
       MediaModel mediaModel = getRandomTrackFromAlbums(audioModels);
       try {
-        _audioPlayer.stop();
+        audioPlayer.stop();
       } catch (Exception) {
         debugPrint('Error at onShuffleClicked. No audio file to stop playing');
       }
-      _audioPlayer.play(mediaModel.mediaFile.path);
-      _historyRepo.addToHistory(mediaModel.mediaFile.path);
+      audioPlayer.play(mediaModel.mediaFile.path);
+      historyRepo.addToHistory(mediaModel.mediaFile.path);
       positionChangeListen(mediaModel);
       onCurrentAudioDone(getRandomTrackFromAlbums(audioModels));
       this.currentAudio =
@@ -62,13 +95,13 @@ class AudioBloc extends MediaBloc {
   void onAlbumRandomPlayClicked(AlbumModel album) {
     int random = Random().nextInt(album.mediaList.length - 1);
     try {
-      _audioPlayer.stop();
+      audioPlayer.stop();
     } catch (Exception) {
       debugPrint('Error at onAlbumRandomPlayClicked. No audio file to stop playing');
     }
     MediaModel mediaModel = album.mediaList[random];
-    _audioPlayer.play(mediaModel.mediaFile.path);
-    _historyRepo.addToHistory(mediaModel.mediaFile.path);
+    audioPlayer.play(mediaModel.mediaFile.path);
+    historyRepo.addToHistory(mediaModel.mediaFile.path);
     positionChangeListen(mediaModel);
     onCurrentAudioDone(album.mediaList[album.mediaList.length - 1]);
     this.currentAudio =
@@ -77,12 +110,12 @@ class AudioBloc extends MediaBloc {
 
   void onAudioTap(PathModel pathModel, List<PathModel> albumAudio) {
     try {
-      _audioPlayer.stop();
+      audioPlayer.stop();
     } catch (Exception) {
       debugPrint('Error at onAudioTap. No audio file to stop playing');
     }
-    _audioPlayer.play(pathModel.path);
-    _historyRepo.addToHistory(pathModel.path);
+    audioPlayer.play(pathModel.path);
+    historyRepo.addToHistory(pathModel.path);
     positionChangeListen(pathModel);
     onCurrentAudioDone(pathModel);
     this.currentAudio = CurrentAudioModel(path: pathModel.path, isPlaying: true, name: pathModel.getName());
@@ -98,36 +131,10 @@ class AudioBloc extends MediaBloc {
     return selectedAlbum.mediaList[selectedAlbum.mediaList.length - 1];
   }
 
-  void positionChangeListen(PathModel pathModel) {
-    _audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
-      this.currentAudio = CurrentAudioModel(
-          path: pathModel.path,
-          isPlaying: true,
-          // Not for fast forward and fast rewind
-          currentAudioPosition: await _audioPlayer.getCurrentPosition(),
-          audioDuration: await _audioPlayer.getDuration(),
-          name: pathModel.getName());
-    });
-  }
-
-  void onCurrentAudioDone(PathModel pathModel) {
-    // TODO accept a list instead
-    _audioPlayer.onPlayerCompletion.listen((data) async {
-      _audioPlayer.play(pathModel.path);
-      _historyRepo.addToHistory(pathModel.path);
-      this.currentAudio = CurrentAudioModel(
-          path: pathModel.path,
-          isPlaying: true,
-          currentAudioPosition: await _audioPlayer.getCurrentPosition(),
-          audioDuration: await _audioPlayer.getDuration(),
-          name: pathModel.getName());
-    });
-  }
-
   void onAddAudioToPlaylistTap(List<CheckValue> checkValues, String path) {
     checkValues.forEach((CheckValue checkValues) {
       if (checkValues.value) {
-        _playlistRepo.addToPlayList(checkValues.title, path);
+        playlistRepo.addToPlayList(checkValues.title, path);
       }
     });
   }
@@ -136,7 +143,7 @@ class AudioBloc extends MediaBloc {
     checkValues.forEach((CheckValue checkValues) {
       if (checkValues.value) {
         mediaModels.forEach((mediaModel) {
-          _playlistRepo.addToPlayList(checkValues.title, mediaModel.mediaFile.path);
+          playlistRepo.addToPlayList(checkValues.title, mediaModel.mediaFile.path);
         });
       }
     });
