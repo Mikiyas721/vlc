@@ -20,7 +20,6 @@ class MyListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ListTile(
       leading: Icon(
         leadingIcon,
@@ -31,7 +30,7 @@ class MyListTile extends StatelessWidget {
       ),
       subtitle: subTitle != null ? Text(subTitle) : null,
       onTap: onTap,
-      trailing: path != null
+      trailing: onAddAudioTap != null
           ? IconButton(
               icon: Icon(Icons.add),
               onPressed: onAddAudioTap,

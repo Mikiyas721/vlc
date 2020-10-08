@@ -1,10 +1,15 @@
+import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:get_it/get_it.dart';
+import '../dataSource/historyDataSource.dart';
 import '../model/media.dart';
 import '../core/utils/disposable.dart';
 import '../dataSource/playlistDataSource.dart';
 
 class PlayListBloc extends Disposable {
   PlaylistRepo _playlistRepo = GetIt.instance.get();
+  final HistoryRepo _historyRepo = GetIt.instance.get();
+  AudioPlayer _audioPlayer = GetIt.instance.get();
 
   Stream<List<SavedPathModel>> get playlistStream =>
       _playlistRepo.getStream<List<SavedPathModel>>((value) => value);
@@ -32,15 +37,24 @@ class PlayListBloc extends Disposable {
     _playlistRepo.updateStream(savedPlaylists);
   }
 
-  List<String> onPlayListTap(String playlistName) {
+  List<SavedPathModel> onPlayListTap(String playlistName) {
     List<String> tracks = _playlistRepo.getPreference<List>(playlistName);
-    print(tracks);
-    return tracks;
+    List<SavedPathModel> savedTracks;
+    if (tracks != null) {
+      savedTracks = [];
+      tracks.forEach((String path) {
+        savedTracks.add(SavedPathModel(path: path));
+      });
+    }
+    return savedTracks;
   }
 
   bool onPlaylistPlay(String playlistName) {
     List<String> tracks = _playlistRepo.getPreference<List>(playlistName);
     if (tracks != null) {
+      String path = tracks[Random().nextInt(tracks.length)];
+      _audioPlayer.play(path);
+      _historyRepo.addToHistory(path);
       return false;
     }
     return true;

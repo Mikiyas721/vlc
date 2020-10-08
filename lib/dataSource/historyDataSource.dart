@@ -7,5 +7,14 @@ class HistoryRepo extends ListRepo<SavedPathModel> {
 
   HistoryRepo(BehaviorSubject<List<SavedPathModel>> subject) : super(subject);
 
-
+  void addToHistory(String pathToSave) {
+    List<String> history = getPreference<List>(preferenceKey);
+    history.add(pathToSave);
+    List<SavedPathModel> mappedHistory = [];
+    history.forEach((String element) {
+      mappedHistory.add(SavedPathModel(path: element));
+    });
+    setPreference(preferenceKey, history);
+    updateStream(mappedHistory);
+  }
 }

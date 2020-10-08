@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
+import '../dataSource/historyDataSource.dart';
 import '../core/utils/disposable.dart';
 import '../dataSource/galleryDataSource.dart';
 import '../model/album.dart';
@@ -48,6 +49,7 @@ class ImageBloc extends MediaBloc {
   GalleryRepo _galleryRepo = GetIt.instance.get();
   ImageRepo _imageRepo = GetIt.instance.get();
   VideoRepo _videoRepo = GetIt.instance.get();
+  final HistoryRepo _historyRepo = GetIt.instance.get();
 
   get galleryStream => _galleryRepo.getStream<List<AlbumModel>>((value) => value);
 
@@ -69,6 +71,10 @@ class ImageBloc extends MediaBloc {
     else if (loadType == MediaType.IMAGE)
       _imageRepo.updateStream(await getAlbumModels(albums));
     else if (loadType == MediaType.VIDEO) _videoRepo.updateStream(await getAlbumModels(albums));
+  }
+
+  void addHistory(String pathToSave) {
+    _historyRepo.addToHistory(pathToSave);
   }
 
   @override

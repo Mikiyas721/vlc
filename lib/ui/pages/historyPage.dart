@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../model/media.dart';
-import '../../bloc/history.dart';
+import '../../bloc/historyBloc.dart';
 import '../../bloc/provider/provider.dart';
 import '../../ui/customWidget/myDrawer.dart';
 
@@ -10,6 +10,7 @@ class HistoryPage extends StatelessWidget {
     return BlocProvider(
         blocFactory: () => HistoryBloc(),
         builder: (BuildContext context, HistoryBloc bloc) {
+          bloc.loadHistory();
           return Scaffold(
             drawer: MyDrawer(isHistorySelected: true),
             appBar: AppBar(
@@ -40,11 +41,13 @@ class HistoryPage extends StatelessWidget {
                     })
               ],
             ),
-            body: StreamBuilder(builder: (BuildContext context, AsyncSnapshot<List<SavedPathModel>> snapshot) {
-              return snapshot.data == null
-                  ? Center(child: CircularProgressIndicator())
-                  : (snapshot.data.isEmpty ? Center(child: Text('No History')) : getBody(snapshot.data));
-            }),
+            body: StreamBuilder(
+                stream: bloc.historyStream,
+                builder: (BuildContext context, AsyncSnapshot<List<SavedPathModel>> snapshot) {
+                  return snapshot.data == null
+                      ? Center(child: CircularProgressIndicator())
+                      : (snapshot.data.isEmpty ? Center(child: Text('No History')) : getBody(snapshot.data));
+                }),
           );
         });
   }
@@ -52,7 +55,8 @@ class HistoryPage extends StatelessWidget {
   Widget getBody(List<SavedPathModel> models) {
     List<Widget> historyList = [];
     models.forEach((SavedPathModel stringModel) {
-      historyList.add(ListTile(title: Text(stringModel.value)));
+      historyList.add(ListTile(leading: Icon(Icons.history), title: Text(stringModel.value)));
+      //TODO add DateTime and media type
     });
     return ListView(
       shrinkWrap: true,

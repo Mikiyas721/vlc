@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
+import '../dataSource/historyDataSource.dart';
 import '../dataSource/playlistDataSource.dart';
 import '../ui/customWidget/myPlaylistSelectionDialog.dart';
 import '../bloc/galleryBloc.dart';
@@ -16,6 +17,7 @@ class AudioBloc extends MediaBloc {
   final DeviceAudioRepo _deviceAudioRepo = GetIt.instance.get();
   final CurrentAudioRepo _currentAudioRepo = GetIt.instance.get();
   final PlaylistRepo _playlistRepo = GetIt.instance.get();
+  final HistoryRepo _historyRepo = GetIt.instance.get();
   final AudioPlayer _audioPlayer = GetIt.instance.get();
 
   Stream<List<AlbumModel>> get deviceAudioStream =>
@@ -47,6 +49,7 @@ class AudioBloc extends MediaBloc {
         debugPrint('Error at onShuffleClicked. No audio file to stop playing');
       }
       _audioPlayer.play(mediaModel.mediaFile.path);
+      _historyRepo.addToHistory(mediaModel.mediaFile.path);
       positionChangeListen(mediaModel);
       onCurrentAudioDone(getRandomTrackFromAlbums(audioModels));
       this.currentAudio =
@@ -65,23 +68,24 @@ class AudioBloc extends MediaBloc {
     }
     MediaModel mediaModel = album.mediaList[random];
     _audioPlayer.play(mediaModel.mediaFile.path);
+    _historyRepo.addToHistory(mediaModel.mediaFile.path);
     positionChangeListen(mediaModel);
     onCurrentAudioDone(album.mediaList[album.mediaList.length - 1]);
     this.currentAudio =
         CurrentAudioModel(path: mediaModel.mediaFile.path, isPlaying: true, name: mediaModel.getName());
   }
 
-  void onAudioTap(MediaModel mediaModel, List<MediaModel> albumAudio) {
+  void onAudioTap(PathModel pathModel, List<PathModel> albumAudio) {
     try {
       _audioPlayer.stop();
     } catch (Exception) {
       debugPrint('Error at onAudioTap. No audio file to stop playing');
     }
-    _audioPlayer.play(mediaModel.mediaFile.path);
-    positionChangeListen(mediaModel);
-    onCurrentAudioDone(mediaModel);
-    this.currentAudio =
-        CurrentAudioModel(path: mediaModel.mediaFile.path, isPlaying: true, name: mediaModel.getName());
+    _audioPlayer.play(pathModel.path);
+    _historyRepo.addToHistory(pathModel.path);
+    positionChangeListen(pathModel);
+    onCurrentAudioDone(pathModel);
+    this.currentAudio = CurrentAudioModel(path: pathModel.path, isPlaying: true, name: pathModel.getName());
   }
 
   void loadDeviceAudio() async {
@@ -94,28 +98,29 @@ class AudioBloc extends MediaBloc {
     return selectedAlbum.mediaList[selectedAlbum.mediaList.length - 1];
   }
 
-  void positionChangeListen(MediaModel mediaModel) {
+  void positionChangeListen(PathModel pathModel) {
     _audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
       this.currentAudio = CurrentAudioModel(
-          path: mediaModel.mediaFile.path,
+          path: pathModel.path,
           isPlaying: true,
           // Not for fast forward and fast rewind
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
           audioDuration: await _audioPlayer.getDuration(),
-          name: mediaModel.getName());
+          name: pathModel.getName());
     });
   }
 
-  void onCurrentAudioDone(MediaModel mediaModel) {
+  void onCurrentAudioDone(PathModel pathModel) {
     // TODO accept a list instead
     _audioPlayer.onPlayerCompletion.listen((data) async {
-      _audioPlayer.play(mediaModel.mediaFile.path);
+      _audioPlayer.play(pathModel.path);
+      _historyRepo.addToHistory(pathModel.path);
       this.currentAudio = CurrentAudioModel(
-          path: mediaModel.mediaFile.path,
+          path: pathModel.path,
           isPlaying: true,
           currentAudioPosition: await _audioPlayer.getCurrentPosition(),
           audioDuration: await _audioPlayer.getDuration(),
-          name: mediaModel.getName());
+          name: pathModel.getName());
     });
   }
 

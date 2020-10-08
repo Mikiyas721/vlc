@@ -64,7 +64,7 @@ class AudioAlbum extends StatelessWidget {
                           size: 30,
                           color: Colors.white,
                         ),
-                        onPressed: onAlbumTap),
+                        onPressed: onAlbumAdd),
               ],
             )
           ],

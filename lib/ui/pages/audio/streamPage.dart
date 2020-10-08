@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/model/currentAudio.dart';
+import '../../../model/currentAudio.dart';
 import '../../../ui/customWidget/audioControls.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';

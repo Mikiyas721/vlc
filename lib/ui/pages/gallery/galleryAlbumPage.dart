@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../bloc/galleryBloc.dart';
+import '../../../bloc/provider/provider.dart';
 import '../../../model/mediaType.dart';
 import '../../customWidget/myImageView.dart';
 import '../../customWidget/myVideoPlayer.dart';
@@ -12,19 +14,20 @@ class GalleryAlbumPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ImageBloc bloc = Provider.of<ImageBloc>(context);
     return Scaffold(
         appBar: AppBar(title: Text(title)),
         body: Align(
           alignment: Alignment.topLeft,
           child: GridView.count(
             crossAxisCount: 3,
-            children: getImages(context),
+            children: getImages(context, bloc),
             padding: EdgeInsets.all(5),
           ),
         ));
   }
 
-  List<Widget> getImages(BuildContext context) {
+  List<Widget> getImages(BuildContext context, ImageBloc bloc) {
     List<Widget> mediaWidgets = [];
     if (mediaModels != null) {
       double width = MediaQuery.of(context).size.width;
@@ -59,6 +62,7 @@ class GalleryAlbumPage extends StatelessWidget {
               }));
             } else {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                bloc.addHistory(mediaModel.mediaFile.path);
                 return MyVideoPlayer(
                   mediaFile: mediaModel.mediaFile,
                   fileName: mediaModel.getName(),

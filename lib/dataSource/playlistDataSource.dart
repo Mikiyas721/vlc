@@ -31,7 +31,7 @@ class PlaylistRepo extends ListRepo<SavedPathModel> {
   }
 
   List<String> addToPlayList(String key, String newTrack) {
-    List<String> playListTracks = getPlayListTracks(newTrack);
+    List<String> playListTracks = getPlayListTracks(key);
     if (playListTracks != null) {
       for (String track in playListTracks) {
         if (newTrack == track) return null;

@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/ui/customWidget/myPlaylistSelectionDialog.dart';
+import '../../../ui/customWidget/myPlaylistSelectionDialog.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../../model/currentAudio.dart';
@@ -11,9 +10,11 @@ import '../../../model/media.dart';
 
 class AudioAlbumPage extends StatelessWidget {
   final String title;
-  final List<MediaModel> albumAudio;
+  final List<PathModel> albumAudio;
+  final bool isPlaylist;
 
-  AudioAlbumPage({Key key, @required this.title, @required this.albumAudio}) : super(key: key);
+  AudioAlbumPage({Key key, @required this.title, @required this.albumAudio, this.isPlaylist = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +56,15 @@ class AudioAlbumPage extends StatelessWidget {
 
   List<Widget> getAlbumBody(AudioBloc bloc, BuildContext context) {
     List<Widget> elements = [];
-    for (MediaModel mediaModel in albumAudio) {
+    for (PathModel pathModel in albumAudio) {
       elements.add(MyListTile(
         leadingIcon: Icons.audiotrack,
-        title: mediaModel.getName(),
-        path: mediaModel.mediaFile.path,
+        title: pathModel.getName(),
+        path: pathModel.path,
         onTap: () {
-          bloc.onAudioTap(mediaModel, albumAudio);
+          bloc.onAudioTap(pathModel, albumAudio);
         },
-        onAddAudioTap: () {
+        onAddAudioTap: isPlaylist?null:() {
           List<String> playlists = bloc.getPlaylists;
           playlists == null
               ? Toast.show('There are no playlists. Please first create a playlist', context)
@@ -73,7 +74,7 @@ class AudioAlbumPage extends StatelessWidget {
                     return MyPlaylistSelectionDialog(
                       options: playlists,
                       onOKClicked: (List<CheckValue> checkValues) {
-                        bloc.onAddAudioToPlaylistTap(checkValues, mediaModel.mediaFile.path);
+                        bloc.onAddAudioToPlaylistTap(checkValues, pathModel.path);
                       },
                     );
                   });
