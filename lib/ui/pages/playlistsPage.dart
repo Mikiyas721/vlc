@@ -37,7 +37,7 @@ class PlayListsPage extends StatelessWidget {
           ),
           body: StreamBuilder(
             stream: bloc.playlistStream,
-            builder: (BuildContext context, AsyncSnapshot<List<SavedPathModel>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<DevicePathModel>> snapshot) {
               bloc.loadPlayLists();
               return snapshot.data == null
                   ? Center(child: CircularProgressIndicator())
@@ -74,7 +74,7 @@ class PlayListsPage extends StatelessWidget {
     );
   }
 
-  List<Widget> getBody(List<SavedPathModel> list, PlayListBloc bloc, BuildContext context) {
+  List<Widget> getBody(List<DevicePathModel> list, PlayListBloc bloc, BuildContext context) {
     List<Widget> body = [];
     list.forEach((element) {
       body.add(AudioAlbum(
@@ -83,7 +83,7 @@ class PlayListsPage extends StatelessWidget {
             if (bloc.onPlaylistPlay(element.value)) Toast.show('No Track to play', context);
           },
           onAlbumTap: () {
-            List<SavedPathModel> tracks = bloc.onPlayListTap(element.value);
+            List<DevicePathModel> tracks = bloc.onPlayListTap(element.value);
             if (tracks == null)
               Toast.show('No Tracks in this Playlist', context);
             else {

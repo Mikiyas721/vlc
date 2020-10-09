@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dataSource/directoryDataSource.dart';
 import 'dataSource/galleryDataSource.dart';
 import 'dataSource/audioDataSource.dart';
 import 'dataSource/historyDataSource.dart';
@@ -27,7 +28,9 @@ void inject() async {
   GetIt.instance
       .registerLazySingleton<CurrentAudioRepo>(() => CurrentAudioRepo(BehaviorSubject<CurrentAudioModel>()));
   GetIt.instance
-      .registerLazySingleton<PlaylistRepo>(() => PlaylistRepo(BehaviorSubject<List<SavedPathModel>>()));
+      .registerLazySingleton<PlaylistRepo>(() => PlaylistRepo(BehaviorSubject<List<DevicePathModel>>()));
   GetIt.instance
-      .registerLazySingleton<HistoryRepo>(() => HistoryRepo(BehaviorSubject<List<SavedPathModel>>()));
+      .registerLazySingleton<HistoryRepo>(() => HistoryRepo(BehaviorSubject<List<DevicePathModel>>()));
+  GetIt.instance
+      .registerLazySingleton<DirectoryRepo>(() => DirectoryRepo(BehaviorSubject<List<DevicePathModel>>()));
 }

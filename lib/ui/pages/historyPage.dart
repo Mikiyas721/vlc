@@ -46,7 +46,7 @@ class HistoryPage extends StatelessWidget {
             ),
             body: StreamBuilder(
                 stream: bloc.historyStream,
-                builder: (BuildContext context, AsyncSnapshot<List<SavedPathModel>> snapshot) {
+                builder: (BuildContext context, AsyncSnapshot<List<DevicePathModel>> snapshot) {
                   return snapshot.data == null
                       ? Center(child: CircularProgressIndicator())
                       : (snapshot.data.isEmpty ? Center(child: Text('No History')) : getBody(snapshot.data));
@@ -55,9 +55,9 @@ class HistoryPage extends StatelessWidget {
         });
   }
 
-  Widget getBody(List<SavedPathModel> models) {
+  Widget getBody(List<DevicePathModel> models) {
     List<Widget> historyList = [];
-    models.forEach((SavedPathModel stringModel) {
+    models.forEach((DevicePathModel stringModel) {
       historyList.add(ListTile(leading: Icon(Icons.history), title: Text(stringModel.getName())));
       //TODO add DateTime and media type
     });

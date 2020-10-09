@@ -46,8 +46,8 @@ class MediaModel extends PathModel {
   }
 }
 
-class SavedPathModel extends PathModel {
-  SavedPathModel({path}) : super(path: path);
+class DevicePathModel extends PathModel {
+  DevicePathModel({path}) : super(path: path);
 
   @override
   Map<String, dynamic> toMap() {

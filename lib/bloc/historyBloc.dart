@@ -6,15 +6,15 @@ import '../model/media.dart';
 class HistoryBloc extends Disposable {
   HistoryRepo _historyRepo = GetIt.instance.get();
 
-  Stream<List<SavedPathModel>> get historyStream =>
-      _historyRepo.getStream<List<SavedPathModel>>((value) => value);
+  Stream<List<DevicePathModel>> get historyStream =>
+      _historyRepo.getStream<List<DevicePathModel>>((value) => value);
 
   void loadHistory() {
     List<String> history = _historyRepo.getPreference<List>(_historyRepo.preferenceKey);
-    List<SavedPathModel> mappedHistory = [];
+    List<DevicePathModel> mappedHistory = [];
     if (history != null) {
       history.forEach((String element) {
-        mappedHistory.add(SavedPathModel(path: element));
+        mappedHistory.add(DevicePathModel(path: element));
       });
     }
     _historyRepo.updateStream(mappedHistory);

@@ -2,10 +2,10 @@ import 'package:rxdart/rxdart.dart';
 import '../core/repository.dart';
 import '../model/media.dart';
 
-class PlaylistRepo extends ListRepo<SavedPathModel> {
+class PlaylistRepo extends ListRepo<DevicePathModel> {
   String playlistsKey = 'PLAYLISTS';
 
-  PlaylistRepo(BehaviorSubject<List<SavedPathModel>> subject) : super(subject);
+  PlaylistRepo(BehaviorSubject<List<DevicePathModel>> subject) : super(subject);
 
   List<String> get getPlayLists => getPreference<List>(playlistsKey);
 

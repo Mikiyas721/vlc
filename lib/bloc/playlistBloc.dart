@@ -4,15 +4,15 @@ import '../model/media.dart';
 import 'audioBloc.dart';
 
 class PlayListBloc extends AudioPlayersBloc {
-  Stream<List<SavedPathModel>> get playlistStream =>
-      playlistRepo.getStream<List<SavedPathModel>>((value) => value);
+  Stream<List<DevicePathModel>> get playlistStream =>
+      playlistRepo.getStream<List<DevicePathModel>>((value) => value);
 
   bool onOkClicked(String playListName) {
     List<String> isAdded = playlistRepo.addPlayList(playListName);
     if (isAdded != null) {
-      List<SavedPathModel> models = [];
+      List<DevicePathModel> models = [];
       isAdded.forEach((playLists) {
-        models.add(SavedPathModel(path: playLists));
+        models.add(DevicePathModel(path: playLists));
       });
       playlistRepo.updateStream(models);
     }
@@ -20,23 +20,23 @@ class PlayListBloc extends AudioPlayersBloc {
   }
 
   void loadPlayLists() {
-    List<SavedPathModel> savedPlaylists = [];
+    List<DevicePathModel> savedPlaylists = [];
     List<String> savedList = playlistRepo.getPreference<List>(playlistRepo.playlistsKey);
     if (savedList != null) {
       savedList.forEach((playList) {
-        savedPlaylists.add(SavedPathModel(path: playList));
+        savedPlaylists.add(DevicePathModel(path: playList));
       });
     }
     playlistRepo.updateStream(savedPlaylists);
   }
 
-  List<SavedPathModel> onPlayListTap(String playlistName) {
+  List<DevicePathModel> onPlayListTap(String playlistName) {
     List<String> tracks = playlistRepo.getPreference<List>(playlistName);
-    List<SavedPathModel> savedTracks;
+    List<DevicePathModel> savedTracks;
     if (tracks != null) {
       savedTracks = [];
       tracks.forEach((String path) {
-        savedTracks.add(SavedPathModel(path: path));
+        savedTracks.add(DevicePathModel(path: path));
       });
     }
     return savedTracks;
@@ -48,7 +48,7 @@ class PlayListBloc extends AudioPlayersBloc {
       String path = tracks[Random().nextInt(tracks.length)];
       audioPlayer.play(path);
       historyRepo.addToHistory(path);
-      SavedPathModel model = SavedPathModel(path: path);
+      DevicePathModel model = DevicePathModel(path: path);
       positionChangeListen(model);
       onCurrentAudioDone(getRandomTrack(tracks));
       this.currentAudio = CurrentAudioModel(path: model.path, isPlaying: true, name: model.getName());
@@ -57,8 +57,8 @@ class PlayListBloc extends AudioPlayersBloc {
     return true;
   }
 
-  SavedPathModel getRandomTrack(List<String> savedTracks) {
-    return SavedPathModel(path: savedTracks[Random().nextInt(savedTracks.length - 1)]);
+  DevicePathModel getRandomTrack(List<String> savedTracks) {
+    return DevicePathModel(path: savedTracks[Random().nextInt(savedTracks.length - 1)]);
   }
 
   @override
