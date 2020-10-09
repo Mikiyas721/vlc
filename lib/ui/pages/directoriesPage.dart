@@ -17,38 +17,44 @@ class DirectoriesPage extends StatelessWidget {
         blocFactory: () => DirectoryBloc(),
         builder: (BuildContext context, DirectoryBloc bloc) {
           bloc.loadRootDirectories();
-          return Scaffold(
-            drawer: MyDrawer(isDirectoriesSelected: true),
-            appBar: AppBar(
-              title: Text('Directories'),
-              bottom: PreferredSize(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 30,
-                    padding: EdgeInsets.only(left: 15, bottom: 3, top: 3),
-                    child: StreamBuilder(
-                      stream: bloc.dirStream,
-                      builder: (BuildContext context, AsyncSnapshot<List<DevicePathModel>> snapShot) {
-                        return Text(
-                          snapShot.data == null
-                              ? ''
-                              : snapShot.data.isNotEmpty ? getDir(snapShot.data[0].path, bloc) : 'ghj',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        );
-                      },
-                    ),
-                    color: Colors.lightBlue,
-                  ),
-                  preferredSize: Size.fromHeight(30)),
-            ),
-            body: StreamBuilder(
-                stream: bloc.dirStream,
-                builder: (BuildContext context, AsyncSnapshot<List<DevicePathModel>> snapShot) {
-                  return snapShot.data == null
-                      ? Center(child: CircularProgressIndicator())
-                      : ListView(children: getBody(snapShot.data, bloc, context));
-                }),
-          );
+          return WillPopScope(
+              child: Scaffold(
+                drawer: MyDrawer(isDirectoriesSelected: true),
+                appBar: AppBar(
+                  title: Text('Directories'),
+                  bottom: PreferredSize(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 30,
+                        padding: EdgeInsets.only(left: 15, bottom: 3, top: 3),
+                        child: StreamBuilder(
+                          stream: bloc.dirStream,
+                          builder: (BuildContext context, AsyncSnapshot<List<DevicePathModel>> snapShot) {
+                            return Text(
+                              snapShot.data == null ? '' : getDir(snapShot.data[0].parentPath, bloc),
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            ); //TODO Make text slide
+                          },
+                        ),
+                        color: Colors.lightBlue,
+                      ),
+                      preferredSize: Size.fromHeight(30)),
+                ),
+                body: StreamBuilder(
+                    stream: bloc.dirStream,
+                    builder: (BuildContext context, AsyncSnapshot<List<DevicePathModel>> snapShot) {
+                      return snapShot.data == null
+                          ? Center(child: CircularProgressIndicator())
+                          : snapShot.data.length == 1 && snapShot.data[0].path == snapShot.data[0].parentPath
+                              ? Center(
+                                  child: Text('This directory is empty'),
+                                )
+                              : ListView(children: getBody(snapShot.data, bloc, context));
+                    }),
+              ),
+              onWillPop: () async {
+                return bloc.goBack(bloc.currentPathParent);
+              });
         });
   }
 
@@ -98,16 +104,16 @@ class DirectoriesPage extends StatelessWidget {
   }
 
   String getDir(String path, DirectoryBloc bloc) {
-    if (path == bloc.internalStorage)
+    if (path == '/storage/emulated')
       return '/';
     else {
       List<String> split = path.split('/');
       String pathString = '';
-      for (int i = 0; i < split.length - 1; i++) {
+      for (int i = 0; i < split.length; i++) {
         if (i <= 3) continue;
         pathString += '${split[i]}/';
       }
-      return 'Storage/$pathString';
+      return 'storage/$pathString';
     }
   }
 }
