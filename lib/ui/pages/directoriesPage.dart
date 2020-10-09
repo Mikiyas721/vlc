@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:mime/mime.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/ui/customWidget/myImageView.dart';
-import 'package:vlc/ui/customWidget/myVideoPlayer.dart';
+import '../../ui/customWidget/myImageView.dart';
+import '../../ui/customWidget/myVideoPlayer.dart';
 import '../../model/media.dart';
 import '../../ui/customWidget/myListTIle.dart';
 import '../../bloc/directoryBloc.dart';
@@ -75,7 +74,7 @@ class DirectoriesPage extends StatelessWidget {
                     );
                   }));
                 } else if (fileType == 'audio') {
-                  //play Audio
+                  bloc.playAudio(model.path);
                 } else
                   Toast.show('Can not open this file', context);
               } else

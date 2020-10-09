@@ -1,7 +1,8 @@
 import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:vlc/model/media.dart';
+import 'package:vlc/model/currentAudio.dart';
+import '../model/media.dart';
 import '../dataSource/directoryDataSource.dart';
 import '../bloc/audioBloc.dart';
 
@@ -29,6 +30,19 @@ class DirectoryBloc extends AudioPlayersBloc {
   bool isHidden(String path) {
     List<String> split = path.split('/');
     return split[split.length - 1].startsWith('.');
+  }
+
+  void playAudio(String path) {
+    try {
+      audioPlayer.stop();
+    } catch (Exception) {
+      debugPrint('Error at onAudioTap. No audio file to stop playing');
+    }
+    audioPlayer.play(path);
+    historyRepo.addToHistory(path);
+    final model = DevicePathModel(path: path);
+    positionChangeListen(model);
+    this.currentAudio = CurrentAudioModel(path: path, isPlaying: true, name: model.getName());
   }
 
   @override
