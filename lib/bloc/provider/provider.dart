@@ -12,7 +12,7 @@ class Provider<T> extends InheritedWidget {
   static T of<T>(BuildContext context) {
     Provider<T> provider = context.dependOnInheritedWidgetOfExactType<Provider<T>>();
     return provider?.bloc;
-  }
+  }//Not working
 }
 
 class BlocProvider<T extends Disposable> extends StatefulWidget {

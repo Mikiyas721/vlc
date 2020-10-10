@@ -44,16 +44,16 @@ class GalleryPage extends StatelessWidget {
                 ),
               ),
               body: TabBarView(children: <Widget>[
-                getBody(bloc.galleryStream),
-                getBody(bloc.imageStream),
-                getBody(bloc.videoStream),
+                getBody(bloc.galleryStream,bloc),
+                getBody(bloc.imageStream,bloc),
+                getBody(bloc.videoStream,bloc),
               ]),
             ));
       },
     );
   }
 
-  getBody(Stream<List<AlbumModel>> stream) {
+  Widget getBody(Stream<List<AlbumModel>> stream, ImageBloc bloc) {
     return StreamBuilder(
         stream: stream,
         builder: (BuildContext context, AsyncSnapshot<List<AlbumModel>> snapShot) {
@@ -65,7 +65,7 @@ class GalleryPage extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: GridView.count(
                     crossAxisCount: 1,
-                    children: getAlbums(context, snapShot.data),
+                    children: getAlbums(context, snapShot.data, bloc),
                     padding: EdgeInsets.all(5),
                   ),
                 );
@@ -73,7 +73,7 @@ class GalleryPage extends StatelessWidget {
   }
 }
 
-List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels) {
+List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels, ImageBloc bloc) {
   List<Widget> albums = [];
   for (AlbumModel album in albumModels) {
     albums.add(GestureDetector(
@@ -97,9 +97,7 @@ List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels) {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
           return GalleryAlbumPage(
-            title: album.name,
-            mediaModels: album.mediaList,
-          );
+              title: album.name, mediaModels: album.mediaList, bloc: bloc);
         }));
       },
     ));

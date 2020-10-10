@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:holding_gesture/holding_gesture.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/model/media.dart';
+import '../../model/media.dart';
 import '../../bloc/audioBloc.dart';
 import '../../bloc/provider/provider.dart';
 import '../../model/currentAudio.dart';
@@ -80,11 +80,11 @@ class AudioControls extends StatelessWidget {
                         .seek(Duration(milliseconds: (await _audioPlayer.getCurrentPosition()) - 5000));
                   },
                   onTap: () {
-                    if (family != null && currentAudioIndex != null) {
+                    if (family != null && currentAudioIndex>0) {
                       int currentAudioIndex = this.currentAudioIndex - 1;
                       bloc.onAudioTap(family, currentAudioIndex);
                     } else
-                      Toast.show('Unable to play previous audio', context);
+                      Toast.show('No more audio', context);
                   },
                   holdTimeout: Duration(milliseconds: 300),
                 ),
@@ -106,7 +106,9 @@ class AudioControls extends StatelessWidget {
                     : IconButton(
                         icon: Icon(Icons.play_arrow),
                         onPressed: () {
-                          if (path != null) {
+                          if(family==null&&path==null)
+                            Toast.show('No Audio file to play', context);
+                          else {
                             bloc.currentAudio = CurrentAudioModel(
                                 family: family,
                                 currentAudioIndex: currentAudioIndex,
@@ -114,8 +116,8 @@ class AudioControls extends StatelessWidget {
                                 name: audioName,
                                 isStopped: false);
                             _audioPlayer.resume();
-                          } else
-                            Toast.show('No Audio file to play', context);
+                          }
+
                         },
                       ),
                 IconButton(
@@ -131,11 +133,11 @@ class AudioControls extends StatelessWidget {
                         .seek(Duration(milliseconds: (await _audioPlayer.getCurrentPosition()) + 5000));
                   },
                   onTap: () {
-                    if (family != null && currentAudioIndex != null) {
+                    if (family != null && currentAudioIndex < family.length - 1) {
                       int currentAudioIndex = this.currentAudioIndex + 1;
                       bloc.onAudioTap(family, currentAudioIndex);
                     } else
-                      Toast.show('Unable to play previous audio', context);
+                      Toast.show('No more Audio', context);
                   },
                   holdTimeout: Duration(milliseconds: 300),
                 ),

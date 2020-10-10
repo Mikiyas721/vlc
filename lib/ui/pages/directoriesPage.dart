@@ -57,9 +57,9 @@ class DirectoriesPage extends StatelessWidget {
                     stream: bloc.playingStream,
                     builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
                       return snapShot.data == null
-                          ? null
+                          ? Container(height:0, width:0)
                           : snapShot.data.isStopped
-                              ? null
+                              ? Container(height:0, width:0)
                               : AudioControls(
                                   isPlaying: snapShot.data.isPlaying,
                                   currentAudioPosition: snapShot.data.currentAudioPosition,

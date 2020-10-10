@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../../../bloc/galleryBloc.dart';
 import '../../../bloc/provider/provider.dart';
@@ -9,25 +11,25 @@ import '../../../model/media.dart';
 class GalleryAlbumPage extends StatelessWidget {
   final List<MediaModel> mediaModels;
   final String title;
+  final ImageBloc bloc;
 
-  GalleryAlbumPage({this.title, this.mediaModels});
+  GalleryAlbumPage({this.title, this.mediaModels, this.bloc});
 
   @override
   Widget build(BuildContext context) {
-    ImageBloc bloc = Provider.of<ImageBloc>(context);
     return Scaffold(
         appBar: AppBar(title: Text(title)),
         body: Align(
           alignment: Alignment.topLeft,
           child: GridView.count(
             crossAxisCount: 3,
-            children: getImages(context, bloc),
+            children: getImages(context),
             padding: EdgeInsets.all(5),
           ),
         ));
   }
 
-  List<Widget> getImages(BuildContext context, ImageBloc bloc) {
+  List<Widget> getImages(BuildContext context) {
     List<Widget> mediaWidgets = [];
     if (mediaModels != null) {
       double width = MediaQuery.of(context).size.width;

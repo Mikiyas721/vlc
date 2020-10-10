@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../model/media.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 class MyImageView extends StatefulWidget {
   final List<PathModel> family;
@@ -15,6 +15,7 @@ class MyImageView extends StatefulWidget {
 class _MyImageViewState extends State<MyImageView> {
   var currentImage;
   int currentIndex;
+  double scale = 1;
 
   @override
   void initState() {
@@ -34,25 +35,28 @@ class _MyImageViewState extends State<MyImageView> {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: GestureDetector(
-        onPanUpdate: (DragUpdateDetails dragUpdateDetails) {
-          if (dragUpdateDetails.delta.dx > 0) {
-            setState(() {
-              if (currentIndex > 0) currentIndex--;
-            });
-          } else if (dragUpdateDetails.delta.dx < 0) {
-            setState(() {
-              if (currentIndex < widget.family.length - 1) currentIndex++;
-            });
-          }
+        onScaleUpdate: (ScaleUpdateDetails scaleUpdateDetails) {
+          setState(() {
+            scale = scaleUpdateDetails.scale;
+          });
+        },
+        onDoubleTap: () {
+          setState(() {
+            scale = 1;
+          });
         },
         child: Center(
-          child: Container(
-            width: screenWidth,
-            height: currentImage.runtimeType == MediaModel
-                ? (currentImage.height * screenWidth) / currentImage.width
-                : screenHeight,
-            decoration: BoxDecoration(
-                image: DecorationImage(image: FileImage(currentImage.mediaFile), fit: BoxFit.fill)),
+          child: Transform(
+            transform: Matrix4.diagonal3(Vector3.all(scale)),
+            alignment: FractionalOffset.center,
+            child: Container(
+              width: screenWidth,
+              height: currentImage.runtimeType == MediaModel
+                  ? (currentImage.height * screenWidth) / currentImage.width
+                  : screenHeight,
+              decoration: BoxDecoration(
+                  image: DecorationImage(image: FileImage(currentImage.mediaFile), fit: BoxFit.fill)),
+            ),
           ),
         ),
       ),
