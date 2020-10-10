@@ -89,7 +89,7 @@ class DirectoriesPage extends StatelessWidget {
                 String fileType = lookupMimeType(model.path).split('/')[0];
                 if (fileType == 'image') {
                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                    return MyImageView(imageFile: File(model.path));
+                    return MyImageView(picture: File(model.path));
                   }));
                 } else if (fileType == 'video') {
                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {

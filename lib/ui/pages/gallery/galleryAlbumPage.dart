@@ -31,47 +31,46 @@ class GalleryAlbumPage extends StatelessWidget {
     List<Widget> mediaWidgets = [];
     if (mediaModels != null) {
       double width = MediaQuery.of(context).size.width;
-      mediaModels.forEach((mediaModel) {
+      for (int i = 0; i < mediaModels.length; i++) {
         mediaWidgets.add(GestureDetector(
           child: Container(
             width: width * 0.33,
             height: width * 0.33,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: mediaModel.thumbNail != null
-                        ? MemoryImage(mediaModel.thumbNail)
-                        : FileImage(mediaModel.mediaFile),
+                    image: mediaModels[i].thumbNail != null
+                        ? MemoryImage(mediaModels[i].thumbNail)
+                        : FileImage(mediaModels[i].mediaFile),
                     fit: BoxFit.cover)),
             margin: EdgeInsets.all(2),
             child: Align(
               child: Icon(
-                mediaModel.mediaType == MediaType.IMAGE ? Icons.image : Icons.videocam,
+                mediaModels[i].mediaType == MediaType.IMAGE ? Icons.image : Icons.videocam,
                 color: Colors.white,
               ),
               alignment: Alignment.bottomRight,
             ),
           ),
           onTap: () {
-            if (mediaModel.mediaType == MediaType.IMAGE) {
+            if (mediaModels[i].mediaType == MediaType.IMAGE) {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                 return MyImageView(
-                  width: mediaModel.width,
-                  height: mediaModel.height,
-                  imageFile: mediaModel.mediaFile,
+                  family: mediaModels,
+                  currentPictureIndex: i,
                 );
               }));
             } else {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                bloc.addHistory(mediaModel.mediaFile.path);
+                bloc.addHistory(mediaModels[i].mediaFile.path);
                 return MyVideoPlayer(
-                  mediaFile: mediaModel.mediaFile,
-                  fileName: mediaModel.getName(),
+                  mediaFile: mediaModels[i].mediaFile,
+                  fileName: mediaModels[i].getName(),
                 );
               }));
             }
           },
         ));
-      });
+      }
     }
     return mediaWidgets;
   }
