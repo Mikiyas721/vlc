@@ -3,26 +3,23 @@ import 'package:flutter/material.dart';
 import '../../model/media.dart';
 
 class MyImageView extends StatefulWidget {
-  final List<MediaModel> family;
+  final List<PathModel> family;
   final int currentPictureIndex;
-  final File picture;
 
-  MyImageView({this.family, this.currentPictureIndex, this.picture});
+  MyImageView({this.family, this.currentPictureIndex});
 
   @override
   _MyImageViewState createState() => _MyImageViewState();
 }
 
 class _MyImageViewState extends State<MyImageView> {
-  MediaModel currentImage;
+  var currentImage;
   int currentIndex;
 
   @override
   void initState() {
-    if (widget.picture == null) {
-      currentIndex = widget.currentPictureIndex;
-      currentImage = widget.family[currentIndex];
-    }
+    currentIndex = widget.currentPictureIndex;
+    currentImage = widget.family[currentIndex];
     super.initState();
   }
 
@@ -38,28 +35,24 @@ class _MyImageViewState extends State<MyImageView> {
       ),
       body: GestureDetector(
         onPanUpdate: (DragUpdateDetails dragUpdateDetails) {
-          if (widget.picture == null) {
-            if (dragUpdateDetails.delta.dx > 0) {
-              setState(() {
-                if (currentIndex > 0) currentIndex--;
-              });
-            } else if (dragUpdateDetails.delta.dx < 0) {
-              setState(() {
-                if (currentIndex < widget.family.length - 1) currentIndex++;
-              });
-            }
+          if (dragUpdateDetails.delta.dx > 0) {
+            setState(() {
+              if (currentIndex > 0) currentIndex--;
+            });
+          } else if (dragUpdateDetails.delta.dx < 0) {
+            setState(() {
+              if (currentIndex < widget.family.length - 1) currentIndex++;
+            });
           }
         },
         child: Center(
           child: Container(
             width: screenWidth,
-            height: currentImage == null
-                ? screenHeight
-                : (currentImage.height * screenWidth) / currentImage.width,
+            height: currentImage.runtimeType == MediaModel
+                ? (currentImage.height * screenWidth) / currentImage.width
+                : screenHeight,
             decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: FileImage(widget.picture == null ? currentImage.mediaFile : widget.picture),
-                    fit: BoxFit.fill)),
+                image: DecorationImage(image: FileImage(currentImage.mediaFile), fit: BoxFit.fill)),
           ),
         ),
       ),

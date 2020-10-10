@@ -80,32 +80,35 @@ class DirectoriesPage extends StatelessWidget {
   List<Widget> getBody(List<DevicePathModel> paths, DirectoryBloc bloc, BuildContext context) {
     List<Widget> widgets = [];
     if (paths != null) {
-      paths.forEach((model) {
+      for (int i = 0; i < paths.length; i++) {
         widgets.add(MyListTile(
-            leadingIcon: isFile(model.path) ? Icons.attach_file : Icons.folder,
-            title: getTitle(model.path),
+            leadingIcon: isFile(paths[i].path) ? Icons.attach_file : Icons.folder,
+            title: getTitle(paths[i].path),
             onTap: () {
-              if (isFile(model.path)) {
-                String fileType = lookupMimeType(model.path).split('/')[0];
+              if (isFile(paths[i].path)) {
+                String fileType = lookupMimeType(paths[i].path).split('/')[0];
                 if (fileType == 'image') {
                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                    return MyImageView(picture: File(model.path));
+                    return MyImageView(
+                      family: [paths[i]],
+                      currentPictureIndex: 0,
+                    );
                   }));
                 } else if (fileType == 'video') {
                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                     return MyVideoPlayer(
-                      mediaFile: File(model.path),
-                      fileName: getTitle(model.path),
-                    );
+                        /*mediaFile: File(model.path),
+                      fileName: getTitle(model.path),*/
+                        );
                   }));
                 } else if (fileType == 'audio') {
-                  bloc.playAudio(model.path);
+                  bloc.playAudio(paths[i].path);
                 } else
                   Toast.show('Can not open this file', context);
               } else
-                bloc.fetchChildDirs(model.path);
+                bloc.fetchChildDirs(paths[i].path);
             }));
-      });
+      }
     }
     return widgets;
   }

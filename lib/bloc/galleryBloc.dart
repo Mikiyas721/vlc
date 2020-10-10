@@ -17,7 +17,7 @@ abstract class MediaBloc extends Disposable {
         albumMedia.add(MediaModel(
             width: asset.width,
             duration: asset.duration,
-            mediaFile: await asset.file,
+            file: await asset.file,
             height: asset.height,
             size: asset.size,
             id: asset.id,

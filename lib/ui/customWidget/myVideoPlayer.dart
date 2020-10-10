@@ -4,12 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+import 'package:vlc/model/media.dart';
 
 class MyVideoPlayer extends StatefulWidget {
-  final File mediaFile;
-  final String fileName;
+  final List<PathModel> family;
+  final int currentVideoIndex;
 
-  MyVideoPlayer({this.mediaFile, this.fileName});
+  MyVideoPlayer({this.family, this.currentVideoIndex});
 
   @override
   _MyVideoPlayerState createState() => _MyVideoPlayerState();
@@ -18,26 +19,29 @@ class MyVideoPlayer extends StatefulWidget {
 class _MyVideoPlayerState extends State<MyVideoPlayer> {
   FlickVideoPlayer _flickVideoPlayer;
   FlickManager _flickManager;
+  PathModel currentVideo;
+  int currentIndex;
 
   @override
   void initState() {
+    currentIndex = widget.currentVideoIndex;
+    currentVideo = widget.family[currentIndex];
     _flickManager = FlickManager(
-        videoPlayerController: VideoPlayerController.file(widget.mediaFile),
+        videoPlayerController: VideoPlayerController.file(currentVideo.mediaFile),
         onVideoEnd: () {
-          //TODO play next video and adjust device orientation accordingly
-          Navigator.pop(context);
+          if (currentIndex < widget.family.length - 1) {
+            setState(() {
+              currentIndex++;
+            });
+          } else
+            Navigator.pop(context);
+          //TODO adjust device orientation accordingly
         });
     _flickVideoPlayer = FlickVideoPlayer(
       flickManager: _flickManager,
       preferredDeviceOrientation: [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp],
     );
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _flickManager.dispose();
-    super.dispose();
   }
 
   @override
@@ -49,7 +53,7 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
         title: SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: Text(
-              widget.fileName,
+              currentVideo.getName(),
               style: TextStyle(color: Colors.white),
               softWrap: false,
               overflow: TextOverflow.ellipsis,
@@ -57,5 +61,11 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
       ),
       body: _flickVideoPlayer,
     );
+  }
+
+  @override
+  void dispose() {
+    _flickManager.dispose();
+    super.dispose();
   }
 }

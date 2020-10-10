@@ -6,8 +6,11 @@ import '../core/jsonModel.dart';
 
 abstract class PathModel extends JSONModel {
   final String path;
+  final File mediaFile;
 
-  PathModel({this.path}) : super(path);
+  PathModel({this.path})
+      : mediaFile = File(path),
+        super(path);
 
   String getName() {
     List<String> split = path.split('/');
@@ -17,7 +20,6 @@ abstract class PathModel extends JSONModel {
 
 class MediaModel extends PathModel {
   final String id;
-  final File mediaFile;
   final int width;
   final int height;
   final int duration;
@@ -33,12 +35,12 @@ class MediaModel extends PathModel {
       @required this.width,
       @required this.size,
       @required this.duration,
-      @required this.mediaFile,
+      @required File file,
       @required this.mediaType,
       @required this.thumbNail,
       this.streamUrl,
       this.orientation = 0})
-      : super(path: mediaFile.path);
+      : super(path: file.path);
 
   @override
   Map<String, dynamic> toMap() {
@@ -48,6 +50,7 @@ class MediaModel extends PathModel {
 
 class DevicePathModel extends PathModel {
   final String parentPath;
+
   DevicePathModel({path, this.parentPath}) : super(path: path);
 
   @override

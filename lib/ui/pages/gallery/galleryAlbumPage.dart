@@ -63,8 +63,8 @@ class GalleryAlbumPage extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                 bloc.addHistory(mediaModels[i].mediaFile.path);
                 return MyVideoPlayer(
-                  mediaFile: mediaModels[i].mediaFile,
-                  fileName: mediaModels[i].getName(),
+                  family: mediaModels,
+                  currentVideoIndex: i,
                 );
               }));
             }
