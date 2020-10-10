@@ -43,15 +43,17 @@ class PlayListBloc extends AudioPlayersBloc {
   }
 
   bool onPlaylistPlay(String playlistName) {
-    List<String> tracks = playlistRepo.getPreference<List>(playlistName);
+    List<PathModel> tracks = playlistRepo.getPlaylistElements();
     if (tracks != null) {
-      String path = tracks[Random().nextInt(tracks.length)];
-      audioPlayer.play(path);
-      historyRepo.addToHistory(path);
-      DevicePathModel model = DevicePathModel(path: path);
-      positionChangeListen(model);
-      onCurrentAudioDone(getRandomTrack(tracks));
-      this.currentAudio = CurrentAudioModel(path: model.path, isPlaying: true, name: model.getName());
+      int random = Random().nextInt(tracks.length);
+      audioPlayer.play(tracks[random].path);
+      historyRepo.addToHistory(tracks[random].path);
+      positionChangeListen(
+        pathModel: tracks,
+      );
+      onCurrentAudioDone(tracks, isRandom: true);
+      this.currentAudio = CurrentAudioModel(
+          path: tracks[random].path, isPlaying: true, name: tracks[random].getName(), isStopped: false);
       return false;
     }
     return true;

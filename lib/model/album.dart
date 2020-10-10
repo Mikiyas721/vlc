@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../core/jsonModel.dart';
@@ -22,7 +21,6 @@ class AlbumModel extends JSONModel {
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
     return null;
   }
 }

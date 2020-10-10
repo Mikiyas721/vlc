@@ -42,26 +42,23 @@ class StreamPage extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(10),
               )),
-          bottomSheet:
-              StreamBuilder(
-                stream: bloc.onlineStream,
-                  builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
-            return snapShot.data == null
-                ? AudioControls(
-                    path: '',
-                    audioName: '',
-                    currentAudioPosition: 0,
-                    audioTotalDuration: 1,
-                    isPlaying: false,
-                  )
-                : AudioControls(
-                    path: snapShot.data.path,
-                    audioName: snapShot.data.name,
-                    currentAudioPosition: snapShot.data.currentAudioPosition,
-                    audioTotalDuration: snapShot.data.audioDuration,
-                    isPlaying: snapShot.data.isPlaying,
-                  );
-          }),
+          bottomSheet: StreamBuilder(
+              stream: bloc.onlineStream,
+              builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
+                return snapShot.data == null
+                    ? null
+                    : snapShot.data.isStopped
+                        ? null
+                        : AudioControls(
+                            isPlaying: snapShot.data.isPlaying,
+                            currentAudioPosition: snapShot.data.currentAudioPosition,
+                            audioTotalDuration: snapShot.data.audioDuration,
+                            path: snapShot.data.path,
+                            family: snapShot.data.family,
+                            currentAudioIndex: snapShot.data.currentAudioIndex,
+                            audioName: snapShot.data.name,
+                          );
+              }),
         );
       },
     );

@@ -44,4 +44,13 @@ class PlaylistRepo extends ListRepo<DevicePathModel> {
       return [];
     }
   }
+
+  List<PathModel> getPlaylistElements() {
+    List<PathModel> pathModels = [];
+    List<String> saved = getPreference<List>(playlistsKey);
+    saved.forEach((element) {
+      pathModels.add(DevicePathModel(path: element));
+    });
+    return pathModels;
+  }
 }

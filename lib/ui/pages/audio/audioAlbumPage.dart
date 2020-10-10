@@ -35,20 +35,18 @@ class AudioAlbumPage extends StatelessWidget {
                 stream: bloc.playingStream,
                 builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
                   return snapShot.data == null
-                      ? AudioControls(
-                          isPlaying: false,
-                          currentAudioPosition: 0,
-                          audioTotalDuration: 1,
-                          path: null,
-                          audioName: '',
-                        )
-                      : AudioControls(
-                          isPlaying: snapShot.data.isPlaying,
-                          currentAudioPosition: snapShot.data.currentAudioPosition,
-                          audioTotalDuration: snapShot.data.audioDuration,
-                          path: snapShot.data.path,
-                          audioName: snapShot.data.name,
-                        );
+                      ? null
+                      : snapShot.data.isStopped
+                          ? null
+                          : AudioControls(
+                              isPlaying: snapShot.data.isPlaying,
+                              currentAudioPosition: snapShot.data.currentAudioPosition,
+                              audioTotalDuration: snapShot.data.audioDuration,
+                              path: snapShot.data.path,
+                              family: snapShot.data.family,
+                              currentAudioIndex: snapShot.data.currentAudioIndex,
+                              audioName: snapShot.data.name,
+                            );
                 }),
           );
         });
@@ -56,29 +54,31 @@ class AudioAlbumPage extends StatelessWidget {
 
   List<Widget> getAlbumBody(AudioBloc bloc, BuildContext context) {
     List<Widget> elements = [];
-    for (PathModel pathModel in albumAudio) {
+    for (int i = 0; i < albumAudio.length; i++) {
       elements.add(MyListTile(
         leadingIcon: Icons.audiotrack,
-        title: pathModel.getName(),
-        path: pathModel.path,
+        title: albumAudio[i].getName(),
+        path: albumAudio[i].path,
         onTap: () {
-          bloc.onAudioTap(pathModel, albumAudio);
+          bloc.onAudioTap(albumAudio, i);
         },
-        onAddAudioTap: isPlaylist?null:() {
-          List<String> playlists = bloc.getPlaylists;
-          playlists == null
-              ? Toast.show('There are no playlists. Please first create a playlist', context)
-              : showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return MyPlaylistSelectionDialog(
-                      options: playlists,
-                      onOKClicked: (List<CheckValue> checkValues) {
-                        bloc.onAddAudioToPlaylistTap(checkValues, pathModel.path);
-                      },
-                    );
-                  });
-        },
+        onAddAudioTap: isPlaylist
+            ? null
+            : () {
+                List<String> playlists = bloc.getPlaylists;
+                playlists == null
+                    ? Toast.show('There are no playlists. Please first create a playlist', context)
+                    : showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return MyPlaylistSelectionDialog(
+                            options: playlists,
+                            onOKClicked: (List<CheckValue> checkValues) {
+                              bloc.onAddAudioToPlaylistTap(checkValues, albumAudio[i].path);
+                            },
+                          );
+                        });
+              },
       ));
     }
     return elements;

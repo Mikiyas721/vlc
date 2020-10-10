@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:mime/mime.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
+import 'package:vlc/model/currentAudio.dart';
+import 'package:vlc/ui/customWidget/audioControls.dart';
 import '../../ui/customWidget/myImageView.dart';
 import '../../ui/customWidget/myVideoPlayer.dart';
 import '../../model/media.dart';
@@ -50,6 +52,23 @@ class DirectoriesPage extends StatelessWidget {
                                   child: Text('This directory is empty'),
                                 )
                               : ListView(children: getBody(snapShot.data, bloc, context));
+                    }),
+                bottomSheet: StreamBuilder(
+                    stream: bloc.playingStream,
+                    builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
+                      return snapShot.data == null
+                          ? null
+                          : snapShot.data.isStopped
+                              ? null
+                              : AudioControls(
+                                  isPlaying: snapShot.data.isPlaying,
+                                  currentAudioPosition: snapShot.data.currentAudioPosition,
+                                  audioTotalDuration: snapShot.data.audioDuration,
+                                  path: snapShot.data.path,
+                                  family: snapShot.data.family,
+                                  currentAudioIndex: snapShot.data.currentAudioIndex,
+                                  audioName: snapShot.data.name,
+                                );
                     }),
               ),
               onWillPop: () async {

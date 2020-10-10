@@ -3,25 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:holding_gesture/holding_gesture.dart';
 import 'package:toast/toast.dart';
-import '../../core/mixins/dateTime.dart';
+import 'package:vlc/model/media.dart';
 import '../../bloc/audioBloc.dart';
 import '../../bloc/provider/provider.dart';
 import '../../model/currentAudio.dart';
 
-class AudioControls extends StatelessWidget with DateTimeMixin {
+class AudioControls extends StatelessWidget {
   final AudioPlayer _audioPlayer = GetIt.instance.get();
   final bool isPlaying;
   final int currentAudioPosition;
   final int audioTotalDuration;
   final String path;
   final String audioName;
+  final List<PathModel> family;
+  final int currentAudioIndex;
 
   AudioControls(
       {@required this.isPlaying,
       @required this.currentAudioPosition,
       @required this.audioTotalDuration,
-      @required this.path,
-      @required this.audioName});
+      @required this.audioName,
+      this.path,
+      this.family,
+      this.currentAudioIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +80,11 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                         .seek(Duration(milliseconds: (await _audioPlayer.getCurrentPosition()) - 5000));
                   },
                   onTap: () {
-                    //TODO Previous Audio
+                    if (family != null && currentAudioIndex != null) {
+                      int currentAudioIndex = this.currentAudioIndex - 1;
+                      bloc.onAudioTap(family, currentAudioIndex);
+                    } else
+                      Toast.show('Unable to play previous audio', context);
                   },
                   holdTimeout: Duration(milliseconds: 300),
                 ),
@@ -85,11 +93,13 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                         icon: Icon(Icons.pause),
                         onPressed: () async {
                           bloc.currentAudio = CurrentAudioModel(
-                              path: path,
                               isPlaying: false,
                               currentAudioPosition: await _audioPlayer.getCurrentPosition(),
                               audioDuration: await _audioPlayer.getDuration(),
-                              name: audioName);
+                              name: audioName,
+                              family: family,
+                              currentAudioIndex: currentAudioIndex,
+                              isStopped: false);
                           _audioPlayer.pause();
                         },
                       )
@@ -97,8 +107,12 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                         icon: Icon(Icons.play_arrow),
                         onPressed: () {
                           if (path != null) {
-                            bloc.currentAudio =
-                                CurrentAudioModel(path: path, isPlaying: true, name: audioName);
+                            bloc.currentAudio = CurrentAudioModel(
+                                family: family,
+                                currentAudioIndex: currentAudioIndex,
+                                isPlaying: true,
+                                name: audioName,
+                                isStopped: false);
                             _audioPlayer.resume();
                           } else
                             Toast.show('No Audio file to play', context);
@@ -107,7 +121,7 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                 IconButton(
                     icon: Icon(Icons.stop),
                     onPressed: () {
-                      bloc.currentAudio = CurrentAudioModel(path: path, isPlaying: false, name: audioName);
+                      bloc.currentAudio = CurrentAudioModel(isStopped: true);
                       _audioPlayer.stop();
                     }),
                 HoldDetector(
@@ -117,7 +131,11 @@ class AudioControls extends StatelessWidget with DateTimeMixin {
                         .seek(Duration(milliseconds: (await _audioPlayer.getCurrentPosition()) + 5000));
                   },
                   onTap: () {
-                    //TODO Next Audio
+                    if (family != null && currentAudioIndex != null) {
+                      int currentAudioIndex = this.currentAudioIndex + 1;
+                      bloc.onAudioTap(family, currentAudioIndex);
+                    } else
+                      Toast.show('Unable to play previous audio', context);
                   },
                   holdTimeout: Duration(milliseconds: 300),
                 ),

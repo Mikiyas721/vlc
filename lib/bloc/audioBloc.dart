@@ -29,29 +29,50 @@ abstract class AudioPlayersBloc extends MediaBloc {
 
   List<String> get getPlaylists => playlistRepo.getPlayLists;
 
-  void positionChangeListen(PathModel pathModel) {
+  void positionChangeListen({String path, List<PathModel> pathModel, int currentAudioIndex}) {
     audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
       this.currentAudio = CurrentAudioModel(
-          path: pathModel.path,
+          path: path,
+          family: pathModel,
+          currentAudioIndex: currentAudioIndex,
           isPlaying: true,
           // Not for fast forward and fast rewind
           currentAudioPosition: await audioPlayer.getCurrentPosition(),
           audioDuration: await audioPlayer.getDuration(),
-          name: pathModel.getName());
+          name: pathModel[currentAudioIndex].getName(),
+          isStopped: false);
     });
   }
 
-  void onCurrentAudioDone(PathModel pathModel) {
-    // TODO accept a list instead
+  void onCurrentAudioDone(List<PathModel> pathModels, {int currentAudioIndex, bool isRandom = false}) {
     audioPlayer.onPlayerCompletion.listen((data) async {
-      audioPlayer.play(pathModel.path);
-      historyRepo.addToHistory(pathModel.path);
-      this.currentAudio = CurrentAudioModel(
-          path: pathModel.path,
-          isPlaying: true,
-          currentAudioPosition: await audioPlayer.getCurrentPosition(),
-          audioDuration: await audioPlayer.getDuration(),
-          name: pathModel.getName());
+      if (isRandom) {
+        int randomIndex = Random().nextInt(pathModels.length - 1);
+        audioPlayer.play(pathModels[randomIndex].path);
+        historyRepo.addToHistory(pathModels[randomIndex].path);
+        this.currentAudio = CurrentAudioModel(
+            isPlaying: true,
+            currentAudioPosition: await audioPlayer.getCurrentPosition(),
+            audioDuration: await audioPlayer.getDuration(),
+            name: pathModels[randomIndex].getName(),
+            family: pathModels,
+            currentAudioIndex: randomIndex,
+            isStopped: false);
+      } else {
+        currentAudioIndex++;
+        if (currentAudioIndex < pathModels.length) {
+          audioPlayer.play(pathModels[currentAudioIndex].path);
+          historyRepo.addToHistory(pathModels[currentAudioIndex].path);
+          this.currentAudio = CurrentAudioModel(
+              family: pathModels,
+              currentAudioIndex: currentAudioIndex,
+              isPlaying: true,
+              currentAudioPosition: await audioPlayer.getCurrentPosition(),
+              audioDuration: await audioPlayer.getDuration(),
+              name: pathModels[currentAudioIndex].getName(),
+              isStopped: false);
+        }
+      }
     });
   }
 }
@@ -67,8 +88,8 @@ class AudioBloc extends AudioPlayersBloc {
       _remoteAudioRepo.getStream<CurrentAudioModel>((value) => value);
 
   void onAudioUrlEntered(String newValue) {
-    _remoteAudioRepo
-        .updateStream(CurrentAudioModel(path: newValue, isPlaying: false, name: getName(newValue)));
+    _remoteAudioRepo.updateStream(
+        CurrentAudioModel(path: newValue, isPlaying: false, name: getName(newValue), isStopped: false));
   }
 
   void onSendUrl() {
@@ -76,26 +97,31 @@ class AudioBloc extends AudioPlayersBloc {
       audioPlayer.stop();
       String path = _remoteAudioRepo.dataStream.value.path;
       audioPlayer.play(path, isLocal: false);
-      positionChangeListen(DevicePathModel(path: path));
+      positionChangeListen(path: path);
     } catch (Exception) {
       debugPrint('No audio file is playing');
     }
   }
 
-  bool onShuffleClicked(List<AlbumModel> audioModels) {
-    if (audioModels != null) {
-      MediaModel mediaModel = getRandomTrackFromAlbums(audioModels);
+  bool onShuffleClicked(List<AlbumModel> albumModels) {
+    if (albumModels != null) {
+      List<PathModel> audioList = getAllMedia(albumModels);
+      int randomIndex = Random().nextInt(audioList.length - 1);
       try {
         audioPlayer.stop();
       } catch (Exception) {
         debugPrint('Error at onShuffleClicked. No audio file to stop playing');
       }
-      audioPlayer.play(mediaModel.mediaFile.path);
-      historyRepo.addToHistory(mediaModel.mediaFile.path);
-      positionChangeListen(mediaModel);
-      onCurrentAudioDone(getRandomTrackFromAlbums(audioModels));
-      this.currentAudio =
-          CurrentAudioModel(path: mediaModel.mediaFile.path, isPlaying: true, name: mediaModel.getName());
+      audioPlayer.play(audioList[randomIndex].path);
+      historyRepo.addToHistory(audioList[randomIndex].path);
+      positionChangeListen(pathModel: audioList, currentAudioIndex: randomIndex);
+      onCurrentAudioDone(audioList, isRandom: true);
+      this.currentAudio = CurrentAudioModel(
+          family: audioList,
+          currentAudioIndex: randomIndex,
+          isPlaying: true,
+          name: audioList[randomIndex].getName(),
+          isStopped: false);
       return true;
     }
     return false;
@@ -111,33 +137,37 @@ class AudioBloc extends AudioPlayersBloc {
     MediaModel mediaModel = album.mediaList[random];
     audioPlayer.play(mediaModel.mediaFile.path);
     historyRepo.addToHistory(mediaModel.mediaFile.path);
-    positionChangeListen(mediaModel);
-    onCurrentAudioDone(album.mediaList[album.mediaList.length - 1]);
-    this.currentAudio =
-        CurrentAudioModel(path: mediaModel.mediaFile.path, isPlaying: true, name: mediaModel.getName());
+    positionChangeListen(pathModel: album.mediaList, currentAudioIndex: random);
+    onCurrentAudioDone(album.mediaList, currentAudioIndex: random);
+    this.currentAudio = CurrentAudioModel(
+        family: album.mediaList,
+        currentAudioIndex: random,
+        isPlaying: true,
+        name: mediaModel.getName(),
+        isStopped: false);
   }
 
-  void onAudioTap(PathModel pathModel, List<PathModel> albumAudio) {
+  void onAudioTap(List<PathModel> albumAudio, int currentAudioIndex) {
     try {
       audioPlayer.stop();
     } catch (Exception) {
       debugPrint('Error at onAudioTap. No audio file to stop playing');
     }
-    audioPlayer.play(pathModel.path);
-    historyRepo.addToHistory(pathModel.path);
-    positionChangeListen(pathModel);
-    onCurrentAudioDone(pathModel);
-    this.currentAudio = CurrentAudioModel(path: pathModel.path, isPlaying: true, name: pathModel.getName());
+    PathModel currentAudioModel = albumAudio[currentAudioIndex];
+    audioPlayer.play(currentAudioModel.path);
+    historyRepo.addToHistory(currentAudioModel.path);
+    positionChangeListen(pathModel: albumAudio, currentAudioIndex: currentAudioIndex);
+    onCurrentAudioDone(albumAudio, currentAudioIndex: currentAudioIndex);
+    this.currentAudio = CurrentAudioModel(
+        path: albumAudio[currentAudioIndex].path,
+        isPlaying: true,
+        name: albumAudio[currentAudioIndex].getName(),
+        isStopped: false);
   }
 
   void loadDeviceAudio() async {
     List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(type: RequestType.audio);
     _deviceAudioRepo.updateStream(await getAlbumModels(albums));
-  }
-
-  MediaModel getRandomTrackFromAlbums(List<AlbumModel> audioModels) {
-    final selectedAlbum = audioModels[Random().nextInt(audioModels.length - 1)];
-    return selectedAlbum.mediaList[selectedAlbum.mediaList.length - 1];
   }
 
   void onAddAudioToPlaylistTap(List<CheckValue> checkValues, String path) {
@@ -164,5 +194,13 @@ class AudioBloc extends AudioPlayersBloc {
   static String getName(String path) {
     List<String> split = path.split('/');
     return split.elementAt(split.length - 1);
+  }
+
+  static List<PathModel> getAllMedia(List<AlbumModel> albumModels) {
+    List<PathModel> pathModels = [];
+    albumModels.forEach((albumModel) {
+      pathModels.addAll(albumModel.mediaList);
+    });
+    return pathModels;
   }
 }

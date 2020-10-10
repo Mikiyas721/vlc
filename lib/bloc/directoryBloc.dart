@@ -56,8 +56,9 @@ class DirectoryBloc extends AudioPlayersBloc {
     audioPlayer.play(path);
     historyRepo.addToHistory(path);
     final model = DevicePathModel(path: path);
-    positionChangeListen(model);
-    this.currentAudio = CurrentAudioModel(path: path, isPlaying: true, name: model.getName());
+    positionChangeListen(path: path);
+    this.currentAudio =
+        CurrentAudioModel(path: path, isPlaying: true, name: model.getName(), isStopped: false);
   }
 
   @override

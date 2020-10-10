@@ -50,25 +50,24 @@ class PlayListsPage extends StatelessWidget {
                           children: getBody(snapshot.data, bloc, context),
                         ));
             },
-          ),bottomSheet: StreamBuilder(
-            stream: bloc.playingStream,
-            builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
-              return snapShot.data == null
-                  ? AudioControls(
-                isPlaying: false,
-                currentAudioPosition: 0,
-                audioTotalDuration: 1,
-                path: null,
-                audioName: '',
-              )
-                  : AudioControls(
-                isPlaying: snapShot.data.isPlaying,
-                currentAudioPosition: snapShot.data.currentAudioPosition,
-                audioTotalDuration: snapShot.data.audioDuration,
-                path: snapShot.data.path,
-                audioName: snapShot.data.name,
-              );
-            }),
+          ),
+          bottomSheet: StreamBuilder(
+              stream: bloc.playingStream,
+              builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
+                return snapShot.data == null
+                    ? null
+                    : snapShot.data.isStopped
+                        ? null
+                        : AudioControls(
+                            isPlaying: snapShot.data.isPlaying,
+                            currentAudioPosition: snapShot.data.currentAudioPosition,
+                            audioTotalDuration: snapShot.data.audioDuration,
+                            path: snapShot.data.path,
+                            family: snapShot.data.family,
+                            currentAudioIndex: snapShot.data.currentAudioIndex,
+                            audioName: snapShot.data.name,
+                          );
+              }),
         );
       },
     );
@@ -89,7 +88,9 @@ class PlayListsPage extends StatelessWidget {
             else {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                 return AudioAlbumPage(
-                  title: element.value, albumAudio: tracks,isPlaylist: true,
+                  title: element.value,
+                  albumAudio: tracks,
+                  isPlaylist: true,
                 );
               }));
             }
