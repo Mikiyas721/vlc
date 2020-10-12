@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:vlc/model/mediaType.dart';
 import '../model/currentAudio.dart';
 import '../model/media.dart';
 import '../dataSource/directoryDataSource.dart';
@@ -54,7 +55,7 @@ class DirectoryBloc extends AudioPlayersBloc {
       debugPrint('Error at onAudioTap. No audio file to stop playing');
     }
     audioPlayer.play(path);
-    historyRepo.addToHistory(path);
+    historyRepo.addToHistory(path, MediaType.AUDIO);
     final model = DevicePathModel(path: path);
     positionChangeListen(path: path);
     this.currentAudio =

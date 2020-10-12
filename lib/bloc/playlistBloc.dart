@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:vlc/model/mediaType.dart';
+
 import '../model/currentAudio.dart';
 import '../model/media.dart';
 import 'audioBloc.dart';
@@ -47,7 +49,7 @@ class PlayListBloc extends AudioPlayersBloc {
     if (tracks != null) {
       int random = Random().nextInt(tracks.length);
       audioPlayer.play(tracks[random].path);
-      historyRepo.addToHistory(tracks[random].path);
+      historyRepo.addToHistory(tracks[random].path, MediaType.AUDIO);
       positionChangeListen(
         pathModel: tracks,
       );

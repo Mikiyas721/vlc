@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:vlc/model/mediaType.dart';
 import '../dataSource/historyDataSource.dart';
 import '../dataSource/playlistDataSource.dart';
 import '../ui/customWidget/myPlaylistSelectionDialog.dart';
@@ -49,7 +50,7 @@ abstract class AudioPlayersBloc extends MediaBloc {
       if (isRandom) {
         int randomIndex = Random().nextInt(pathModels.length - 1);
         audioPlayer.play(pathModels[randomIndex].path);
-        historyRepo.addToHistory(pathModels[randomIndex].path);
+        historyRepo.addToHistory(pathModels[randomIndex].path, MediaType.AUDIO);
         this.currentAudio = CurrentAudioModel(
             isPlaying: true,
             currentAudioPosition: await audioPlayer.getCurrentPosition(),
@@ -62,7 +63,7 @@ abstract class AudioPlayersBloc extends MediaBloc {
         currentAudioIndex++;
         if (currentAudioIndex < pathModels.length) {
           audioPlayer.play(pathModels[currentAudioIndex].path);
-          historyRepo.addToHistory(pathModels[currentAudioIndex].path);
+          historyRepo.addToHistory(pathModels[currentAudioIndex].path, MediaType.AUDIO);
           this.currentAudio = CurrentAudioModel(
               family: pathModels,
               currentAudioIndex: currentAudioIndex,
@@ -113,7 +114,7 @@ class AudioBloc extends AudioPlayersBloc {
         debugPrint('Error at onShuffleClicked. No audio file to stop playing');
       }
       audioPlayer.play(audioList[randomIndex].path);
-      historyRepo.addToHistory(audioList[randomIndex].path);
+      historyRepo.addToHistory(audioList[randomIndex].path, MediaType.AUDIO);
       positionChangeListen(pathModel: audioList, currentAudioIndex: randomIndex);
       onCurrentAudioDone(audioList, isRandom: true);
       this.currentAudio = CurrentAudioModel(
@@ -136,7 +137,7 @@ class AudioBloc extends AudioPlayersBloc {
     }
     MediaModel mediaModel = album.mediaList[random];
     audioPlayer.play(mediaModel.mediaFile.path);
-    historyRepo.addToHistory(mediaModel.mediaFile.path);
+    historyRepo.addToHistory(mediaModel.mediaFile.path, MediaType.AUDIO);
     positionChangeListen(pathModel: album.mediaList, currentAudioIndex: random);
     onCurrentAudioDone(album.mediaList, currentAudioIndex: random);
     this.currentAudio = CurrentAudioModel(
@@ -155,7 +156,7 @@ class AudioBloc extends AudioPlayersBloc {
     }
     PathModel currentAudioModel = albumAudio[currentAudioIndex];
     audioPlayer.play(currentAudioModel.path);
-    historyRepo.addToHistory(currentAudioModel.path);
+    historyRepo.addToHistory(currentAudioModel.path, MediaType.AUDIO);
     positionChangeListen(pathModel: albumAudio, currentAudioIndex: currentAudioIndex);
     onCurrentAudioDone(albumAudio, currentAudioIndex: currentAudioIndex);
     this.currentAudio = CurrentAudioModel(

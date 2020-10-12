@@ -50,8 +50,10 @@ class MediaModel extends PathModel {
 
 class DevicePathModel extends PathModel {
   final String parentPath;
+  final DateTime dateTime;
+  final MediaType mediaType;
 
-  DevicePathModel({path, this.parentPath}) : super(path: path);
+  DevicePathModel({path, this.parentPath, this.mediaType, this.dateTime}) : super(path: path);
 
   @override
   Map<String, dynamic> toMap() {

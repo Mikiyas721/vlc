@@ -73,8 +73,8 @@ class ImageBloc extends MediaBloc {
     else if (loadType == MediaType.VIDEO) _videoRepo.updateStream(await getAlbumModels(albums));
   }
 
-  void addHistory(String pathToSave) {
-    _historyRepo.addToHistory(pathToSave);
+  void addHistory(String pathToSave, MediaType mediaType) {
+    _historyRepo.addToHistory(pathToSave, mediaType);
   }
 
   @override

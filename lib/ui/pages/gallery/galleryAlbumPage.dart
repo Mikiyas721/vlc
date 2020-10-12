@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import '../../../bloc/galleryBloc.dart';
-import '../../../bloc/provider/provider.dart';
 import '../../../model/mediaType.dart';
 import '../../customWidget/myImageView.dart';
 import '../../customWidget/myVideoPlayer.dart';
@@ -63,7 +60,7 @@ class GalleryAlbumPage extends StatelessWidget {
               }));
             } else {
               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                bloc.addHistory(mediaModels[i].mediaFile.path);
+                bloc.addHistory(mediaModels[i].mediaFile.path,MediaType.VIDEO);
                 return MyVideoPlayer(
                   family: mediaModels,
                   currentVideoIndex: i,

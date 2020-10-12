@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vlc/model/mediaType.dart';
+import 'package:vlc/ui/customWidget/myListTIle.dart';
 import '../../model/media.dart';
 import '../../bloc/historyBloc.dart';
 import '../../bloc/provider/provider.dart';
@@ -33,7 +35,7 @@ class HistoryPage extends StatelessWidget {
                                 ),
                                 FlatButton(
                                   child: Text('Ok'),
-                                  onPressed: (){
+                                  onPressed: () {
                                     bloc.onDeleteHistory();
                                     Navigator.pop(context);
                                   },
@@ -58,7 +60,12 @@ class HistoryPage extends StatelessWidget {
   Widget getBody(List<DevicePathModel> models) {
     List<Widget> historyList = [];
     models.forEach((DevicePathModel stringModel) {
-      historyList.add(ListTile(leading: Icon(Icons.history), title: Text(stringModel.getName())));
+      historyList.add(MyListTile(
+        leadingIcon: stringModel.mediaType == MediaType.VIDEO ? Icons.videocam : Icons.music_note,
+        title: stringModel.getName(),
+        onTap: () {},
+        subTitle: stringModel.dateTime.toString().split('.')[0],
+      ));
       //TODO add DateTime and media type
     });
     return ListView(
