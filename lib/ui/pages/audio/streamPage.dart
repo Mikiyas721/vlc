@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import '../../../model/currentAudio.dart';
 import '../../../ui/customWidget/audioControls.dart';
 import '../../../bloc/audioBloc.dart';
@@ -37,7 +38,11 @@ class StreamPage extends StatelessWidget {
                           size: 35,
                           color: Colors.blue,
                         ),
-                        onPressed: bloc.onSendUrl)
+                        onPressed: ()async{
+                          int status = await bloc.onSendUrl();
+                          if(status ==0) Toast.show('Playing audio', context);
+                          else Toast.show('Could not play audio', context);
+                        })
                   ],
                 ),
                 padding: EdgeInsets.all(10),

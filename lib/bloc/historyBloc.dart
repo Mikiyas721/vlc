@@ -15,7 +15,6 @@ class HistoryBloc extends Disposable {
     List<DevicePathModel> mappedHistory = [];
     if (history != null) {
       history.forEach((String element) {
-        print(element);
         final firstSplit = element.split('&');
         final secondSplit = firstSplit[1].split('|');
         mappedHistory.add(DevicePathModel(path: firstSplit[0],dateTime: DateTime.parse(secondSplit[0]),mediaType: getMediaType(secondSplit[1])));

@@ -90,17 +90,20 @@ class AudioBloc extends AudioPlayersBloc {
 
   void onAudioUrlEntered(String newValue) {
     _remoteAudioRepo.updateStream(
-        CurrentAudioModel(path: newValue, isPlaying: false, name: getName(newValue), isStopped: false));
+        CurrentAudioModel(path: newValue, isPlaying: false, name: getName(newValue), isStopped: true));
   }
 
-  void onSendUrl() {
+  Future<int> onSendUrl() async {
     try {
       audioPlayer.stop();
       String path = _remoteAudioRepo.dataStream.value.path;
-      audioPlayer.play(path, isLocal: false);
+      _remoteAudioRepo.updateStream(
+          CurrentAudioModel(path: path, isPlaying: false, name: getName(path), isStopped: false));
       positionChangeListen(path: path);
+      return await audioPlayer.play(path, isLocal: false);
     } catch (Exception) {
       debugPrint('No audio file is playing');
+      return 0;
     }
   }
 
