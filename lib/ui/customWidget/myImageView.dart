@@ -36,13 +36,29 @@ class _MyImageViewState extends State<MyImageView> {
       ),
       body: GestureDetector(
         onScaleUpdate: (ScaleUpdateDetails scaleUpdateDetails) {
+          if (scaleUpdateDetails.focalPoint.dx > 0) {
+            setState(() {
+              if (currentIndex < widget.family.length - 1) {
+                currentIndex++;
+                currentImage = widget.family[currentIndex];
+              }
+            });
+          } else {
+            if (currentIndex > 0) {
+              currentIndex--;
+              currentImage = widget.family[currentIndex];
+            }
+          }
           setState(() {
             scale = scaleUpdateDetails.scale;
           });
         },
         onDoubleTap: () {
           setState(() {
-            scale = 1;
+            if (scale == 1)
+              scale = 2;
+            else
+              scale = 1;
           });
         },
         child: Center(

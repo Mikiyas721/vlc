@@ -86,10 +86,10 @@ class DirectoriesPage extends StatelessWidget {
             title: getTitle(models[i].path),
             onTap: () async {
               if (isFile(models[i].path)) {
-                final image = File(models[i].path);
-                final decodedImage = await decodeImageFromList(image.readAsBytesSync());
                 String fileType = lookupMimeType(models[i].path).split('/')[0];
                 if (fileType == 'image') {
+                  final image = File(models[i].path);
+                  final decodedImage = await decodeImageFromList(image.readAsBytesSync());
                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                     return MyImageView(
                       family: [
