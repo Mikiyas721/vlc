@@ -57,9 +57,9 @@ class DirectoriesPage extends StatelessWidget {
                     stream: bloc.playingStream,
                     builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
                       return snapShot.data == null
-                          ? Container(height:0, width:0)
+                          ? Container(height: 0, width: 0)
                           : snapShot.data.isStopped
-                              ? Container(height:0, width:0)
+                              ? Container(height: 0, width: 0)
                               : AudioControls(
                                   isPlaying: snapShot.data.isPlaying,
                                   currentAudioPosition: snapShot.data.currentAudioPosition,
@@ -77,36 +77,40 @@ class DirectoriesPage extends StatelessWidget {
         });
   }
 
-  List<Widget> getBody(List<DevicePathModel> paths, DirectoryBloc bloc, BuildContext context) {
+  List<Widget> getBody(List<DevicePathModel> models, DirectoryBloc bloc, BuildContext context) {
     List<Widget> widgets = [];
-    if (paths != null) {
-      for (int i = 0; i < paths.length; i++) {
+    if (models != null) {
+      for (int i = 0; i < models.length; i++) {
         widgets.add(MyListTile(
-            leadingIcon: isFile(paths[i].path) ? Icons.attach_file : Icons.folder,
-            title: getTitle(paths[i].path),
-            onTap: () {
-              if (isFile(paths[i].path)) {
-                String fileType = lookupMimeType(paths[i].path).split('/')[0];
+            leadingIcon: isFile(models[i].path) ? Icons.attach_file : Icons.folder,
+            title: getTitle(models[i].path),
+            onTap: () async {
+              if (isFile(models[i].path)) {
+                final image = File(models[i].path);
+                final decodedImage = await decodeImageFromList(image.readAsBytesSync());
+                String fileType = lookupMimeType(models[i].path).split('/')[0];
                 if (fileType == 'image') {
                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                     return MyImageView(
-                      family: [paths[i]],
+                      family: [
+                        MediaModel(height: decodedImage.height, width: decodedImage.width, file: image)
+                      ],
                       currentPictureIndex: 0,
                     );
                   }));
                 } else if (fileType == 'video') {
                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                     return MyVideoPlayer(
-                        /*mediaFile: File(model.path),
-                      fileName: getTitle(model.path),*/
-                        );
+                      family: [models[i]],
+                      currentVideoIndex: i,
+                    );
                   }));
                 } else if (fileType == 'audio') {
-                  bloc.playAudio(paths[i].path);
+                  bloc.playAudio(models[i].path);
                 } else
                   Toast.show('Can not open this file', context);
               } else
-                bloc.fetchChildDirs(paths[i].path);
+                bloc.fetchChildDirs(models[i].path);
             }));
       }
     }

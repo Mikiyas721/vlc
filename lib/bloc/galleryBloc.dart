@@ -20,7 +20,6 @@ abstract class MediaBloc extends Disposable {
             file: await asset.file,
             height: asset.height,
             size: asset.size,
-            id: asset.id,
             orientation: asset.orientation,
             mediaType: mapMediaType(asset.type),
             thumbNail: await asset.thumbDataWithSize(200, 200)));

@@ -19,7 +19,6 @@ abstract class PathModel extends JSONModel {
 }
 
 class MediaModel extends PathModel {
-  final String id;
   final int width;
   final int height;
   final int duration;
@@ -30,14 +29,13 @@ class MediaModel extends PathModel {
   final int orientation; // flutter_exif_rotation: ^0.2.7
 
   MediaModel(
-      {@required this.id,
+      {@required File file,
       @required this.height,
       @required this.width,
-      @required this.size,
-      @required this.duration,
-      @required File file,
-      @required this.mediaType,
-      @required this.thumbNail,
+      this.size,
+      this.duration,
+      this.mediaType,
+      this.thumbNail,
       this.streamUrl,
       this.orientation = 0})
       : super(path: file.path);
