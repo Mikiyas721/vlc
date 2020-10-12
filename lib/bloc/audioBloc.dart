@@ -171,7 +171,7 @@ class AudioBloc extends AudioPlayersBloc {
 
   void loadDeviceAudio() async {
     List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(type: RequestType.audio);
-    _deviceAudioRepo.updateStream(await getAlbumModels(albums));
+    await getAlbumModels(albums, _deviceAudioRepo);
   }
 
   void onAddAudioToPlaylistTap(List<CheckValue> checkValues, String path) {

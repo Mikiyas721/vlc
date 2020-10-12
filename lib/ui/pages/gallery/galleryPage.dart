@@ -9,46 +9,61 @@ import '../../../ui/customWidget/myDrawer.dart';
 import '../../../ui/pages/gallery/galleryAlbumPage.dart';
 import '../../customWidget/myDrawer.dart';
 
-class GalleryPage extends StatelessWidget {
+class GalleryPage extends StatefulWidget {
+  @override
+  _GalleryPageState createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends State<GalleryPage> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 3, vsync: this);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ImageBloc>(
       blocFactory: () => ImageBloc(),
       builder: (BuildContext context, ImageBloc bloc) {
-        bloc.loadMedia(MediaType.COMMON);
-        bloc.loadMedia(MediaType.IMAGE);
         bloc.loadMedia(MediaType.VIDEO);
+        bloc.loadMedia(MediaType.IMAGE);
+        bloc.loadMedia(MediaType.COMMON);
         return DefaultTabController(
             length: 3,
             child: Scaffold(
-              drawer: MyDrawer(isGallerySelected: true),
-              appBar: AppBar(
-                title: Text('Albums'),
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.refresh),
-                    onPressed: () async {
-                      await bloc.loadMedia(MediaType.COMMON);
-                      await bloc.loadMedia(MediaType.IMAGE);
-                      await bloc
-                          .loadMedia(MediaType.VIDEO); // TODO Check if its is possible to know the active tab
-                    },
-                  )
-                ],
-                bottom: TabBar(
-                  tabs: [
-                    Tab(icon: Icon(Icons.all_inclusive)),
-                    Tab(icon: Icon(Icons.image)),
-                    Tab(icon: Icon(Icons.videocam))
+                drawer: MyDrawer(isGallerySelected: true),
+                appBar: AppBar(
+                  title: Text('Albums'),
+                  actions: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.refresh),
+                      onPressed: () async {
+                        if (_tabController.index == 0)
+                          bloc.loadMedia(MediaType.VIDEO);
+                        else if (_tabController.index == 1)
+                          bloc.loadMedia(MediaType.IMAGE);
+                        else
+                          bloc.loadMedia(MediaType.COMMON);
+                      },
+                    )
                   ],
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(icon: Icon(Icons.videocam)),
+                      Tab(icon: Icon(Icons.image)),
+                      Tab(icon: Icon(Icons.all_inclusive)),
+                    ],
+                  ),
                 ),
-              ),
-              body: TabBarView(children: <Widget>[
-                getBody(bloc.galleryStream,bloc),
-                getBody(bloc.imageStream,bloc),
-                getBody(bloc.videoStream,bloc),
-              ]),
-            ));
+                body: TabBarView(children: <Widget>[
+                  getBody(bloc.videoStream, bloc),
+                  getBody(bloc.imageStream, bloc),
+                  getBody(bloc.galleryStream, bloc),
+                ])));
       },
     );
   }
@@ -96,8 +111,7 @@ List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels, Image
       ),
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-          return GalleryAlbumPage(
-              title: album.name, mediaModels: album.mediaList, bloc: bloc);
+          return GalleryAlbumPage(title: album.name, mediaModels: album.mediaList, bloc: bloc);
         }));
       },
     ));

@@ -9,13 +9,15 @@ class AlbumModel extends JSONModel {
   final int assetCount;
   final List<MediaModel> mediaList;
   final Uint8List thumbNail;
+  final double loadProgress;
 
   AlbumModel(
       {@required this.id,
       @required this.name,
       @required this.assetCount,
       @required this.mediaList,
-      @required this.thumbNail
+      @required this.thumbNail,
+        this.loadProgress
       })
       : super(id);
 

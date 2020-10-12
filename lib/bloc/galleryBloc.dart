@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:vlc/core/repository.dart';
 import '../dataSource/historyDataSource.dart';
 import '../core/utils/disposable.dart';
 import '../dataSource/galleryDataSource.dart';
@@ -8,30 +9,31 @@ import '../model/media.dart';
 import '../model/mediaType.dart';
 
 abstract class MediaBloc extends Disposable {
-  Future<List<AlbumModel>> getAlbumModels(List<AssetPathEntity> albums) async {
+  void getAlbumModels(List<AssetPathEntity> albums, ListRepo repo) async {
     List<AlbumModel> albumModels = List();
-    for (AssetPathEntity album in albums) {
-      List<AssetEntity> assets = await album.assetList;
+    for (int i = 0; i < albums.length; i++) {
+      List<AssetEntity> assets = await albums[i].assetList;
       List<MediaModel> albumMedia = List();
-      for (AssetEntity asset in assets) {
+      for (int j = 0; j < assets.length; j++) {
         albumMedia.add(MediaModel(
-            width: asset.width,
-            duration: asset.duration,
-            file: await asset.file,
-            height: asset.height,
-            size: asset.size,
-            orientation: asset.orientation,
-            mediaType: mapMediaType(asset.type),
-            thumbNail: await asset.thumbDataWithSize(200, 200)));
+            width: assets[j].width,
+            duration: assets[j].duration,
+            file: await assets[j].file,
+            height: assets[j].height,
+            size: assets[j].size,
+            orientation: assets[j].orientation,
+            mediaType: mapMediaType(assets[j].type),
+            thumbNail: await assets[j].thumbDataWithSize(200, 200)));
       }
       albumModels.add(AlbumModel(
-          id: album.id,
-          name: getAlbumName(album.name),
-          assetCount: album.assetCount,
+          id: albums[i].id,
+          name: getAlbumName(albums[i].name),
+          assetCount: albums[i].assetCount,
           mediaList: albumMedia,
-          thumbNail: await assets[0].thumbDataWithSize(200, 200)));
+          thumbNail: await assets[0].thumbDataWithSize(200, 200),
+          loadProgress: i / assets.length));
+      repo.updateStream(albumModels);
     }
-    return albumModels;
   }
 
   String getAlbumName(String name) {
@@ -66,10 +68,10 @@ class ImageBloc extends MediaBloc {
       albums = await PhotoManager.getAssetPathList(type: RequestType.video);
 
     if (loadType == MediaType.COMMON)
-      _galleryRepo.updateStream(await getAlbumModels(albums));
+      getAlbumModels(albums, _galleryRepo);
     else if (loadType == MediaType.IMAGE)
-      _imageRepo.updateStream(await getAlbumModels(albums));
-    else if (loadType == MediaType.VIDEO) _videoRepo.updateStream(await getAlbumModels(albums));
+      getAlbumModels(albums, _imageRepo);
+    else if (loadType == MediaType.VIDEO) getAlbumModels(albums, _videoRepo);
   }
 
   void addHistory(String pathToSave, MediaType mediaType) {
