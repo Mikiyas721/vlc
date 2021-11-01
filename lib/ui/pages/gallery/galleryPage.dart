@@ -6,7 +6,6 @@ import '../../../bloc/provider/provider.dart';
 import '../../../model/album.dart';
 import '../../../model/mediaType.dart';
 import '../../../ui/customWidget/myDrawer.dart';
-import '../../../ui/pages/gallery/galleryAlbumPage.dart';
 import '../../customWidget/myDrawer.dart';
 
 class GalleryPage extends StatefulWidget {
@@ -14,24 +13,82 @@ class GalleryPage extends StatefulWidget {
   _GalleryPageState createState() => _GalleryPageState();
 }
 
-class _GalleryPageState extends State<GalleryPage> with SingleTickerProviderStateMixin {
+class _GalleryPageState extends State<GalleryPage>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
 
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ImageBloc>(
-      blocFactory: () => ImageBloc(),
-      builder: (BuildContext context, ImageBloc bloc) {
+      blocFactory: () => ImageBloc(context),
+      onInit: (ImageBloc bloc) {
         bloc.loadMedia(MediaType.VIDEO);
         bloc.loadMedia(MediaType.IMAGE);
         bloc.loadMedia(MediaType.COMMON);
+      },
+      builder: (BuildContext context, ImageBloc bloc) {
+
+        Widget getBody(Stream<List<AlbumModel>> stream) {
+          return StreamBuilder(
+              stream: stream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<AlbumModel>> snapShot) {
+                return snapShot.data == null
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Align(
+                        alignment: Alignment.topLeft,
+                        child: GridView.builder(
+                          itemCount: snapShot.data.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 1),
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 3),
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: MemoryImage(
+                                            snapShot.data[index].thumbNail),
+                                        fit: BoxFit.cover)),
+                                child: Stack(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: MyTextDisplay(
+                                          text: '${snapShot.data[index].name}',
+                                          alignment: Alignment.bottomLeft),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: MyTextDisplay(
+                                          text:
+                                              '(${snapShot.data[index].assetCount})',
+                                          alignment: Alignment.bottomRight),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                bloc.onGalleryPageTap(
+                                    snapShot.data[index], bloc);
+                              },
+                            );
+                          },
+                          padding: EdgeInsets.all(5),
+                        ),
+                      );
+              });
+        }
+
         return DefaultTabController(
             length: 3,
             child: Scaffold(
@@ -42,12 +99,7 @@ class _GalleryPageState extends State<GalleryPage> with SingleTickerProviderStat
                     IconButton(
                       icon: Icon(Icons.refresh),
                       onPressed: () async {
-                        if (_tabController.index == 0)
-                          bloc.loadMedia(MediaType.VIDEO);
-                        else if (_tabController.index == 1)
-                          bloc.loadMedia(MediaType.IMAGE);
-                        else
-                          bloc.loadMedia(MediaType.COMMON);
+                        bloc.onRefresh(_tabController.index);
                       },
                     )
                   ],
@@ -60,62 +112,11 @@ class _GalleryPageState extends State<GalleryPage> with SingleTickerProviderStat
                   ),
                 ),
                 body: TabBarView(children: <Widget>[
-                  getBody(bloc.videoStream, bloc),
-                  getBody(bloc.imageStream, bloc),
-                  getBody(bloc.galleryStream, bloc),
+                  getBody(bloc.videoStream),
+                  getBody(bloc.imageStream),
+                  getBody(bloc.galleryStream),
                 ])));
       },
     );
   }
-
-  Widget getBody(Stream<List<AlbumModel>> stream, ImageBloc bloc) {
-    return StreamBuilder(
-        stream: stream,
-        builder: (BuildContext context, AsyncSnapshot<List<AlbumModel>> snapShot) {
-          return snapShot.data == null
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Align(
-                  alignment: Alignment.topLeft,
-                  child: GridView.count(
-                    crossAxisCount: 1,
-                    children: getAlbums(context, snapShot.data, bloc),
-                    padding: EdgeInsets.all(5),
-                  ),
-                );
-        });
-  }
-}
-
-List<Widget> getAlbums(BuildContext context, List<AlbumModel> albumModels, ImageBloc bloc) {
-  List<Widget> albums = [];
-  for (AlbumModel album in albumModels) {
-    albums.add(GestureDetector(
-      child: Container(
-        margin: EdgeInsets.only(bottom: 3),
-        decoration:
-            BoxDecoration(image: DecorationImage(image: MemoryImage(album.thumbNail), fit: BoxFit.cover)),
-        child: Stack(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: MyTextDisplay(text: '${album.name}', alignment: Alignment.bottomLeft),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: MyTextDisplay(text: '(${album.assetCount})', alignment: Alignment.bottomRight),
-            )
-          ],
-        ),
-      ),
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-          return GalleryAlbumPage(title: album.name, mediaModels: album.mediaList, bloc: bloc);
-        }));
-      },
-    ));
-  }
-
-  return albums;
 }

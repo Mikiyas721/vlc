@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:vlc/core/repository.dart';
+import 'package:vlc/ui/customWidget/myImageView.dart';
+import 'package:vlc/ui/customWidget/myVideoPlayer.dart';
 import '../dataSource/historyDataSource.dart';
 import '../core/utils/disposable.dart';
 import '../dataSource/galleryDataSource.dart';
@@ -9,6 +12,10 @@ import '../model/media.dart';
 import '../model/mediaType.dart';
 
 abstract class MediaBloc extends Disposable {
+  final BuildContext context;
+
+  MediaBloc(this.context);
+
   void getAlbumModels(List<AssetPathEntity> albums, ListRepo repo) async {
     List<AlbumModel> albumModels = List();
     for (int i = 0; i < albums.length; i++) {
@@ -47,12 +54,15 @@ abstract class MediaBloc extends Disposable {
 }
 
 class ImageBloc extends MediaBloc {
+  ImageBloc(BuildContext context) : super(context);
+
   GalleryRepo _galleryRepo = GetIt.instance.get();
   ImageRepo _imageRepo = GetIt.instance.get();
   VideoRepo _videoRepo = GetIt.instance.get();
-  final HistoryRepo _historyRepo = GetIt.instance.get();
+  HistoryRepo _historyRepo = GetIt.instance.get();
 
-  get galleryStream => _galleryRepo.getStream<List<AlbumModel>>((value) => value);
+  get galleryStream =>
+      _galleryRepo.getStream<List<AlbumModel>>((value) => value);
 
   get imageStream => _imageRepo.getStream<List<AlbumModel>>((value) => value);
 
@@ -78,6 +88,48 @@ class ImageBloc extends MediaBloc {
     _historyRepo.addToHistory(pathToSave, mediaType);
   }
 
+  void onGalleryAlbumTap(List<MediaModel> mediaModels, int index) {
+    if (mediaModels[index].mediaType == MediaType.IMAGE) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        return MyImageView(
+          family: mediaModels,
+          currentPictureIndex: index,
+        );
+      }));
+    } else {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        addHistory(mediaModels[index].mediaFile.path, MediaType.VIDEO);
+        return MyVideoPlayer(
+          family: mediaModels,
+          currentVideoIndex: index,
+        );
+      }));
+    }
+  }
+
+  void onRefresh(int index) {
+    if (index == 0)
+      loadMedia(MediaType.VIDEO);
+    else if (index == 1)
+      loadMedia(MediaType.IMAGE);
+    else
+      loadMedia(MediaType.COMMON);
+  }
+
+  void onGalleryPageTap(AlbumModel albumModel, bloc) {
+    Navigator.pushNamed(context, '/galleryAlbumPage', arguments: {
+      'title': albumModel.name,
+      'mediaModels': albumModel.mediaList
+    });
+  }
+
   @override
-  void dispose() {}
+  void dispose() {
+    _galleryRepo.dataStream.close();
+    _imageRepo.dataStream.close();
+    _videoRepo.dataStream.close();
+    _historyRepo.dataStream.close();
+  }
 }

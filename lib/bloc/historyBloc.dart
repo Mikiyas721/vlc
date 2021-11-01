@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:vlc/model/mediaType.dart';
 import '../core/utils/disposable.dart';
@@ -5,7 +6,10 @@ import '../dataSource/historyDataSource.dart';
 import '../model/media.dart';
 
 class HistoryBloc extends Disposable {
+  final BuildContext context;
   HistoryRepo _historyRepo = GetIt.instance.get();
+
+  HistoryBloc(this.context);
 
   Stream<List<DevicePathModel>> get historyStream =>
       _historyRepo.getStream<List<DevicePathModel>>((value) => value);
@@ -23,11 +27,34 @@ class HistoryBloc extends Disposable {
     _historyRepo.updateStream(mappedHistory);
   }
 
-  void onDeleteHistory() {
-    _historyRepo.setPreference<List>(_historyRepo.preferenceKey, null);
-    _historyRepo.updateStream([]);
+  Future<void> onDeleteHistory() async{
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text('Are you sure you want to delete your history'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  _historyRepo.setPreference<List>(_historyRepo.preferenceKey, null);
+                  _historyRepo.updateStream([]);
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+    _historyRepo.dataStream.close();
+  }
 }

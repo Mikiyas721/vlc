@@ -1,83 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
-import '../../../ui/customWidget/myPlaylistSelectionDialog.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../../model/currentAudio.dart';
 import '../../../ui/customWidget/audioControls.dart';
 import '../../../ui/customWidget/myListTIle.dart';
-import '../../../model/media.dart';
 
 class AudioAlbumPage extends StatelessWidget {
-  final String title;
-  final List<PathModel> albumAudio;
-  final bool isPlaylist;
-
-  AudioAlbumPage({Key key, @required this.title, @required this.albumAudio, this.isPlaylist = false})
-      : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> arguments = ModalRoute.of(context).settings.arguments;
+
     return BlocProvider(
-        blocFactory: () => AudioBloc(),
+        blocFactory: () => AudioBloc(context),
         builder: (BuildContext context, AudioBloc bloc) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(title),
+              title: Text(arguments['title']),
             ),
-            body: ListView(
-                children: getAlbumBody(bloc, context),
-              ),
+            body: ListView.builder(
+              itemCount: arguments['albumAudio'].length,
+              itemBuilder: (BuildContext context, int index) {
+                return MyListTile(
+                  leadingIcon: Icons.audiotrack,
+                  title: arguments['albumAudio'][index].getName(),
+                  path: arguments['albumAudio'][index].path,
+                  onTap: () {
+                    bloc.onAudioTap(arguments['albumAudio'], index);
+                  },
+                  onAddAudioTap: arguments['isPlaylist']
+                      ? null
+                      : () {
+                          bloc.onAddAudioTap(arguments['albumAudio'][index]);
+                        },
+                );
+              },
+            ),
             bottomSheet: StreamBuilder(
                 stream: bloc.playingStream,
-                builder: (BuildContext context, AsyncSnapshot<CurrentAudioModel> snapShot) {
+                builder: (BuildContext context,
+                    AsyncSnapshot<CurrentAudioModel> snapShot) {
                   return snapShot.data == null
-                      ? Container(height:0, width:0)
+                      ? Container(height: 0, width: 0)
                       : snapShot.data.isStopped
-                          ? Container(height:0, width:0)
+                          ? Container(height: 0, width: 0)
                           : AudioControls(
                               isPlaying: snapShot.data.isPlaying,
-                              currentAudioPosition: snapShot.data.currentAudioPosition,
+                              currentAudioPosition:
+                                  snapShot.data.currentAudioPosition,
                               audioTotalDuration: snapShot.data.audioDuration,
                               path: snapShot.data.path,
                               family: snapShot.data.family,
-                              currentAudioIndex: snapShot.data.currentAudioIndex,
+                              currentAudioIndex:
+                                  snapShot.data.currentAudioIndex,
                               audioName: snapShot.data.name,
                             );
                 }),
           );
         });
-  }
-
-  List<Widget> getAlbumBody(AudioBloc bloc, BuildContext context) {
-    List<Widget> elements = [];
-    for (int i = 0; i < albumAudio.length; i++) {
-      elements.add(MyListTile(
-        leadingIcon: Icons.audiotrack,
-        title: albumAudio[i].getName(),
-        path: albumAudio[i].path,
-        onTap: () {
-          bloc.onAudioTap(albumAudio, i);
-        },
-        onAddAudioTap: isPlaylist
-            ? null
-            : () {
-                List<String> playlists = bloc.getPlaylists;
-                playlists == null
-                    ? Toast.show('There are no playlists. Please first create a playlist', context)
-                    : showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return MyPlaylistSelectionDialog(
-                            options: playlists,
-                            onOKClicked: (List<CheckValue> checkValues) {
-                              bloc.onAddAudioToPlaylistTap(checkValues, albumAudio[i].path);
-                            },
-                          );
-                        });
-              },
-      ));
-    }
-    return elements;
   }
 }

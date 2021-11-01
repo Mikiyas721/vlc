@@ -10,5 +10,4 @@ class SettingsPage extends StatelessWidget{
       body: Center(child: Text('Settings')),
     );
   }
-
 }

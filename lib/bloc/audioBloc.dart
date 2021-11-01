@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:toast/toast.dart';
 import 'package:vlc/model/mediaType.dart';
 import '../dataSource/historyDataSource.dart';
 import '../dataSource/playlistDataSource.dart';
@@ -23,14 +25,18 @@ abstract class AudioPlayersBloc extends MediaBloc {
   @protected
   final HistoryRepo historyRepo = GetIt.instance.get();
 
-  set currentAudio(CurrentAudioModel currentAudioModel) => currentAudioRepo.updateStream(currentAudioModel);
+  AudioPlayersBloc(BuildContext context) : super(context);
+
+  set currentAudio(CurrentAudioModel currentAudioModel) =>
+      currentAudioRepo.updateStream(currentAudioModel);
 
   Stream<CurrentAudioModel> get playingStream =>
       currentAudioRepo.getStream<CurrentAudioModel>((value) => value);
 
   List<String> get getPlaylists => playlistRepo.getPlayLists;
 
-  void positionChangeListen({String path, List<PathModel> pathModel, int currentAudioIndex}) {
+  void positionChangeListen(
+      {String path, List<PathModel> pathModel, int currentAudioIndex}) {
     audioPlayer.onAudioPositionChanged.listen((Duration duration) async {
       this.currentAudio = CurrentAudioModel(
           path: path,
@@ -45,7 +51,8 @@ abstract class AudioPlayersBloc extends MediaBloc {
     });
   }
 
-  void onCurrentAudioDone(List<PathModel> pathModels, {int currentAudioIndex, bool isRandom = false}) {
+  void onCurrentAudioDone(List<PathModel> pathModels,
+      {int currentAudioIndex, bool isRandom = false}) {
     audioPlayer.onPlayerCompletion.listen((data) async {
       if (isRandom) {
         int randomIndex = Random().nextInt(pathModels.length - 1);
@@ -63,7 +70,8 @@ abstract class AudioPlayersBloc extends MediaBloc {
         currentAudioIndex++;
         if (currentAudioIndex < pathModels.length) {
           audioPlayer.play(pathModels[currentAudioIndex].path);
-          historyRepo.addToHistory(pathModels[currentAudioIndex].path, MediaType.AUDIO);
+          historyRepo.addToHistory(
+              pathModels[currentAudioIndex].path, MediaType.AUDIO);
           this.currentAudio = CurrentAudioModel(
               family: pathModels,
               currentAudioIndex: currentAudioIndex,
@@ -82,6 +90,8 @@ class AudioBloc extends AudioPlayersBloc {
   final RemoteAudioRepo _remoteAudioRepo = GetIt.instance.get();
   final DeviceAudioRepo _deviceAudioRepo = GetIt.instance.get();
 
+  AudioBloc(BuildContext context) : super(context);
+
   Stream<List<AlbumModel>> get deviceAudioStream =>
       _deviceAudioRepo.getStream<List<AlbumModel>>((value) => value);
 
@@ -89,16 +99,19 @@ class AudioBloc extends AudioPlayersBloc {
       _remoteAudioRepo.getStream<CurrentAudioModel>((value) => value);
 
   void onAudioUrlEntered(String newValue) {
-    _remoteAudioRepo.updateStream(
-        CurrentAudioModel(path: newValue, isPlaying: false, name: getName(newValue), isStopped: true));
+    _remoteAudioRepo.updateStream(CurrentAudioModel(
+        path: newValue,
+        isPlaying: false,
+        name: getName(newValue),
+        isStopped: true));
   }
 
   Future<int> onSendUrl() async {
     try {
       audioPlayer.stop();
       String path = _remoteAudioRepo.dataStream.value.path;
-      _remoteAudioRepo.updateStream(
-          CurrentAudioModel(path: path, isPlaying: false, name: getName(path), isStopped: false));
+      _remoteAudioRepo.updateStream(CurrentAudioModel(
+          path: path, isPlaying: false, name: getName(path), isStopped: false));
       positionChangeListen(path: path);
       return await audioPlayer.play(path, isLocal: false);
     } catch (Exception) {
@@ -107,7 +120,7 @@ class AudioBloc extends AudioPlayersBloc {
     }
   }
 
-  bool onShuffleClicked(List<AlbumModel> albumModels) {
+  void onShuffleClicked(List<AlbumModel> albumModels) {
     if (albumModels != null) {
       List<PathModel> audioList = getAllMedia(albumModels);
       int randomIndex = Random().nextInt(audioList.length - 1);
@@ -118,7 +131,8 @@ class AudioBloc extends AudioPlayersBloc {
       }
       audioPlayer.play(audioList[randomIndex].path);
       historyRepo.addToHistory(audioList[randomIndex].path, MediaType.AUDIO);
-      positionChangeListen(pathModel: audioList, currentAudioIndex: randomIndex);
+      positionChangeListen(
+          pathModel: audioList, currentAudioIndex: randomIndex);
       onCurrentAudioDone(audioList, isRandom: true);
       this.currentAudio = CurrentAudioModel(
           family: audioList,
@@ -126,9 +140,8 @@ class AudioBloc extends AudioPlayersBloc {
           isPlaying: true,
           name: audioList[randomIndex].getName(),
           isStopped: false);
-      return true;
     }
-    return false;
+    Toast.show('No Audio file found', context);
   }
 
   void onAlbumRandomPlayClicked(AlbumModel album) {
@@ -136,7 +149,8 @@ class AudioBloc extends AudioPlayersBloc {
     try {
       audioPlayer.stop();
     } catch (Exception) {
-      debugPrint('Error at onAlbumRandomPlayClicked. No audio file to stop playing');
+      debugPrint(
+          'Error at onAlbumRandomPlayClicked. No audio file to stop playing');
     }
     MediaModel mediaModel = album.mediaList[random];
     audioPlayer.play(mediaModel.mediaFile.path);
@@ -149,6 +163,33 @@ class AudioBloc extends AudioPlayersBloc {
         isPlaying: true,
         name: mediaModel.getName(),
         isStopped: false);
+
+    Toast.show('Randomly Playing from Album ${album.name}', context);
+  }
+
+  void onAlbumTap(AlbumModel album) {
+    Navigator.pushNamed(context, '/audioAlbumPage', arguments: {
+      'title': album.name,
+      'albumAudio': album.mediaList,
+      'isPlaylist': false
+    });
+  }
+
+  void onAlbumAdd(AlbumModel album) {
+    List<String> playlists = getPlaylists;
+    playlists == null
+        ? Toast.show(
+            'There are no playlists. Please first create a playlist', context)
+        : showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return MyPlaylistSelectionDialog(
+                options: playlists,
+                onOKClicked: (List<CheckValue> checkValues) {
+                  onAddAlbumToPlaylistTap(checkValues, album.mediaList);
+                },
+              );
+            });
   }
 
   void onAudioTap(List<PathModel> albumAudio, int currentAudioIndex) {
@@ -160,7 +201,8 @@ class AudioBloc extends AudioPlayersBloc {
     PathModel currentAudioModel = albumAudio[currentAudioIndex];
     audioPlayer.play(currentAudioModel.path);
     historyRepo.addToHistory(currentAudioModel.path, MediaType.AUDIO);
-    positionChangeListen(pathModel: albumAudio, currentAudioIndex: currentAudioIndex);
+    positionChangeListen(
+        pathModel: albumAudio, currentAudioIndex: currentAudioIndex);
     onCurrentAudioDone(albumAudio, currentAudioIndex: currentAudioIndex);
     this.currentAudio = CurrentAudioModel(
         path: albumAudio[currentAudioIndex].path,
@@ -170,7 +212,8 @@ class AudioBloc extends AudioPlayersBloc {
   }
 
   void loadDeviceAudio() async {
-    List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(type: RequestType.audio);
+    List<AssetPathEntity> albums =
+        await PhotoManager.getAssetPathList(type: RequestType.audio);
     await getAlbumModels(albums, _deviceAudioRepo);
   }
 
@@ -182,18 +225,42 @@ class AudioBloc extends AudioPlayersBloc {
     });
   }
 
-  void onAddAlbumToPlaylistTap(List<CheckValue> checkValues, List<MediaModel> mediaModels) {
+  void onAddAlbumToPlaylistTap(
+      List<CheckValue> checkValues, List<MediaModel> mediaModels) {
     checkValues.forEach((CheckValue checkValues) {
       if (checkValues.value) {
         mediaModels.forEach((mediaModel) {
-          playlistRepo.addToPlayList(checkValues.title, mediaModel.mediaFile.path);
+          playlistRepo.addToPlayList(
+              checkValues.title, mediaModel.mediaFile.path);
         });
       }
     });
   }
 
-  @override
-  void dispose() {}
+  void onAddAudioTap(PathModel albumAudio) {
+    List<String> playlists = getPlaylists;
+    playlists == null
+        ? Toast.show(
+            'There are no playlists. Please first create a playlist', context)
+        : showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return MyPlaylistSelectionDialog(
+                options: playlists,
+                onOKClicked: (List<CheckValue> checkValues) {
+                  onAddAudioToPlaylistTap(checkValues, albumAudio.path);
+                },
+              );
+            });
+  }
+
+  void onStream() async {
+    int status = await onSendUrl();
+    if (status == 0)
+      Toast.show('Playing audio', context);
+    else
+      Toast.show('Could not play audio', context);
+  }
 
   static String getName(String path) {
     List<String> split = path.split('/');
@@ -206,5 +273,14 @@ class AudioBloc extends AudioPlayersBloc {
       pathModels.addAll(albumModel.mediaList);
     });
     return pathModels;
+  }
+
+  @override
+  void dispose() {
+    currentAudioRepo.dataStream.close();
+    playlistRepo.dataStream.close();
+    historyRepo.dataStream.close();
+    _remoteAudioRepo.dataStream.close();
+    _deviceAudioRepo.dataStream.close();
   }
 }

@@ -11,7 +11,7 @@ import 'model/album.dart';
 import 'model/currentAudio.dart';
 import 'model/media.dart';
 
-void inject() async {
+Future<void> inject() async {
   final preference = await SharedPreferences.getInstance();
   GetIt.instance.registerSingleton<SharedPreferences>(preference);
   final _audioPlayer = AudioPlayer();

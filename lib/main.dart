@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Vlc',
+      title: 'Media',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -28,12 +28,14 @@ class MyApp extends StatelessWidget {
   }
 
   final routes = {
+    '/': (BuildContext context) => GalleryPage(),
+    '/audioAlbumPage': (BuildContext context) => AudioPage(),
     '/audioPage': (BuildContext context) => AudioPage(),
+    '/streamPage': (BuildContext context) => StreamPage(),
+    '/galleryAlbumPage': (BuildContext context) => StreamPage(),
     '/directoriesPage': (BuildContext context) => DirectoriesPage(),
     '/historyPage': (BuildContext context) => HistoryPage(),
-    '/': (BuildContext context) => GalleryPage(),
     '/playlistsPage': (BuildContext context) => PlayListsPage(),
     '/settingsPage': (BuildContext context) => SettingsPage(),
-    '/streamPage': (BuildContext context) => StreamPage(),
   };
 }
