@@ -1,6 +1,6 @@
-# vlc
+# media
 
-A media player app
+Gallery and Media Player
 
 ## Getting Started
 

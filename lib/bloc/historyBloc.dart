@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:vlc/model/mediaType.dart';
+import '../model/mediaType.dart';
 import '../core/utils/disposable.dart';
 import '../dataSource/historyDataSource.dart';
 import '../model/media.dart';
 
-class HistoryBloc extends Disposable {
+class HistoryBloc extends MyDisposable {
   final BuildContext context;
   HistoryRepo _historyRepo = GetIt.instance.get();
 

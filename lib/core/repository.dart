@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:core';
 import './jsonModel.dart';
 
-abstract class Repo extends Disposable {
+abstract class Repo extends MyDisposable {
   BehaviorSubject _dataStream;
   SharedPreferences _sharedPreferences;
 

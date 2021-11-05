@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../../../ui/customWidget/myTextDisplay.dart';
 import '../../../bloc/galleryBloc.dart';
 import '../../../bloc/provider/provider.dart';

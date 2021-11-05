@@ -1,35 +1,27 @@
-import 'dart:io';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
-import 'package:vlc/model/media.dart';
+import '../../model/media.dart';
 
-class MyVideoPlayer extends StatefulWidget {
-  final List<PathModel> family;
-  final int currentVideoIndex;
-
-  MyVideoPlayer({this.family, this.currentVideoIndex});
-
+class VideoPlayerPage extends StatefulWidget {
   @override
-  _MyVideoPlayerState createState() => _MyVideoPlayerState();
+  _VideoPlayerPageState createState() => _VideoPlayerPageState();
 }
 
-class _MyVideoPlayerState extends State<MyVideoPlayer> {
+class _VideoPlayerPageState extends State<VideoPlayerPage> {
   FlickVideoPlayer _flickVideoPlayer;
   FlickManager _flickManager;
-  PathModel currentVideo;
+  List<PathModel> family;
   int currentIndex;
 
   @override
   void initState() {
-    currentIndex = widget.currentVideoIndex;
-    currentVideo = widget.family[currentIndex];
     _flickManager = FlickManager(
-        videoPlayerController: VideoPlayerController.file(currentVideo.mediaFile),
+        videoPlayerController: VideoPlayerController.file(family[currentIndex].mediaFile),
         onVideoEnd: () {
-          if (currentIndex < widget.family.length - 1) {
+          if (currentIndex < family.length - 1) {
             setState(() {
               currentIndex++;
             });
@@ -39,13 +31,16 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
         });
     _flickVideoPlayer = FlickVideoPlayer(
       flickManager: _flickManager,
-      preferredDeviceOrientation: [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp],
+      preferredDeviceOrientation: [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight],
     );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Map map = ModalRoute.of(context).settings.arguments;
+    currentIndex = map['currentVideoIndex'];
+    family = map['family'];
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -53,7 +48,7 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
         title: SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: Text(
-              currentVideo.getName(),
+              family[currentIndex].getName(),
               style: TextStyle(color: Colors.white),
               softWrap: false,
               overflow: TextOverflow.ellipsis,

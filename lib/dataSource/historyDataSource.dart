@@ -1,5 +1,5 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:vlc/model/mediaType.dart';
+import '../model/mediaType.dart';
 import '../core/repository.dart';
 import '../model/media.dart';
 

@@ -1,31 +1,22 @@
 import 'package:flutter/material.dart';
-import '../../model/media.dart';
+import '../../../model/media.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
-class MyImageView extends StatefulWidget {
-  final List<PathModel> family;
-  final int currentPictureIndex;
-
-  MyImageView({this.family, this.currentPictureIndex});
-
+class ImageViewPage extends StatefulWidget {
   @override
-  _MyImageViewState createState() => _MyImageViewState();
+  _ImageViewPageState createState() => _ImageViewPageState();
 }
 
-class _MyImageViewState extends State<MyImageView> {
-  var currentImage;
+class _ImageViewPageState extends State<ImageViewPage> {
+  List<PathModel> family;
   int currentIndex;
   double scale = 1;
 
   @override
-  void initState() {
-    currentIndex = widget.currentPictureIndex;
-    currentImage = widget.family[currentIndex];
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Map map = ModalRoute.of(context).settings.arguments;
+    currentIndex = map['currentPictureIndex'];
+    family = map['currentIndex'];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -38,15 +29,13 @@ class _MyImageViewState extends State<MyImageView> {
         onScaleUpdate: (ScaleUpdateDetails scaleUpdateDetails) {
           if (scaleUpdateDetails.focalPoint.dx > 0) {
             setState(() {
-              if (currentIndex < widget.family.length - 1) {
+              if (currentIndex < family.length - 1) {
                 currentIndex++;
-                currentImage = widget.family[currentIndex];
               }
             });
           } else {
             if (currentIndex > 0) {
               currentIndex--;
-              currentImage = widget.family[currentIndex];
             }
           }
           setState(() {
@@ -67,11 +56,15 @@ class _MyImageViewState extends State<MyImageView> {
             alignment: FractionalOffset.center,
             child: Container(
               width: screenWidth,
-              height: currentImage.runtimeType == MediaModel
-                  ? (currentImage.height * screenWidth) / currentImage.width
+              height: family[currentIndex].runtimeType == MediaModel
+                  ? ((family[currentIndex] as MediaModel).height *
+                          screenWidth) /
+                      (family[currentIndex] as MediaModel).width
                   : screenHeight,
               decoration: BoxDecoration(
-                  image: DecorationImage(image: FileImage(currentImage.mediaFile), fit: BoxFit.fill)),
+                  image: DecorationImage(
+                      image: FileImage(family[currentIndex].mediaFile),
+                      fit: BoxFit.fill)),
             ),
           ),
         ),

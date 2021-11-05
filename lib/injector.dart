@@ -12,25 +12,29 @@ import 'model/currentAudio.dart';
 import 'model/media.dart';
 
 Future<void> inject() async {
-  final preference = await SharedPreferences.getInstance();
-  GetIt.instance.registerSingleton<SharedPreferences>(preference);
-  final _audioPlayer = AudioPlayer();
+  final getItInstance = GetIt.instance;
 
-  GetIt.instance.registerSingleton<AudioPlayer>(_audioPlayer);
+  getItInstance.registerSingleton<SharedPreferences>(
+      await SharedPreferences.getInstance());
 
-  GetIt.instance.registerLazySingleton<GalleryRepo>(() => GalleryRepo(BehaviorSubject<List<AlbumModel>>()));
-  GetIt.instance.registerLazySingleton<VideoRepo>(() => VideoRepo(BehaviorSubject<List<AlbumModel>>()));
-  GetIt.instance.registerLazySingleton<ImageRepo>(() => ImageRepo(BehaviorSubject<List<AlbumModel>>()));
-  GetIt.instance
-      .registerLazySingleton<RemoteAudioRepo>(() => RemoteAudioRepo(BehaviorSubject<CurrentAudioModel>()));
-  GetIt.instance
-      .registerLazySingleton<DeviceAudioRepo>(() => DeviceAudioRepo(BehaviorSubject<List<AlbumModel>>()));
-  GetIt.instance
-      .registerLazySingleton<CurrentAudioRepo>(() => CurrentAudioRepo(BehaviorSubject<CurrentAudioModel>()));
-  GetIt.instance
-      .registerLazySingleton<PlaylistRepo>(() => PlaylistRepo(BehaviorSubject<List<DevicePathModel>>()));
-  GetIt.instance
-      .registerLazySingleton<HistoryRepo>(() => HistoryRepo(BehaviorSubject<List<DevicePathModel>>()));
-  GetIt.instance
-      .registerLazySingleton<DirectoryRepo>(() => DirectoryRepo(BehaviorSubject<List<DevicePathModel>>()));
+  getItInstance.registerSingleton<AudioPlayer>(AudioPlayer());
+
+  getItInstance.registerLazySingleton<GalleryRepo>(
+      () => GalleryRepo(BehaviorSubject<List<AlbumModel>>()));
+  getItInstance.registerLazySingleton<VideoRepo>(
+      () => VideoRepo(BehaviorSubject<List<AlbumModel>>()));
+  getItInstance.registerLazySingleton<ImageRepo>(
+      () => ImageRepo(BehaviorSubject<List<AlbumModel>>()));
+  getItInstance.registerLazySingleton<RemoteAudioRepo>(
+      () => RemoteAudioRepo(BehaviorSubject<CurrentAudioModel>()));
+  getItInstance.registerLazySingleton<DeviceAudioRepo>(
+      () => DeviceAudioRepo(BehaviorSubject<List<AlbumModel>>()));
+  getItInstance.registerLazySingleton<CurrentAudioRepo>(
+      () => CurrentAudioRepo(BehaviorSubject<CurrentAudioModel>()));
+  getItInstance.registerLazySingleton<PlaylistRepo>(
+      () => PlaylistRepo(BehaviorSubject<List<DevicePathModel>>()));
+  getItInstance.registerLazySingleton<HistoryRepo>(
+      () => HistoryRepo(BehaviorSubject<List<DevicePathModel>>()));
+  getItInstance.registerLazySingleton<DirectoryRepo>(
+      () => DirectoryRepo(BehaviorSubject<List<DevicePathModel>>()));
 }

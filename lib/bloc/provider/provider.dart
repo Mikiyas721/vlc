@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/utils/disposable.dart';
 
-class Provider<T extends Disposable> extends InheritedWidget {
+class Provider<T extends MyDisposable> extends InheritedWidget {
   final T bloc;
 
   Provider({Key key, Widget child, @required this.bloc})
@@ -10,12 +10,12 @@ class Provider<T extends Disposable> extends InheritedWidget {
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;
 
-  static T of<T extends Disposable>(BuildContext context) =>
+  static T of<T extends MyDisposable>(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<Provider<T>>()?.bloc;
 //Not working
 }
 
-class BlocProvider<T extends Disposable> extends StatefulWidget {
+class BlocProvider<T extends MyDisposable> extends StatefulWidget {
   final T Function() blocFactory;
   final void Function(T) onInit;
   final void Function(T) onDispose;
@@ -33,7 +33,7 @@ class BlocProvider<T extends Disposable> extends StatefulWidget {
   _BlocProviderState<T> createState() => _BlocProviderState();
 }
 
-class _BlocProviderState<T extends Disposable> extends State<BlocProvider<T>> {
+class _BlocProviderState<T extends MyDisposable> extends State<BlocProvider<T>> {
   T bloc;
 
   @override

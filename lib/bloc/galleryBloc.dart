@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:vlc/core/repository.dart';
-import 'package:vlc/ui/customWidget/myImageView.dart';
-import 'package:vlc/ui/customWidget/myVideoPlayer.dart';
+import '../core/repository.dart';
+import '../ui/pages/gallery/imageViewPage.dart';
+import '../ui/pages/videoPlayerPage.dart';
 import '../dataSource/historyDataSource.dart';
 import '../core/utils/disposable.dart';
 import '../dataSource/galleryDataSource.dart';
@@ -11,7 +11,7 @@ import '../model/album.dart';
 import '../model/media.dart';
 import '../model/mediaType.dart';
 
-abstract class MediaBloc extends Disposable {
+abstract class MediaBloc extends MyDisposable {
   final BuildContext context;
 
   MediaBloc(this.context);
@@ -90,22 +90,16 @@ class ImageBloc extends MediaBloc {
 
   void onGalleryAlbumTap(List<MediaModel> mediaModels, int index) {
     if (mediaModels[index].mediaType == MediaType.IMAGE) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
-        return MyImageView(
-          family: mediaModels,
-          currentPictureIndex: index,
-        );
-      }));
+      Navigator.pushNamed(context, '/imageViewPage',arguments: {
+        'family': mediaModels,
+        'currentPictureIndex': index,
+      });
     } else {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
-        addHistory(mediaModels[index].mediaFile.path, MediaType.VIDEO);
-        return MyVideoPlayer(
-          family: mediaModels,
-          currentVideoIndex: index,
-        );
-      }));
+      addHistory(mediaModels[index].mediaFile.path, MediaType.VIDEO);
+      Navigator.pushNamed(context,'/videoPlayerPage', arguments: {
+        'family': mediaModels,
+        'currentVideoIndex': index,
+      });
     }
   }
 

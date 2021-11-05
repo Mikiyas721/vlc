@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/model/mediaType.dart';
+import '../model/mediaType.dart';
 import '../dataSource/historyDataSource.dart';
 import '../dataSource/playlistDataSource.dart';
 import '../ui/customWidget/myPlaylistSelectionDialog.dart';

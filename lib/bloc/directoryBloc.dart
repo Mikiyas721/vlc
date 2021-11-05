@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mime/mime.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/model/mediaType.dart';
-import 'package:vlc/ui/customWidget/myImageView.dart';
-import 'package:vlc/ui/customWidget/myVideoPlayer.dart';
+import '../model/mediaType.dart';
+import '../ui/pages/gallery/imageViewPage.dart';
+import '../ui/pages/videoPlayerPage.dart';
 import '../model/currentAudio.dart';
 import '../model/media.dart';
 import '../dataSource/directoryDataSource.dart';
@@ -81,26 +81,20 @@ class DirectoryBloc extends AudioPlayersBloc {
       if (fileType == 'image') {
         final image = File(models.path);
         final decodedImage = await decodeImageFromList(image.readAsBytesSync());
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return MyImageView(
-            family: [
-              MediaModel(
-                  height: decodedImage.height,
-                  width: decodedImage.width,
-                  file: image)
-            ],
-            currentPictureIndex: 0,
-          );
-        }));
+        Navigator.pushNamed(context, '/imageViewPage',arguments: {
+          'family': [
+            MediaModel(
+                height: decodedImage.height,
+                width: decodedImage.width,
+                file: image)
+          ],
+          'currentPictureIndex': 0,
+        });
       } else if (fileType == 'video') {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return MyVideoPlayer(
-            family: [models],
-            currentVideoIndex: index,
-          );
-        }));
+        Navigator.pushNamed(context,'/videoPlayerPage', arguments: {
+          'family': [models],
+          'currentVideoIndex': index,
+        });
       } else if (fileType == 'audio') {
         playAudio(models.path);
       } else

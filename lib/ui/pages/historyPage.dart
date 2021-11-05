@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/model/mediaType.dart';
-import 'package:vlc/ui/customWidget/myListTIle.dart';
+import '../../model/mediaType.dart';
+import '../../ui/customWidget/myListTIle.dart';
 import '../../model/media.dart';
 import '../../bloc/historyBloc.dart';
 import '../../bloc/provider/provider.dart';

@@ -1,9 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
-import 'package:vlc/model/mediaType.dart';
-import 'package:vlc/ui/pages/audio/audioAlbumPage.dart';
-
+import '../model/mediaType.dart';
 import '../model/currentAudio.dart';
 import '../model/media.dart';
 import 'audioBloc.dart';

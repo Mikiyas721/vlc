@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/bloc/provider/provider.dart';
+import '../../../bloc/provider/provider.dart';
 import '../../../bloc/galleryBloc.dart';
 import '../../../model/mediaType.dart';
 

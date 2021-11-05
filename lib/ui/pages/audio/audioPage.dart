@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vlc/ui/customWidget/myPlaylistSelectionDialog.dart';
 import '../../../model/currentAudio.dart';
 import '../../../ui/customWidget/audioControls.dart';
-import '../../../ui/pages/audio/audioAlbumPage.dart';
 import '../../../bloc/audioBloc.dart';
 import '../../../bloc/provider/provider.dart';
 import '../../../model/album.dart';

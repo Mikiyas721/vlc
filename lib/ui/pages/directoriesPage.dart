@@ -1,10 +1,6 @@
-import 'dart:io';
-import 'package:mime/mime.dart';
 import 'package:flutter/material.dart';
-import 'package:vlc/model/currentAudio.dart';
-import 'package:vlc/ui/customWidget/audioControls.dart';
-import '../../ui/customWidget/myImageView.dart';
-import '../../ui/customWidget/myVideoPlayer.dart';
+import '../../model/currentAudio.dart';
+import '../../ui/customWidget/audioControls.dart';
 import '../../model/media.dart';
 import '../../ui/customWidget/myListTIle.dart';
 import '../../bloc/directoryBloc.dart';

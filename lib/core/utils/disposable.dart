@@ -1,3 +1,3 @@
-abstract class Disposable {
+abstract class MyDisposable {
   void dispose();
 }
