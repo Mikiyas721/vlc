@@ -1,7 +1,6 @@
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import '../../model/media.dart';
 
@@ -17,9 +16,13 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   int currentIndex;
 
   @override
-  void initState() {
+  Widget build(BuildContext context) {
+    Map map = ModalRoute.of(context).settings.arguments;
+    currentIndex = map['currentVideoIndex'];
+    family = map['family'];
     _flickManager = FlickManager(
-        videoPlayerController: VideoPlayerController.file(family[currentIndex].mediaFile),
+        videoPlayerController:
+            VideoPlayerController.file(family[currentIndex].mediaFile),
         onVideoEnd: () {
           if (currentIndex < family.length - 1) {
             setState(() {
@@ -31,16 +34,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         });
     _flickVideoPlayer = FlickVideoPlayer(
       flickManager: _flickManager,
-      preferredDeviceOrientation: [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight],
     );
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Map map = ModalRoute.of(context).settings.arguments;
-    currentIndex = map['currentVideoIndex'];
-    family = map['family'];
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -54,7 +48,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
               overflow: TextOverflow.ellipsis,
             )),
       ),
-      body: _flickVideoPlayer,
+      body: Stack(
+        children: [
+          Positioned(
+              bottom: 250,
+              top: 250,
+              left: 20,
+              right: 20,
+              child: _flickVideoPlayer)
+        ],
+      ),
     );
   }
 

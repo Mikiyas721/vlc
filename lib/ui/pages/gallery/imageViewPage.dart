@@ -16,7 +16,7 @@ class _ImageViewPageState extends State<ImageViewPage> {
   Widget build(BuildContext context) {
     Map map = ModalRoute.of(context).settings.arguments;
     currentIndex = map['currentPictureIndex'];
-    family = map['currentIndex'];
+    family = map['family'];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(

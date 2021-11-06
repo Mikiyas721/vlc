@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:media/ui/pages/audio/audioAlbumPage.dart';
 import 'package:media/ui/pages/videoPlayerPage.dart';
 import 'ui/pages/gallery/galleryAlbumPage.dart';
 import 'ui/pages/gallery/galleryPage.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Media',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
 
   final routes = {
     '/': (BuildContext context) => GalleryPage(),
-    '/audioAlbumPage': (BuildContext context) => AudioPage(),
+    '/audioAlbumPage': (BuildContext context) => AudioAlbumPage(),
     '/audioPage': (BuildContext context) => AudioPage(),
     '/streamPage': (BuildContext context) => StreamPage(),
     '/galleryAlbumPage': (BuildContext context) => GalleryAlbumPage(),

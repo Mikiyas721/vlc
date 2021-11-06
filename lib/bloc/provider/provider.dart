@@ -12,7 +12,7 @@ class Provider<T extends MyDisposable> extends InheritedWidget {
 
   static T of<T extends MyDisposable>(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<Provider<T>>()?.bloc;
-//Not working
+
 }
 
 class BlocProvider<T extends MyDisposable> extends StatefulWidget {

@@ -2,7 +2,7 @@
     package="com.example.media">
    <application
         android:label="media"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:name="androidx.multidex.MultiDexApplication">
         <activity
             android:name=".MainActivity"
